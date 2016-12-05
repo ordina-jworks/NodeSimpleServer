@@ -15,7 +15,7 @@ export class WorkerFactory {
                 new DataBroker(cluster.worker.id);
                 break;
             case "interval":
-                new IntervalWorker(cluster.worker.id);
+                new IntervalWorker(cluster.worker.id).start();
                 break;
             case "http":
                 cluster.worker.on("message", messageHandler.onMessageFromMasterReceived);

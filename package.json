@@ -10,9 +10,15 @@
     "stop": "forever stopall"
   },
   "dependencies": {
-    "@types/mime": "0.0.29",
+    "typescript": "2.0.8",
+
     "@types/node": "0.0.2",
+    "@types/mime": "0.0.29",
+    "@types/johnny-five": "0.0.30",
+    "@types/serialport": "4.0.6",
+
     "mime": "1.3.4",
-    "typescript": "2.0.8"
+    "johnny-five": "0.10.6",
+    "serialport": "4.0.6"
   }
 }

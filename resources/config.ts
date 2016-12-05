@@ -8,28 +8,24 @@ export class Config {
         socketPort:                     7081,
 
         webContentFolder:               "www",
-        allowFolderListing:             true
+        allowFolderListing:             true,
+
+        intervalTimeoutInSeconds:       480
     };
 
     public keys = {
-        proximusOwner:                  "",
-        proximusBearerToken:            ""
     };
 
     public arduino = {
-        enableArduinoFunctionality:     false,
-        enableNativeArduinoSerial:      true,
+        enableArduino:                  true,
 
-        nativeArduinoPortName:          "usbmodem",
-        nativeActiveImplementation:     null,
-        nativeImplementations:          null,
-
-        activeImplementation:           null,
-        implementations:                null
+        useSerialOverJohnnyFive:        false,
+        serialPortName:                 "usbmodem",
+        serialPortBaudRate:             57600
     };
 
     private constructor() {
-        this.init();
+        //Empty private constructor.
     }
 
     static getInstance = (): Config => {
@@ -37,20 +33,5 @@ export class Config {
             Config.instance = new Config();
         }
         return Config.instance;
-    };
-
-    private init = (): void => {
-        this.arduino.nativeImplementations =  {
-            jaxLondon:      "ArduinoSerialJaxLondon",
-            sensy:          "ArduinoSerialSensy"
-        };
-        this.arduino.nativeActiveImplementation = this.arduino.nativeImplementations.jaxLondon;
-
-
-        this.arduino.implementations = {
-            slotMachine:    "ArduinoSlotMachine",
-            jaxLondon:      "ArduinoJaxLondon"
-        };
-        this.arduino.activeImplementation = this.arduino.implementations.jaxLondon;
     };
 }
