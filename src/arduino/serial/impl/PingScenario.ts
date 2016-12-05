@@ -8,7 +8,7 @@ export class PingScenario implements Scenario {
 
     public run = (port: SerialPort): void => {
         this.port = port;
-        this.ping();
+        setTimeout(this.ping, 2000);
     };
 
     public onMessage = (message: any): void => {
@@ -17,19 +17,46 @@ export class PingScenario implements Scenario {
     };
 
     private ping = (): void => {
+        console.log('ping...');
+
         if(this.port != null) {
             this.port.write('ping');
+            this.port.drain(() => {
+                console.log('ping written to comm port!');
+            });
         } else {
             console.log('No port to write to!');
         }
     };
 
     private pong = (message: any): void => {
-        if(message == 'pong') {
+        console.log(message);
+
+        if(message.trim() == 'pong') {
             console.log('Pong received, pinging again in 1sec...');
             setTimeout(() => {
-
+                this.ping();
             }, 1000);
         }
     };
 }
+
+//TODO: Provide this code in a webservice maybe?
+/**
+ #include <Arduino.h>
+
+ void setup() {
+  Serial.begin(57600);
+}
+
+ void loop() {
+  String ping = Serial.readString();
+  ping.trim();
+
+  if(ping.equalsIgnoreCase("ping")) {
+    Serial.println("pong");
+  }
+
+  delay(33);
+}
+ **/

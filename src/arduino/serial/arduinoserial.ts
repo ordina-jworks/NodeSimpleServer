@@ -18,7 +18,9 @@ export class ArduinoSerial extends Arduino {
     }
 
     public init(): void {
-        if(this.port != null) {
+        this.listPorts();
+
+        if(this.portName != null) {
             this.port = new SerialPort(this.portName, {baudRate: this.baudRate,  parser: SerialPort.parsers.readline('\n')});
             this.port.on('open', this.onCommOpen);
             this.port.on('error', this.onCommError);
@@ -26,6 +28,23 @@ export class ArduinoSerial extends Arduino {
         } else {
             console.error('No comm port for Arduino communication!');
         }
+    };
+
+    private listPorts = () => {
+        SerialPort.list((err, ports) => {
+            console.log('----------------------------------------------');
+            console.log('----------------------------------------------');
+            console.log('Listing comm ports:');
+            console.log('----------------------------------------------');
+
+            ports.forEach((port) => {
+                console.log(port.comName);
+                console.log(port.pnpId);
+                console.log(port.manufacturer);
+                console.log('----------------------------------------------');
+            });
+            console.log('----------------------------------------------');
+        });
     };
 
     private onCommOpen = () => {

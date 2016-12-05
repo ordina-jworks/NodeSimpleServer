@@ -10,5 +10,4 @@ The application is written in typescript (the browser 'apps' are still in JS for
 To be implemented:
 - Websockets 
 - Cross node worker comms (partially done)
-- Arduino comms via serial and johnny-five
 - Documentation
