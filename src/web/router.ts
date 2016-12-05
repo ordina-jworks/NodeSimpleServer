@@ -60,12 +60,12 @@ export class Router {
                 fs.readFile(fullPath, 'binary', (error, file) => {
                     if(error) {
                         //If there was an error while reading the file, present a 500 error.
-                        console.debug('Error serving file!', fullPath);
+                        console.log('Error serving file!', fullPath);
 
                         this.displayError(response, 500, 'Error while serving content!', pathName);
                     } else {
                         let cntType = mime.lookup(fullPath);
-                        console.debug('Serving: ' + fullPath + '\t (' + cntType + ')');
+                        console.log('Serving: ' + fullPath + '\t (' + cntType + ')');
 
                         //Present the file.
                         response.setHeader('Content-Type', cntType);

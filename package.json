@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "postinstall": "sudo npm install forever -g && sudo npm install -g bower",
+    "postinstall": "npm install forever -g && npm install -g bower",
     "build": "tsc -p ./",
     "prestart": "tsc -p ./",
     "start": "forever --minUptime 10000 start src/app.js",
