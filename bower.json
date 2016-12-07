@@ -1,0 +1,26 @@
+{
+  "name": "NodeSimpleServer",
+  "homepage": "https://github.com/ordina-jworks/NodeSimpleServer",
+  "authors": [
+    "beele <kevin.vandenabeele@ordina.be>"
+  ],
+  "description": "www libs for the Node Simple Server web applications",
+  "main": "bower",
+  "moduleType": [],
+  "keywords": [
+    "Node simple server"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "prism": "1.6.0",
+    "clipboard": "1.5.15"
+  }
+}

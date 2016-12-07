@@ -4,7 +4,7 @@ import {ArduinoJohnny}  from "../../arduino/johnny-five/arduinojohnny";
 import {BlinkScenario}  from "../../arduino/johnny-five/impl/blinkscenario";
 import {Arduino}        from "../../arduino/arduino";
 import {ArduinoSerial}  from "../../arduino/serial/arduinoserial";
-import {PingScenario}   from "../../arduino/serial/impl/PingScenario";
+import {PingScenario}   from "../../arduino/serial/impl/pingscenario";
 
 export class IntervalWorker implements NodeWorker {
 

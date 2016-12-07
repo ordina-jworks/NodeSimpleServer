@@ -44,6 +44,13 @@ export class Server {
         );
         this.endpointManager.registerEndpoint(
             new EndPoint(
+                '/endpoints',
+                GenericEndpoints.listEndpoints,
+                null
+            )
+        );
+        this.endpointManager.registerEndpoint(
+            new EndPoint(
                 '/helloworld',
                 GenericEndpoints.helloworld,
                 [new Parameter('name', 'string field containing the name', new HelloWorldValidatorImpl())]

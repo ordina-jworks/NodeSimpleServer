@@ -1,6 +1,8 @@
 import {Parameter}          from "../parameters/parameter";
 import {IncomingMessage}    from "http";
 import {ServerResponse}     from "http";
+import {EndPointManager}    from "../endpointmanager";
+import {EndPoint}           from "../endpoint";
 
 export class GenericEndpoints {
 
@@ -10,6 +12,27 @@ export class GenericEndpoints {
         response.writeHead(301, {
             "Location" : "/welcome/index.html"
         });
+        response.end();
+    }
+
+    public static listEndpoints(request: IncomingMessage, response: ServerResponse, params: Array<Parameter>): void {
+        console.log('listEndpoints endpoint called!');
+
+        let manager: EndPointManager = EndPointManager.getInstance();
+        let endpoints: Array<EndPoint> = manager.getEndpoints();
+
+        let list:Array<{}> = [];
+        for (let endpoint of endpoints) {
+            list.push(
+                {
+                    path:   endpoint.path,
+                    params: endpoint.parameters
+                }
+            );
+        }
+
+        response.writeHead(200, {'Content-Type': 'application/javascript'});
+        response.write(JSON.stringify(list, null, 4));
         response.end();
     }
 

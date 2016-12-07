@@ -41,3 +41,4 @@ jspm_packages
 /resources/**/*.js
 /resources/**/*.map
 .idea/
+www/bower_components
