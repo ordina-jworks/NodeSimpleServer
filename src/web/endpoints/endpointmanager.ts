@@ -5,10 +5,10 @@ export class EndPointManager {
     private static instance: EndPointManager;
 
     //Variables:
-    public endpoints: Array<EndPoint> = [];
+    public endpoints: Array<EndPoint<any, any, any>> = [];
 
     private constructor() {
-        this.init();
+
     }
 
     static getInstance = (): EndPointManager => {
@@ -18,21 +18,17 @@ export class EndPointManager {
         return EndPointManager.instance;
     };
 
-    private init = () => {
-
-    };
-
-    public registerEndpoint = (endpoint: EndPoint): void => {
+    public registerEndpoint = (endpoint: EndPoint<any, any, any>): void => {
         this.endpoints.push(endpoint);
     };
 
-    public getEndpoints = (): Array<EndPoint> => {
+    public getEndpoints = (): Array<EndPoint<any, any, any>> => {
         return this.endpoints;
     };
 
-    public getEndpoint = (path: string): EndPoint => {
+    public getEndpoint = (path: string): EndPoint<any, any, any> => {
         for(let i = 0; i < this.endpoints.length; i++) {
-            let endPoint: EndPoint = this.endpoints[i];
+            let endPoint: EndPoint<any, any, any> = this.endpoints[i];
 
             if(endPoint.path == path || (endPoint.path + '/' == path && endPoint.parameters.length > 0)) {
                 return this.endpoints[i];

@@ -1,70 +1,90 @@
 import cluster          = require('cluster');
 
+import {IPCMessage}     from "./ipcmessage";
+import {MessageTarget}  from "./message-target";
+import {EventEmitter}   from "events";
+
 export class MessageHandler {
 
-    static TARGET_BROKER            = 'TARGET_BROKER';
-    static TARGET_INTERVAL_WORKER   = 'TARGET_INTERVAL_WORKER';
-    static TARGET_HTTP_WORKER       = 'TARGET_HTTP_WORKER';
+    private static instance: MessageHandler         = null;
 
-    dataBroker      : cluster.Worker;
-    intervalWorker  : cluster.Worker;
-    httpWorkers     : Array<cluster.Worker>;
+    //Variables:
+    private dataBroker : cluster.Worker             = null;
+    private intervalWorker : cluster.Worker         = null;
+    private httpWorkers : Array<cluster.Worker>     = null;
 
-    constructor(dataBroker: cluster.Worker, intervalWorker: cluster.Worker, httpWorkers: Array<cluster.Worker>) {
+    public emitter: EventEmitter                   = null;
+
+    private constructor() {
+
+    }
+
+    public static getInstance(): MessageHandler {
+        if(!MessageHandler.instance) {
+            MessageHandler.instance = new MessageHandler();
+        }
+        return MessageHandler.instance;
+    }
+
+    public initForMaster = (dataBroker: cluster.Worker, intervalWorker: cluster.Worker, httpWorkers: Array<cluster.Worker>): void => {
         this.dataBroker     = dataBroker;
         this.intervalWorker = intervalWorker;
         this.httpWorkers    = httpWorkers;
-    }
+
+        this.emitter        = new EventEmitter();
+    };
+
+    public initForSlave = (): void => {
+        this.emitter        = new EventEmitter();
+    };
 
     /******************************************************************************************************************
     *******************************************************************************************************************
     *                                            MASTER MESSAGE HANDLERS                                              *
     *******************************************************************************************************************
     ******************************************************************************************************************/
-
-    public onServerWorkerMessageReceived = (msg): void => {
+    public onServerWorkerMessageReceived = (msg: IPCMessage): void => {
         console.log('Message received from server worker: ' + msg);
         this.targetHandler(msg);
     };
 
-    public onIntervalWorkerMessageReceived = (msg): void => {
+    public onIntervalWorkerMessageReceived = (msg: IPCMessage): void => {
         console.log('Message received from interval worker: ' + msg);
         this.targetHandler(msg);
     };
 
-    public onDataBrokerMessageReceived = (msg): void => {
+    public onDataBrokerMessageReceived = (msg: IPCMessage): void => {
         console.log('Message received from data broker: ' + msg);
         cluster.workers[msg.workerId].send(msg);
-        //TODO: Support the case where the Data broker actually sends a message by itself (and not responds to an earlier message from a worker!)
     };
 
-    private targetHandler = (msg) => {
+    private targetHandler = (msg: IPCMessage) => {
+        console.log(JSON.stringify(msg, null, 4));
+
         switch (msg.target){
-            case MessageHandler.TARGET_BROKER:
+            case MessageTarget.DATA_BROKER:
                 this.dataBroker.send(msg);
                 break;
-            case MessageHandler.TARGET_INTERVAL_WORKER:
+            case MessageTarget.INTERVAL_WORKER:
                 this.intervalWorker.send(msg);
                 break;
-            case MessageHandler.TARGET_HTTP_WORKER:
-                var index = Math.round(Math.random() * this.httpWorkers.length) - 1;
+            case MessageTarget.HTTP_WORKER:
+                let index: number = Math.round(Math.random() * this.httpWorkers.length) - 1;
                 index = index === -1 ? 0 : index;
                 this.httpWorkers[index].send(msg);
                 break;
             default:
-                //cluster.workers[msg.workerId].send({data: msg});
                 console.error('Cannot find message target: ' + msg.target);
         }
     };
 
     /*******************************************************************************************************************
      *******************************************************************************************************************
-     *                                           WORKER MESSAGE HANDLERS                                               *
+     *                                            SLAVE MESSAGE HANDLING                                               *
      *******************************************************************************************************************
      *******************************************************************************************************************/
-
-    public onMessageFromMasterReceived = (msg): void => {
-        console.log("Received message from master: routing to: " + msg.handler + "." + msg.handlerFunction + "MessageHandler(\"\")");
-        eval(msg.handler)[msg.handlerFunction](msg);
+    public onMessageFromMasterReceived = (msg: IPCMessage): void => {
+        console.log('[id:' + cluster.worker.id  + '] Received message from master: routing to: ' + MessageTarget[msg.target] + '.' + msg.targetFunctionName);
+        this.emitter.emit(MessageTarget[msg.target] + '', msg.targetFunctionName, msg.payload);
     };
 }

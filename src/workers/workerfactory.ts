@@ -12,9 +12,11 @@ export class WorkerFactory {
 
         switch (process.env["name"]) {
             case "broker":
+                cluster.worker.on("message", messageHandler.onMessageFromMasterReceived);
                 new DataBroker(cluster.worker.id);
                 break;
             case "interval":
+                cluster.worker.on("message", messageHandler.onMessageFromMasterReceived);
                 new IntervalWorker(cluster.worker.id).start();
                 break;
             case "http":

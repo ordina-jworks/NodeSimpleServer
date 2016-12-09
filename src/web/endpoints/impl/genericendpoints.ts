@@ -6,7 +6,7 @@ import {EndPoint}           from "../endpoint";
 
 export class GenericEndpoints {
 
-    public static index(request: IncomingMessage, response: ServerResponse, params: Array<Parameter>): void {
+    public static index(request: IncomingMessage, response: ServerResponse, params: Array<Parameter<null, null, null>>): void {
         console.log('index endpoint called!');
 
         response.writeHead(301, {
@@ -15,20 +15,28 @@ export class GenericEndpoints {
         response.end();
     }
 
-    public static listEndpoints(request: IncomingMessage, response: ServerResponse, params: Array<Parameter>): void {
+    public static listEndpoints(request: IncomingMessage, response: ServerResponse, params: Array<Parameter<null, null, null>>): void {
         console.log('listEndpoints endpoint called!');
 
         let manager: EndPointManager = EndPointManager.getInstance();
-        let endpoints: Array<EndPoint> = manager.getEndpoints();
+        let endpoints: Array<EndPoint<any, any, any>> = manager.getEndpoints();
 
         let list:Array<{}> = [];
         for (let endpoint of endpoints) {
-            list.push(
-                {
-                    path:   endpoint.path,
-                    params: endpoint.parameters
-                }
-            );
+
+            let params = [];
+            for(let parameter of endpoint.parameters) {
+                let paramDesc: {} = {};
+                paramDesc['name'] = parameter.name;
+                paramDesc['desc'] = parameter.description;
+                paramDesc['valid'] = parameter.validator.description();
+                params.push(paramDesc);
+            }
+
+            let endpointDesc: {} = {};
+            endpointDesc['path'] = endpoint.path;
+            endpointDesc['params'] = params;
+            list.push(endpointDesc);
         }
 
         response.writeHead(200, {'Content-Type': 'application/javascript'});
@@ -36,7 +44,7 @@ export class GenericEndpoints {
         response.end();
     }
 
-    public static helloworld(request: IncomingMessage, response: ServerResponse, params: Array<Parameter>): void {
+    public static helloworld(request: IncomingMessage, response: ServerResponse, params: Array<Parameter<string, null, null>>): void {
         console.log('helloworld endpoint called!');
 
         response.writeHead(200, {'Content-Type': 'text/plain'});

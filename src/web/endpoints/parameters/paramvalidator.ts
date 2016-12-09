@@ -1,6 +1,6 @@
-export interface ParamValidator {
+export interface ParamValidator<T , P , Q> {
 
-    validate(value: any): boolean;
+    validate(value: T | P | Q): boolean;
 
     description(): string;
 }

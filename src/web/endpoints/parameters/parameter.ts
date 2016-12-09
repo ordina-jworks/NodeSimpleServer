@@ -1,24 +1,24 @@
 import {ParamValidator} from "./paramvalidator";
 
-export class Parameter {
+export class Parameter<T, P, Q> {
 
-    public name: string                 = null;
-    public description: string          = null;
-    public validator: ParamValidator    = null;
+    public name: string                         = null;
+    public description: string                  = null;
+    public validator: ParamValidator<T, P, Q>   = null;
 
-    private value: any                  = null;
+    private value: T | P | Q                    = null;
 
-    constructor(name: string, description: string, validator: ParamValidator) {
+    constructor(name: string, description: string, validator: ParamValidator<T, P, Q>) {
         this.name = name;
         this.description = description;
         this.validator = validator;
     }
 
-    public setValue = (value: any): void => {
+    public setValue = (value: T | P | Q): void => {
         this.value = value;
     };
 
-    public getValue = (): any => {
+    public getValue = (): T | P | Q => {
       return this.value;
     };
 

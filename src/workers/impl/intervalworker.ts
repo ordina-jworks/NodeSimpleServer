@@ -5,16 +5,22 @@ import {BlinkScenario}  from "../../arduino/johnny-five/impl/blinkscenario";
 import {Arduino}        from "../../arduino/arduino";
 import {ArduinoSerial}  from "../../arduino/serial/arduinoserial";
 import {PingScenario}   from "../../arduino/serial/impl/pingscenario";
+import {MessageHandler} from "../../ipc/messagehandler";
+import {MessageTarget} from "../../ipc/message-target";
+import {IPCMessage} from "../../ipc/ipcmessage";
+import {MessageManager} from "../../ipc/messagemanager";
 
 export class IntervalWorker implements NodeWorker {
 
-    workerId: string            = null;
+    workerId: string                = null;
 
-    private interval: number    = null;
-    private config: Config      = Config.getInstance();
+    private interval: number        = null;
+    private config: Config          = Config.getInstance();
+    private handler: MessageHandler = MessageHandler.getInstance();
 
     constructor(workerId: string) {
         this.workerId = workerId;
+        this.handler.emitter.on(MessageTarget[MessageTarget.INTERVAL_WORKER] + '', this.onMessage);
 
         console.log('[id:' + workerId + '] IntervalWorker created');
     }
@@ -49,8 +55,15 @@ export class IntervalWorker implements NodeWorker {
     private loop = (): void => {
         console.log('IntervalWorker loop start...');
 
-
+        //TODO: Do recurring things!
 
         console.log('IntervalWorker loop end!');
     };
+
+    public onMessage = (message: IPCMessage): void => {
+        console.log('Intervalworker message received');
+
+        //TODO: Execute function and send reply to the original caller!
+        //MessageManager.getInstance().sendReply();
+    }
 }

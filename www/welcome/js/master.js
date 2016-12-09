@@ -8,7 +8,7 @@ var app = (function() {
     function pageLoaded(event) {
         console.log('Webpage content ready!');
 
-        new Clipboard('.btn', {
+        new Clipboard('.copyButton', {
             text: function(trigger) {
                 return trigger.nextElementSibling.children[0].innerText;
             }

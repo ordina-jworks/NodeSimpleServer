@@ -30,7 +30,8 @@ class SimpleNodeServer {
             this.forkWorkers();
             this.bindMessageHandling();
         } else {
-            this.messageHandler = new MessageHandler(null, null, null);
+            this.messageHandler = MessageHandler.getInstance();
+            this.messageHandler.initForSlave();
             WorkerFactory.createWorker(this.messageHandler);
         }
     };
@@ -59,7 +60,8 @@ class SimpleNodeServer {
     };
 
     private bindMessageHandling = (): void => {
-        this.messageHandler = new MessageHandler(this.databroker, this.intervalWorker, this.httpWorkers);
+        this.messageHandler = MessageHandler.getInstance();
+        this.messageHandler.initForMaster(this.databroker, this.intervalWorker, this.httpWorkers);
 
         this.databroker.on('message', this.messageHandler.onDataBrokerMessageReceived);
         this.intervalWorker.on('message', this.messageHandler.onIntervalWorkerMessageReceived);

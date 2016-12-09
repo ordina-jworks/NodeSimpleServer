@@ -11,7 +11,9 @@ import {ServerResponse}             from "http";
 import {GenericEndpoints}           from "./endpoints/impl/genericendpoints";
 import {EndPointManager}            from "./endpoints/endpointmanager";
 import {Parameter}                  from "./endpoints/parameters/parameter";
-import {HelloWorldValidatorImpl}    from "./endpoints/impl/parameters/helloworldparamvalidator";
+import {HelloWorldValidatorImpl}    from "./endpoints/impl/parameters/helloworldparamvalidatorimpl";
+import {ArduinoEndpoint} from "./endpoints/impl/arduinoendpoint";
+import {ArduinoMethodValidatorImpl} from "./endpoints/impl/parameters/arduinomethodvalidatorimpl";
 
 export class Server {
 
@@ -53,7 +55,15 @@ export class Server {
             new EndPoint(
                 '/helloworld',
                 GenericEndpoints.helloworld,
-                [new Parameter('name', 'string field containing the name', new HelloWorldValidatorImpl())]
+                [new Parameter<string, null, null>('name', 'string field containing the name', new HelloWorldValidatorImpl())]
+            )
+        );
+
+        this.endpointManager.registerEndpoint(
+            new EndPoint(
+                '/arduino/setArduinoMethod',
+                ArduinoEndpoint.setArduinoMethod,
+                [new Parameter<string, null, null>('method', 'string field that contains the method used for adruino implementations', new ArduinoMethodValidatorImpl())]
             )
         );
     };

@@ -1,10 +1,9 @@
 import {ParamValidator} from "../../parameters/paramvalidator";
 
-export class HelloWorldValidatorImpl implements ParamValidator {
+export class HelloWorldValidatorImpl implements ParamValidator<string, null, null> {
 
-    validate(value: any): boolean {
+    validate(value: string): boolean {
         return value != null && value.trim().length > 0;
-
     }
 
     description(): string {
