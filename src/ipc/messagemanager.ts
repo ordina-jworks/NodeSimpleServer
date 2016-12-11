@@ -1,7 +1,9 @@
 import cluster          = require('cluster');
 
-import {IPCMessage} from "./ipcmessage";
-import {MessageTarget} from "./message-target";
+import {IPCMessage}     from "./ipc-message";
+import {MessageTarget}  from "./message-target";
+import {IPCRequest}     from "./ipc-request";
+import {IPCReply}       from "./ipc-reply";
 
 export class MessageManager {
 
@@ -24,7 +26,7 @@ export class MessageManager {
     }
 
     public sendMessage(payload: any, messageTarget: MessageTarget, targetFunctionName: string) {
-        let message: IPCMessage = new IPCMessage(this.workerId, null, payload, messageTarget, targetFunctionName);
+        let message: IPCMessage = new IPCRequest(this.workerId, null, payload, messageTarget, targetFunctionName);
         process.send(message);
     }
 
@@ -32,13 +34,13 @@ export class MessageManager {
         let callbackId: string = process.hrtime()  + "--" + (Math.random() * 6);
         this.callbacks.push([callbackId, callback]);
 
-        let message: IPCMessage = new IPCMessage(this.workerId, callbackId, payload, messageTarget, targetFunctionName);
+        let message: IPCMessage = new IPCRequest(this.workerId, callbackId, payload, messageTarget, targetFunctionName);
         process.send(message);
     }
 
-    public sendReply(payload: any, originalMessage: IPCMessage): void {
-        //let reply: IPCMessage = new IPCReply(this.workerId, payload, originalMessage);
-        //process.send(reply);
+    public sendReply(payload: any, originalMessage: IPCRequest): void {
+        let reply: IPCMessage = new IPCReply(this.workerId, payload, originalMessage);
+        process.send(reply);
     }
 
     public executeCallbackForId(callbackId: string) :void {

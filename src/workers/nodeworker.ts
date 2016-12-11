@@ -1,4 +1,4 @@
-import {IPCMessage} from "../ipc/ipcmessage";
+import {IPCMessage} from "../ipc/ipc-message";
 
 export interface NodeWorker {
 

@@ -4,7 +4,7 @@ import {ServerResponse}     from "http";
 import {Parameter}          from "../parameters/parameter";
 import {Config}             from "../../../../resources/config";
 import {MessageManager}     from "../../../ipc/messagemanager";
-import {IPCMessage}         from "../../../ipc/ipcmessage";
+import {IPCMessage}         from "../../../ipc/ipc-message";
 import {MessageTarget}      from "../../../ipc/message-target";
 
 export class ArduinoEndpoint {
@@ -16,10 +16,11 @@ export class ArduinoEndpoint {
 
         ArduinoEndpoint.config.arduino.useSerialOverJohnnyFive = params[0].getValue();
 
-        //TODO: Send a message to the intervalworker, it then should restart the arduino functionality with the new parameters!
-
         MessageManager.getInstance().sendMessageWithCallback(null, (message: IPCMessage): void => {
            console.log('Callback called!');
+            response.writeHead(200, {'Content-Type': 'text/plain'});
+            response.write('Arduino method has been set!');
+            response.end();
         }, MessageTarget.INTERVAL_WORKER, 'restartArduino');
     }
 

@@ -1,14 +1,14 @@
-import {MessageTarget} from "./message-target";
+import {IPCMessage}     from "./ipc-message";
+import {MessageTarget}  from "./message-target";
 
-export class IPCMessage {
+export class IPCRequest extends IPCMessage {
 
-    public workerId: string                 = null;
     public callbackId: string               = null;
-    public payload: any                     = null;
     public target: MessageTarget            = null;
     public targetFunctionName: string       = null;
 
     constructor(workerId: string, callbackId: string, payload: any, target: MessageTarget, targetFunctionName: string) {
+        super(IPCMessage.TYPE_REQUEST);
         this.workerId           = workerId;
         this.callbackId         = callbackId;
         this.payload            = payload;

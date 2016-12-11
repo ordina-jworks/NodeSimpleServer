@@ -6,9 +6,10 @@ import {Arduino}        from "../../arduino/arduino";
 import {ArduinoSerial}  from "../../arduino/serial/arduinoserial";
 import {PingScenario}   from "../../arduino/serial/impl/pingscenario";
 import {MessageHandler} from "../../ipc/messagehandler";
-import {MessageTarget} from "../../ipc/message-target";
-import {IPCMessage} from "../../ipc/ipcmessage";
+import {MessageTarget}  from "../../ipc/message-target";
+import {IPCMessage}     from "../../ipc/ipc-message";
 import {MessageManager} from "../../ipc/messagemanager";
+import {IPCRequest}     from "../../ipc/ipc-request";
 
 export class IntervalWorker implements NodeWorker {
 
@@ -64,6 +65,6 @@ export class IntervalWorker implements NodeWorker {
         console.log('Intervalworker message received');
 
         //TODO: Execute function and send reply to the original caller!
-        //MessageManager.getInstance().sendReply();
+        MessageManager.getInstance().sendReply(null, <IPCRequest>message);
     }
 }

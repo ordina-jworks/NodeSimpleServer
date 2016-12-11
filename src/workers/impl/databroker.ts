@@ -1,5 +1,5 @@
 import {NodeWorker}     from '../nodeworker';
-import {IPCMessage}     from "../../ipc/ipcmessage";
+import {IPCMessage}     from "../../ipc/ipc-message";
 import {MessageTarget}  from "../../ipc/message-target";
 import {MessageHandler} from "../../ipc/messagehandler";
 
