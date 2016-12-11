@@ -8,12 +8,12 @@ import {Config}     from '../../resources/config';
 import {IncomingMessage}            from "http";
 import {ServerResponse}             from "http";
 
-import {GenericEndpoints}           from "./endpoints/impl/genericendpoints";
-import {EndPointManager}            from "./endpoints/endpointmanager";
+import {GenericEndpoints}           from "./endpoints/impl/generic-endpoints";
+import {EndPointManager}            from "./endpoints/endpoint-manager";
 import {Parameter}                  from "./endpoints/parameters/parameter";
-import {HelloWorldValidatorImpl}    from "./endpoints/impl/parameters/helloworldparamvalidatorimpl";
-import {ArduinoEndpoint} from "./endpoints/impl/arduinoendpoint";
-import {ArduinoMethodValidatorImpl} from "./endpoints/impl/parameters/arduinomethodvalidatorimpl";
+import {HelloWorldValidatorImpl}    from "./endpoints/impl/parameters/hello-world-param-validator-impl";
+import {ArduinoEndpoint} from "./endpoints/impl/arduino-endpoint";
+import {ArduinoMethodValidatorImpl} from "./endpoints/impl/parameters/arduino-method-validator-impl";
 
 export class Server {
 

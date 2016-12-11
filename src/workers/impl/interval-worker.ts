@@ -1,14 +1,14 @@
-import {NodeWorker}     from '../nodeworker';
+import {NodeWorker}     from '../node-worker';
 import {Config}         from "../../../resources/config";
-import {ArduinoJohnny}  from "../../arduino/johnny-five/arduinojohnny";
-import {BlinkScenario}  from "../../arduino/johnny-five/impl/blinkscenario";
+import {ArduinoJohnny}  from "../../arduino/johnny-five/arduino-johnny";
+import {BlinkScenario}  from "../../arduino/johnny-five/impl/blink-scenario";
 import {Arduino}        from "../../arduino/arduino";
-import {ArduinoSerial}  from "../../arduino/serial/arduinoserial";
-import {PingScenario}   from "../../arduino/serial/impl/pingscenario";
-import {MessageHandler} from "../../ipc/messagehandler";
+import {ArduinoSerial}  from "../../arduino/serial/arduino-serial";
+import {PingScenario}   from "../../arduino/serial/impl/ping-scenario";
+import {MessageHandler} from "../../ipc/message-handler";
 import {MessageTarget}  from "../../ipc/message-target";
 import {IPCMessage}     from "../../ipc/ipc-message";
-import {MessageManager} from "../../ipc/messagemanager";
+import {MessageManager} from "../../ipc/message-manager";
 import {IPCRequest}     from "../../ipc/ipc-request";
 
 export class IntervalWorker implements NodeWorker {

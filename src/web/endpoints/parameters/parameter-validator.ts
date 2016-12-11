@@ -1,4 +1,4 @@
-export interface ParamValidator<T , P , Q> {
+export interface ParameterValidator<T , P , Q> {
 
     validate(value: T | P | Q): boolean;
 

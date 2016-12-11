@@ -1,14 +1,14 @@
-import {ParamValidator} from "./paramvalidator";
+import {ParameterValidator} from "./parameter-validator";
 
 export class Parameter<T, P, Q> {
 
     public name: string                         = null;
     public description: string                  = null;
-    public validator: ParamValidator<T, P, Q>   = null;
+    public validator: ParameterValidator<T, P, Q>   = null;
 
     private value: T | P | Q                    = null;
 
-    constructor(name: string, description: string, validator: ParamValidator<T, P, Q>) {
+    constructor(name: string, description: string, validator: ParameterValidator<T, P, Q>) {
         this.name = name;
         this.description = description;
         this.validator = validator;

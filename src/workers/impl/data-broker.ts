@@ -1,7 +1,7 @@
-import {NodeWorker}     from '../nodeworker';
+import {NodeWorker}     from '../node-worker';
 import {IPCMessage}     from "../../ipc/ipc-message";
 import {MessageTarget}  from "../../ipc/message-target";
-import {MessageHandler} from "../../ipc/messagehandler";
+import {MessageHandler} from "../../ipc/message-handler";
 
 export class DataBroker implements NodeWorker {
 

@@ -8,7 +8,7 @@ import {ServerResponse}     from "http";
 
 import {Config}             from '../../resources/config';
 import {EndPoint}           from "./endpoints/endpoint";
-import {EndPointManager}    from "./endpoints/endpointmanager";
+import {EndPointManager}    from "./endpoints/endpoint-manager";
 import {Parameter}          from "./endpoints/parameters/parameter";
 
 export class Router {

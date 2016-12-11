@@ -1,9 +1,9 @@
 import cluster          = require('cluster');
 
-import {DataBroker}     from './impl/databroker';
-import {IntervalWorker} from './impl/intervalworker';
-import {HttpWorker}     from './impl/httpworker';
-import {MessageHandler} from '../ipc/messagehandler';
+import {DataBroker}     from './impl/data-broker';
+import {IntervalWorker} from './impl/interval-worker';
+import {HttpWorker}     from './impl/http-worker';
+import {MessageHandler} from '../ipc/message-handler';
 
 export class WorkerFactory {
 

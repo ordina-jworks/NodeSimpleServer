@@ -1,7 +1,7 @@
 import {Parameter}          from "../parameters/parameter";
 import {IncomingMessage}    from "http";
 import {ServerResponse}     from "http";
-import {EndPointManager}    from "../endpointmanager";
+import {EndPointManager}    from "../endpoint-manager";
 import {EndPoint}           from "../endpoint";
 
 export class GenericEndpoints {

@@ -4,7 +4,7 @@ import {IPCMessage}     from "./ipc-message";
 import {MessageTarget}  from "./message-target";
 import {EventEmitter}   from "events";
 import {IPCRequest}     from "./ipc-request";
-import {MessageManager} from "./messagemanager";
+import {MessageManager} from "./message-manager";
 import {IPCReply}       from "./ipc-reply";
 
 export class MessageHandler {
@@ -16,7 +16,7 @@ export class MessageHandler {
     private intervalWorker : cluster.Worker         = null;
     private httpWorkers : Array<cluster.Worker>     = null;
 
-    public emitter: EventEmitter                   = null;
+    public emitter: EventEmitter                    = null;
 
     private constructor() {
 

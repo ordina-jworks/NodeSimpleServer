@@ -7,7 +7,7 @@ Find a bug? Fixed a bug? Open an issue or make a pull request!
 This is a simple nodejs server application that allows you to host a website and code services.
 The application is written in typescript (the browser 'apps' are still in JS for the time being).
 
-To be implemented:
+Todo:
+- Refactor filenames
 - Websockets 
-- Cross node worker comms (partially done)
 - Documentation

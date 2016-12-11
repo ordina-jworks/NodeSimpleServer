@@ -1,6 +1,6 @@
-import {ParamValidator} from "../../parameters/paramvalidator";
+import {ParameterValidator} from "../../parameters/parameter-validator";
 
-export class ArduinoMethodValidatorImpl implements ParamValidator<string, null, null> {
+export class ArduinoMethodValidatorImpl implements ParameterValidator<string, null, null> {
 
     validate(value: string): boolean {
         let isNotEmpty: boolean = value != null && value.trim().length > 0;

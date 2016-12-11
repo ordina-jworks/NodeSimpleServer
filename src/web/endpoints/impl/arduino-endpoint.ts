@@ -3,7 +3,7 @@ import {ServerResponse}     from "http";
 
 import {Parameter}          from "../parameters/parameter";
 import {Config}             from "../../../../resources/config";
-import {MessageManager}     from "../../../ipc/messagemanager";
+import {MessageManager}     from "../../../ipc/message-manager";
 import {IPCMessage}         from "../../../ipc/ipc-message";
 import {MessageTarget}      from "../../../ipc/message-target";
 

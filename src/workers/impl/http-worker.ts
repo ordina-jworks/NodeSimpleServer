@@ -1,7 +1,7 @@
-import {NodeWorker} from '../nodeworker';
+import {NodeWorker} from '../node-worker';
 import {Server}     from "../../web/server";
 import {IPCMessage} from "../../ipc/ipc-message";
-import {MessageHandler} from "../../ipc/messagehandler";
+import {MessageHandler} from "../../ipc/message-handler";
 import {MessageTarget} from "../../ipc/message-target";
 
 export class HttpWorker implements NodeWorker {

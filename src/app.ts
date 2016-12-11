@@ -1,8 +1,8 @@
 import os               = require('os');
 import cluster          = require('cluster');
 
-import {MessageHandler} from "./ipc/messagehandler";
-import {WorkerFactory}  from "./workers/workerfactory";
+import {MessageHandler} from "./ipc/message-handler";
+import {WorkerFactory}  from "./workers/worker-factory";
 
 class SimpleNodeServer {
 
