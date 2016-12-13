@@ -1,27 +1,37 @@
 import cluster          = require('cluster');
 
-import {IPCMessage}     from "./ipc-message";
+import {IPCMessage}     from "./messages/ipc-message";
 import {MessageTarget}  from "./message-target";
 import {EventEmitter}   from "events";
-import {IPCRequest}     from "./ipc-request";
+import {IPCRequest}     from "./messages/ipc-request";
 import {MessageManager} from "./message-manager";
-import {IPCReply}       from "./ipc-reply";
+import {IPCReply}       from "./messages/ipc-reply";
 
+/**
+ * MessageHandler singleton class.
+ *
+ * This singleton can be used to handle IPC messages.
+ */
 export class MessageHandler {
 
     private static instance: MessageHandler         = null;
-
-    //Variables:
     private dataBroker : cluster.Worker             = null;
     private intervalWorker : cluster.Worker         = null;
     private httpWorkers : Array<cluster.Worker>     = null;
-
     public emitter: EventEmitter                    = null;
 
+    /**
+     * Private constructor for the singleton.
+     */
     private constructor() {
 
     }
 
+    /**
+     * Use this method to get the instance of this singleton class.
+     *
+     * @returns {MessageHandler} The instance of this singleton class.
+     */
     public static getInstance(): MessageHandler {
         if(!MessageHandler.instance) {
             MessageHandler.instance = new MessageHandler();
@@ -41,6 +51,7 @@ export class MessageHandler {
         this.emitter        = new EventEmitter();
     };
 
+    //TODO: Separate master and slave message handling?
     /******************************************************************************************************************
     *******************************************************************************************************************
     *                                            MASTER MESSAGE HANDLERS                                              *

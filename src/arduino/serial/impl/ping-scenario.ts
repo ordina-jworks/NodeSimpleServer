@@ -2,6 +2,9 @@ import SerialPort = require("serialport");
 
 import {Scenario}   from "../../scenario";
 
+/**
+ * PingScenario class that implements the Scenario interface.
+ */
 export class PingScenario implements Scenario {
 
     private port: SerialPort = null;

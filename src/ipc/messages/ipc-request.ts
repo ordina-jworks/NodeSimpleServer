@@ -1,5 +1,5 @@
 import {IPCMessage}     from "./ipc-message";
-import {MessageTarget}  from "./message-target";
+import {MessageTarget}  from "../message-target";
 
 export class IPCRequest extends IPCMessage {
 

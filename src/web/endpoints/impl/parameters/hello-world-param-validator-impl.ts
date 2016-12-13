@@ -1,5 +1,8 @@
 import {ParameterValidator} from "../../parameters/parameter-validator";
 
+/**
+ * Validator implementation for the HelloWorld example.
+ */
 export class HelloWorldValidatorImpl implements ParameterValidator<string, null, null> {
 
     validate(value: string): boolean {

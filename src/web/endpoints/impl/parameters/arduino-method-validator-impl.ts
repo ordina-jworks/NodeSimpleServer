@@ -1,5 +1,8 @@
 import {ParameterValidator} from "../../parameters/parameter-validator";
 
+/**
+ * Validator implementation for the ArduinoMethod endpoint.
+ */
 export class ArduinoMethodValidatorImpl implements ParameterValidator<string, null, null> {
 
     validate(value: string): boolean {

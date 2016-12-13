@@ -11,44 +11,84 @@ import {EndPoint}           from "./endpoints/endpoint";
 import {EndPointManager}    from "./endpoints/endpoint-manager";
 import {Parameter}          from "./endpoints/parameters/parameter";
 
+/**
+ * Router class.
+ *
+ * This class is used to route HTTP requests.
+ * An HTTP Request is either a request for a file or for an endpoint.
+ *
+ * If the requests requests a file, that file is returned, if it requests and endpoint
+ * the endpoint is called.
+ */
 export class Router {
 
-    private config: Config  = Config.getInstance();
+    private config: Config                      = null;
+    private endpointManager: EndPointManager    = null;
 
-    private endpointManager: EndPointManager     = null;
+    private pathParts: Array<string>            = null;
+    private rootFolder: string                  = null;
 
-    private pathParts: Array<string>             = null;
-    private rootFolder: string                   = null;
-
+    /**
+     * Constructor for Router.
+     */
     constructor() {
+        this.config = Config.getInstance();
         this.endpointManager = EndPointManager.getInstance();
 
         this.pathParts  = process.argv[1].split(/([/\\])/);
         this.rootFolder = this.pathParts.splice(0, (this.pathParts.length - 3)).join('');
     }
 
+    /**
+     * This method is used to route each incoming HTTP request.
+     * This method will try to determine if the requests if for a file, an endpoint or to list the folder contents.
+     * If the path is not for a file, it will try and retrieve a matching endpoint. If not endpoint can be found
+     * it will to list the folder contents (if allowed).
+     *
+     * @param pathName The path of the requested resource.
+     * @param request The HTTP Request.
+     * @param response The HTTP Response.
+     */
     public route = (pathName: string, request: IncomingMessage, response: ServerResponse): void => {
         if(this.isFile(pathName)) {
-            this.tryAndServeFile(response, pathName);
+            this.tryAndServeFile(pathName, response);
 
         } else {
-            let endPoint: EndPoint = this.endpointManager.getEndpoint(pathName);
+            let endPoint: EndPoint<any, any, any> = this.endpointManager.getEndpoint(pathName);
 
             if(endPoint != null) {
                 this.tryAndHandleRestEndpoint(endPoint, pathName, request, response);
             } else {
-                this.listFolderContents(response, pathName);
+                this.listFolderContents(pathName, response);
             }
         }
     };
 
+    /**
+     * Method to see if a path points to a (may be a non-existant) file or not.
+     * If the path most likely represents a file which may or may not exist true is returned.
+     * If the path does not seem to point to a valid file false it returned.
+     *
+     * @param pathName The path of the requested resource.
+     * @returns {boolean} True if a valid filename, false if not.
+     */
     private isFile = (pathName: string): boolean => {
         let path = pathName.replace('/','');
         let isFile = path.indexOf('.') > -1;
         return isFile && path.search('.') == 0;
     };
 
-    private tryAndServeFile = (response: ServerResponse, pathName: string): void => {
+    /**
+     * This method will try and serve the requested file.
+     * If the file cannot be found a 404 error will be generated.
+     * If the file is found but cannot be read, a 500 error will be generated.
+     *
+     * Image file types will have a header set for caching optimisations.
+     *
+     * @param pathName The path to the requested file.
+     * @param response The HTTP Response.
+     */
+    private tryAndServeFile = (pathName: string, response: ServerResponse): void => {
         let fullPath = path.normalize(this.rootFolder + '/' + this.config.settings.webContentFolder + pathName);
 
         //Read and present the file.
@@ -85,7 +125,18 @@ export class Router {
         });
     };
 
-    private tryAndHandleRestEndpoint = (endPoint: EndPoint, pathName: string, request: IncomingMessage, response: ServerResponse) => {
+    /**
+     * This method will try and execute the requested endpoint.
+     * If the Endpoint requires parameters, the number of parameters will be validated and a 400 error will ge generated.
+     * If the number of parameters is correct, the parameter validator for the endpoint will be called to validate the parameters.
+     * If the validation of the parameters fails a 400 error will be generated.
+     *
+     * @param endPoint The Endpoint to execute.
+     * @param pathName The path of the requested endpoint.
+     * @param request The HTTP Request.
+     * @param response The HTTP Response.
+     */
+    private tryAndHandleRestEndpoint = (endPoint: EndPoint<any, any, any>, pathName: string, request: IncomingMessage, response: ServerResponse) => {
         let requestData: any = url.parse(request.url, true);
 
         console.log('Handling REST request: ' + pathName);
@@ -96,7 +147,7 @@ export class Router {
 
             if(endPoint.parameters.length === Object.keys(urlParams).length) {
                 for (let i = 0; i < endPoint.parameters.length; i++) {
-                    let param: Parameter = endPoint.parameters[i];
+                    let param: Parameter<any, any, any> = endPoint.parameters[i];
                     param.setValue(urlParams[endPoint.parameters[i].name]);
 
                     if (!param.validate()) {
@@ -112,7 +163,16 @@ export class Router {
         }
     };
 
-    private listFolderContents = (response: ServerResponse, pathName: string): void => {
+    /**
+     * This method will list the contents of the requested folder.
+     * Folder content will only be listed if this is enabled from the configuration.
+     * If an error occurs during the listing of the folder contents, a 500 error will be generated.
+     * If folder content listing is disabled, a 403 error will be generated.
+     *
+     * @param pathName The path of the requested folder.
+     * @param response The HTTP Response.
+     */
+    private listFolderContents = (pathName: string, response: ServerResponse): void => {
         if(this.config.settings.allowFolderListing) {
             let fullPath = path.normalize(this.rootFolder + '/' + this.config.settings.webContentFolder + pathName);
 
@@ -124,6 +184,8 @@ export class Router {
                     return;
                 }
 
+                //TODO: List actual folder contents!
+
                 response.writeHead(200, {'Content-Type': 'application/javascript'});
                 response.write(files);
                 response.end();
@@ -134,6 +196,14 @@ export class Router {
         }
     };
 
+    /**
+     * Returns the HTTP Response with an error code and message.
+     *
+     * @param response The HTTP Response to write the error to.
+     * @param type The type of the error. This is an HTTP status code.
+     * @param message The message to display with the given type.
+     * @param pathName The path for which the error occurred.
+     */
     private displayError = (response: ServerResponse, type:number , message: string, pathName: string): void => {
         console.error(message + ' (' + pathName + ')');
 

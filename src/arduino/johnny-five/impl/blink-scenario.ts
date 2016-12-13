@@ -1,6 +1,9 @@
 import {Scenario}   from "../../scenario";
-import {Board, Led}      from "johnny-five";
+import {Board, Led} from "johnny-five";
 
+/**
+ * BlinkScenario class that implements the Scenario interface.
+ */
 export class BlinkScenario implements Scenario {
 
     public run = (board: Board): void => {

@@ -6,19 +6,28 @@ import {WorkerFactory}  from "./workers/worker-factory";
 
 class SimpleNodeServer {
 
-    private isDebug         : boolean;
+    private isDebug: boolean                    = null;
 
-    private httpWorkers     : Array<cluster.Worker>;
-    private intervalWorker  : cluster.Worker;
-    private databroker      : cluster.Worker;
+    private httpWorkers: Array<cluster.Worker>  = null;
+    private intervalWorker: cluster.Worker      = null;
+    private databroker: cluster.Worker          = null;
 
-    private messageHandler  : MessageHandler;
+    private messageHandler: MessageHandler      = null;
 
+    /**
+     * Constructor for SimpleNodeServer.
+     *
+     * @param isDebug Set this to true is the application should run in debug mode.
+     * This will prevent dead workers from being revived.
+     */
     constructor(isDebug: boolean) {
         this.isDebug = isDebug;
         this.httpWorkers = [];
     }
 
+    /**
+     * Use this method to start the application!
+     */
     public start = (): void => {
         if (cluster.isMaster) {
             console.log('--------------------------------------------------------------------------');
@@ -36,6 +45,11 @@ class SimpleNodeServer {
         }
     };
 
+    /**
+     * Forks the workers, there will always be one DataBroker and one IntervalWorker.
+     * HTTPWorker will be created based on the number of cpu cores. If less than two cores are available
+     * two http workers will be created.
+     */
     private forkWorkers = (): void =>{
         //Fork data broker.
         this.databroker = cluster.fork({name: 'broker', debug: this.isDebug});
@@ -59,6 +73,9 @@ class SimpleNodeServer {
         }
     };
 
+    /**
+     * Binds the message handling for the master process!
+     */
     private bindMessageHandling = (): void => {
         this.messageHandler = MessageHandler.getInstance();
         this.messageHandler.initForMaster(this.databroker, this.intervalWorker, this.httpWorkers);
@@ -71,7 +88,14 @@ class SimpleNodeServer {
         }
     };
 
-    private reviveWorker = (worker, code, signal): void => {
+    /**
+     * Revives dead workers. If a worker dies it can be revived by using this method.
+     *
+     * @param worker The worker instance that has died.
+     * @param code The code indicating why the worker died.
+     * @param signal The signal indicating why the worker died.
+     */
+    private reviveWorker = (worker: cluster.Worker, code: number, signal: string): void => {
         //CHARGING...
         console.log('worker ' + worker.id + ' died! (details => code: ' + code + ' signal: ' + signal);
 
