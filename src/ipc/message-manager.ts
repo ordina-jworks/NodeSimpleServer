@@ -7,6 +7,11 @@ import {IPCReply}       from "./messages/ipc-reply";
 
 /**
  * MessageManager singleton class.
+ * This class has an array of tuples of string and Function.
+ * The string field is the callbackId and the Function is the actual callback.
+ * The message manager is a per worker instance that can only execute callbacks on the same worker.
+ * The integration with the IPC framework allows messages to be sent to other workers and replies to be sent back to the original worker.
+ * It is important that the original worker is called to execute the callback since a function cannot cross a node instance!
  *
  * This singleton can be used to manage IPC messages.
  */
@@ -37,10 +42,14 @@ export class MessageManager {
     }
 
     /**
+     * Sends an IPCMessage of the subtype IPCRequest to the given MessageTarget (one of the three worker types).
+     * A target function is also given and contains the name of the function that will be executed on the target.
+     * The target should implement a specific handler or switch statement to handle these different target function names.
+     * This message is sent without a callback. This means that when the target function has finished no reply will be sent to inform the caller.
      *
-     * @param payload
-     * @param messageTarget
-     * @param targetFunctionName
+     * @param payload The payload for the target, can be of any kind.
+     * @param messageTarget The MessageTarget, being one of the three types of workers.
+     * @param targetFunctionName The name of the function to be executed on the target. This value is NOT evaluated by eval for security reasons.
      */
     public sendMessage(payload: any, messageTarget: MessageTarget, targetFunctionName: string): void {
         let message: IPCMessage = new IPCRequest(this.workerId, null, payload, messageTarget, targetFunctionName);
@@ -48,11 +57,16 @@ export class MessageManager {
     }
 
     /**
+     * Sends an IPCMessage of the subtype IPCRequest to the given MessageTarget (one of the three worker types).
+     * A target function is also given and contains the name of the function that will be executed on the target.
+     * The target should implement a specific handler or switch statement to handle these different target function names.
+     * This message is sent with a callback. The callee sends a new IPCMessage of the subtype IPCReply to inform the caller and provide it with new information if needed.
+     * A reply can be sent by using the sendReply method on this class.
      *
-     * @param payload
-     * @param callback
-     * @param messageTarget
-     * @param targetFunctionName
+     * @param payload The payload for the target, can be of any kind.
+     * @param callback The function that should be called when a reply has been received.
+     * @param messageTarget The MessageTarget, being one of the three types of workers.
+     * @param targetFunctionName The name of the function to be executed on the target. This value is NOT evaluated by eval for security reasons.
      */
     public sendMessageWithCallback(payload: any, callback: Function, messageTarget: MessageTarget, targetFunctionName: string): void {
         let callbackId: string = process.hrtime()  + "--" + (Math.random() * 6);
@@ -63,9 +77,10 @@ export class MessageManager {
     }
 
     /**
+     * Sends and IPCMessage of the subtype IPCReply to the sender of the original message.
      *
-     * @param payload
-     * @param originalMessage
+     * @param payload A new payload to provide to the original sender.
+     * @param originalMessage The message the sender originally sent.
      */
     public sendReply(payload: any, originalMessage: IPCRequest): void {
         let reply: IPCMessage = new IPCReply(this.workerId, payload, originalMessage);
@@ -73,8 +88,9 @@ export class MessageManager {
     }
 
     /**
+     * For a given callbackId execute the callback function.
      *
-     * @param callbackId
+     * @param callbackId The callbackId for which to execute the callback function.
      */
     public executeCallbackForId(callbackId: string) :void {
         for (let callbackEntry of this.callbacks) {

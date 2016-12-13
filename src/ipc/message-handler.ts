@@ -39,6 +39,13 @@ export class MessageHandler {
         return MessageHandler.instance;
     }
 
+    /**
+     * Initialises the MessageHandler for being a handler for the master NodeJS process.
+     *
+     * @param dataBroker The DataBroker worker instance.
+     * @param intervalWorker The IntervalWorker worker instance.
+     * @param httpWorkers The HTTPWorker worker instance.
+     */
     public initForMaster = (dataBroker: cluster.Worker, intervalWorker: cluster.Worker, httpWorkers: Array<cluster.Worker>): void => {
         this.dataBroker     = dataBroker;
         this.intervalWorker = intervalWorker;
@@ -47,34 +54,60 @@ export class MessageHandler {
         this.emitter        = new EventEmitter();
     };
 
+    /**
+     * Initialises the MessageHandler for being a handler for a slave (worker) NodeJS process.
+     */
     public initForSlave = (): void => {
         this.emitter        = new EventEmitter();
     };
 
+    /*-----------------------------------------------------------------------------
+     ------------------------------------------------------------------------------
+     --                         MASTER MESSAGE HANDLING                          --
+     ------------------------------------------------------------------------------
+     ----------------------------------------------------------------------------*/
     //TODO: Separate master and slave message handling?
-    /******************************************************************************************************************
-    *******************************************************************************************************************
-    *                                            MASTER MESSAGE HANDLERS                                              *
-    *******************************************************************************************************************
-    ******************************************************************************************************************/
+
+    /**
+     * Handler function for messages sent by HTTPWorkers.
+     * Forwards the message to the target.
+     *
+     * @param msg The IPCMessage as sent by an HTTPWorker.
+     */
     public onServerWorkerMessageReceived = (msg: IPCMessage): void => {
         console.log('Message received from server worker');
         this.targetHandler(msg);
     };
 
+    /**
+     * Handler function for the messages sent by the IntervalWorker.
+     * Forwards the message to the target.
+     *
+     * @param msg The IPCMessage as sent by the IntervalWorker.
+     */
     public onIntervalWorkerMessageReceived = (msg: IPCMessage): void => {
         console.log('Message received from interval worker');
         this.targetHandler(msg);
     };
 
+    /**
+     * Handler function for the messages sent by the DataBroker.
+     * Forwards the message to the target.
+     *
+     * @param msg The IPCMessage as sent by the DataBroker.
+     */
     public onDataBrokerMessageReceived = (msg: IPCMessage): void => {
         console.log('Message received from data broker');
         cluster.workers[msg.workerId].send(msg);
     };
 
+    /**
+     * This method is used to direct the IPCMessage to the correct target as specified in the message.
+     * This handler makes a distinction between messages of the types IPCRequest and IPCReply.
+     *
+     * @param msg The IPCMessage that is to be forwarded to the correct target.
+     */
     private targetHandler = (msg: IPCMessage) => {
-        //console.log(JSON.stringify(msg, null, 4));
-
         if(msg.type == IPCMessage.TYPE_REQUEST) {
             let m: IPCRequest = <IPCRequest> msg;
             console.log('Master received request');
@@ -103,13 +136,19 @@ export class MessageHandler {
         }
     };
 
-    /*******************************************************************************************************************
-     *******************************************************************************************************************
-     *                                            SLAVE MESSAGE HANDLING                                               *
-     *******************************************************************************************************************
-     *******************************************************************************************************************/
-    public onMessageFromMasterReceived = (msg: IPCMessage): void => {
+    /*-----------------------------------------------------------------------------
+     ------------------------------------------------------------------------------
+     --                          SLAVE MESSAGE HANDLING                          --
+     ------------------------------------------------------------------------------
+     ----------------------------------------------------------------------------*/
 
+    /**
+     * Handler function for the messages sent by the Master NodeJS process.
+     * This handler makes a distinction between messages of the types IPCRequest and IPCReply.
+     *
+     * @param msg The IPCMessage as passed on by the master process.
+     */
+    public onMessageFromMasterReceived = (msg: IPCMessage): void => {
         if(msg.type == IPCMessage.TYPE_REQUEST) {
             let m: IPCRequest = <IPCRequest>msg;
 
