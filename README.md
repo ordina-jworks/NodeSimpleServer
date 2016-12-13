@@ -4,7 +4,7 @@
 
 Simple node server application for hosting web content and web services.
 
-This is a work in progress, not there may be bugs and incomplete features! 
+This is a work in progress, note that there may be bugs and incomplete features! 
 Found a bug? Fixed a bug? Open an issue or make a pull request!
 
 This is a simple NodeJS server application that allows you to host web pages and services.
@@ -21,9 +21,9 @@ The server application is written in TypeScript.
 - On OSX/Linux make sure your npm permissions are fixed!
   - https://docs.npmjs.com/getting-started/fixing-npm-permissions
 - Open a terminal or command window and go to the root folder of the project
-- Execute the command: 'npm install'
-- Execute the command: 'npm start'
-- Open a browser and go to: http://localhost:7080/
+- Execute the command: `npm install`
+- Execute the command: `npm start`
+- Open a browser and go to: [http://localhost:7080/](http://localhost:7080/)
 - You should now see the web page with a big NodeJS logo
 
 
@@ -48,26 +48,23 @@ These workers are all in charge of set of specific tasks.
   - Stores data and provides basic data storing and retrieving functionality
   - Provide a web socket server to distribute data to remote (web)clients
   
-Each worker is ran on its own node process. There is always one IntervalWorker and one DataBroker.
-There are always at least two HTPPWorker instances. This number increases as there are more hardware threads available.
+Each worker is ran on its own node process. There is always one `IntervalWorker` and one `DataBroker`.
+There are always at least two `HTPPWorker` instances. This number increases as there are more hardware threads available.
 The separate node processes do not directly share memory but can communicate via IPC messaging.
 
 Web content is served from the www folder. All file types are supported. Images have an extra caching header set to ease strain on the HTTPWorkers.
-Services or Endpoints can easily be added. The EndPointManager singleton can be retrieved an be used to add new Endpoints to the application.
-It is possible to change endpoints at runtime, any change made to the registered endpoints is reflected immediately and will be used for all following
-HTTP Requests.
+Services or Endpoints can easily be added. The `EndPointManager` singleton can be retrieved an be used to add new Endpoints to the application.
+It is possible to change endpoints at runtime, any change made to the registered endpoints is reflected immediately and will be used for all following HTTP Requests.
 
 **Multiple workers: IPC**
 -------------------------
 Since all NodeJS processes (in this case the master and worker processes) have isolated memory they cannot execute methods on each other's context.
-The IPC 'framework' provided in this application allows messages to be sent between workers. A worker should handle messages and allow for (some)
-of its methods to be executed.
+The IPC 'framework' provided in this application allows messages to be sent between workers. A worker should handle messages and allow for (some) of its methods to be executed.
 
 Messages can be replied to with a reply message. That will inform the caller that the callee has processed the message. The reply can also contain new data.
-A reply is always sent back to the original worker otherwise problems would arise with the execution of the callback methods. This only applies to the HTTPWorkers 
-as there are always multiple workers of this type.
+A reply is always sent back to the original worker otherwise problems would arise with the execution of the callback methods. This only applies to the HTTPWorkers as there are always multiple workers of this type.
 
-For more information please consult the documentation in the classes for IPC communication under the /ipc/messages/ package.
+For more information please consult the documentation in the classes for IPC communication under the `/ipc/messages/` package.
 
 **Arduino logic**
 -----------------
@@ -75,11 +72,11 @@ An Arduino can be controlled in two ways in the application:
 - Johnny-five robotics framework
 - Regular Serial communication
 
-While each method has it advantages and disadvantages it is up to the developer to choose which method he uses.
+While each method has it advantages and disadvantages it is up to the developer to choose which method he/she uses.
 Both methods extend a base Arduino class that provides basic functionality and should allow for easier code portability.
 
 The Arduino implementations rely on a Scenario to be provided that contains the actual logic to interact with the Arduino.
-The Arduino implementations itself are merely an adapter to provide communication. The Scenario provides the actual logic.
+The Arduino implementations themselves are merely an adapter to provide communication. The Scenario provides the actual logic.
 
 There are two example Scenarios. One for Johnny-Five (The BlinkScenario) and one for regular Serial (The PingScenario),
 consult these examples when making new Scenarios.
