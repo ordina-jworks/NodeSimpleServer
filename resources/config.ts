@@ -17,7 +17,7 @@ export class Config {
     };
 
     public arduino = {
-        enableArduino:                  true,
+        enableArduino:                  false,
 
         useSerialOverJohnnyFive:        false,
         serialPortName:                 "usbmodem",
