@@ -113,7 +113,7 @@ export class IntervalWorker implements NodeWorker {
             let m: IPCRequest = <IPCRequest>message;
 
             //While this requires more manual work than working with an eval() statement. It is much much safer.
-            switch (m.targetFunctionName) {
+            switch (m.targetFunction) {
                 case 'restart':
                     this.restart();
                     break;

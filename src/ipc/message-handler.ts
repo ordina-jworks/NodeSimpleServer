@@ -152,7 +152,7 @@ export class MessageHandler {
         if(msg.type == IPCMessage.TYPE_REQUEST) {
             let m: IPCRequest = <IPCRequest>msg;
 
-            console.log('[id:' + cluster.worker.id  + '] Received request from master: routing to: ' + MessageTarget[m.target] + '.' + m.targetFunctionName);
+            console.log('[id:' + cluster.worker.id  + '] Received request from master: routing to: ' + MessageTarget[m.target] + '.' + m.targetFunction);
             this.emitter.emit(MessageTarget[m.target] + '', m);
 
         } else if(msg.type == IPCMessage.TYPE_REPLY) {
