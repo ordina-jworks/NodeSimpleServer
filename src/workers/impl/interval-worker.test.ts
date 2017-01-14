@@ -1,7 +1,7 @@
 import {suite, test} from "mocha-typescript";
 import {IntervalWorker} from "./interval-worker";
 import {expect} from 'chai';
-import sinon = require('sinon');
+import {MessageHandler} from "../../ipc/message-handler";
 
 @suite("Interval worker")
 class IntervalWorkerTest {
@@ -10,6 +10,8 @@ class IntervalWorkerTest {
     private worker: IntervalWorker;
 
     before() {
+        const handler: MessageHandler = MessageHandler.getInstance();
+        handler.initForSlave();
         this.worker = new IntervalWorker(IntervalWorkerTest.id);
     }
 
