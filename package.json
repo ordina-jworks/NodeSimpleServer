@@ -4,21 +4,19 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "postinstall": "npm install forever -g && npm install -g bower && tsc -p ./",
+    "postinstall": "npm install -g bower && tsc -p ./",
     "build": "tsc -p ./",
     "prestart": "bower install && tsc -p ./",
-    "start": "forever --minUptime 10000 start src/app.js",
-    "stop": "forever stopall"
+    "start": "node src/app.js"
   },
   "dependencies": {
     "typescript": "2.0.8",
-
     "@types/node": "0.0.2",
     "@types/mime": "0.0.29",
     "@types/johnny-five": "0.0.30",
     "@types/serialport": "4.0.6",
-
     "mime": "1.3.4",
+    "fcm-node": "^1.0.16",
     "johnny-five": "0.10.6",
     "serialport": "4.0.7"
   }

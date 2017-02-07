@@ -14,6 +14,7 @@ import {Parameter}                  from "./endpoints/parameters/parameter";
 import {HelloWorldValidatorImpl}    from "./endpoints/impl/parameters/hello-world-param-validator-impl";
 import {ArduinoEndpoint}            from "./endpoints/impl/arduino-endpoint";
 import {ArduinoMethodValidatorImpl} from "./endpoints/impl/parameters/arduino-method-validator-impl";
+import {MySenseHelmetEndpoint} from "./endpoints/impl/mysense-helmet-endpoint";
 
 /**
  * Server class.
@@ -82,6 +83,14 @@ export class Server {
                 '/arduino/setArduinoMethod',
                 ArduinoEndpoint.setArduinoMethod,
                 [new Parameter<string, null, null>('method', 'string field that contains the method used for adruino implementations', new ArduinoMethodValidatorImpl())]
+            )
+        );
+
+        this.endpointManager.registerEndpoint(
+            new EndPoint(
+                '/pxm',
+                MySenseHelmetEndpoint.sendPushNotification,
+                null
             )
         );
     };
