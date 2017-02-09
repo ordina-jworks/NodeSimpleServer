@@ -15,6 +15,7 @@ import {HelloWorldValidatorImpl}    from "./endpoints/impl/parameters/hello-worl
 import {ArduinoEndpoint}            from "./endpoints/impl/arduino-endpoint";
 import {ArduinoMethodValidatorImpl} from "./endpoints/impl/parameters/arduino-method-validator-impl";
 import {MySenseHelmetEndpoint} from "./endpoints/impl/mysense-helmet-endpoint";
+import {MandatoryStringValidatorImpl} from "./endpoints/impl/parameters/mandatory-string-param-validator-impl";
 
 /**
  * Server class.
@@ -88,9 +89,25 @@ export class Server {
 
         this.endpointManager.registerEndpoint(
             new EndPoint(
-                '/pxm',
+                '/push/send',
                 MySenseHelmetEndpoint.sendPushNotification,
                 null
+            )
+        );
+
+        this.endpointManager.registerEndpoint(
+            new EndPoint(
+                '/push/register',
+                MySenseHelmetEndpoint.registerDevice,
+                [new Parameter<string, null, null>('device', 'string field that contains the device token', new MandatoryStringValidatorImpl())]
+            )
+        );
+
+        this.endpointManager.registerEndpoint(
+            new EndPoint(
+                '/push/unregister',
+                MySenseHelmetEndpoint.unregisterDevice,
+                [new Parameter<string, null, null>('device', 'string field that contains the device token', new MandatoryStringValidatorImpl())]
             )
         );
     };
