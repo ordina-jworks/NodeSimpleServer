@@ -26,7 +26,7 @@ export class MySenseHelmetEndpoint {
                     //to: sensor.subscriptions[0],
                     collapse_key: 'accident',
 
-                    notification: {
+                    data: {
                         title: process.env.PN_TITLE,
                         body: process.env.PN_MESSAGE
                     }
