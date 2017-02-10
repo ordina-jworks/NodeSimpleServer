@@ -73,8 +73,8 @@ export class Router {
      * @returns {boolean} True if a valid filename, false if not.
      */
     private isFile = (pathName: string): boolean => {
-        let path = pathName.replace('/','');
-        let isFile = path.indexOf('.') > -1;
+        let path: string = pathName.replace('/','');
+        let isFile: boolean = path.indexOf('.') > -1;
         return isFile && path.search('.') == 0;
     };
 

@@ -26,6 +26,12 @@ The server application is written in TypeScript.
 - Open a browser and go to: http://localhost:7080/
 - You should now see the web page with a big NodeJS logo
 
+**Some useful endpoints:**
+
+- http://localhost:7080/endpoints
+  - This lists all the registered endpoints with parameters and descriptions.
+- http://localhost:7080/helloworld/?name=test
+  - This is a demo endpoint that prints a welcome message with the given name.
 
 **Application architecture**
 ============================
@@ -69,11 +75,15 @@ as there are always multiple workers of this type.
 
 For more information please consult the documentation in the classes for IPC communication under the /ipc/messages/ package.
 
-**Arduino logic**
------------------
+**Arduino/Raspberry Pi logic**
+------------------------------
 An Arduino can be controlled in two ways in the application:
 - Johnny-five robotics framework
 - Regular Serial communication
+
+Working with 'Arduino' logic on a Raspberry Pi:
+- Supported by creating a johnny-five based scenario
+- The Johnny-five framework should auto detect the device (unless you connect Arduino's on the raspberry pi!)
 
 While each method has it advantages and disadvantages it is up to the developer to choose which method he uses.
 Both methods extend a base Arduino class that provides basic functionality and should allow for easier code portability.
