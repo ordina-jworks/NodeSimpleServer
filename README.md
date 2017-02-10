@@ -103,7 +103,7 @@ consult these examples when making new Scenarios.
 
 **Blogpost about this application**
 -----------------------------------
-I've written a blogpost that features this application. You can find a lot more information about the architeture of the application in my blogpost
+I've written a blogpost that features this application. You can find a lot more information about the architecture of the application in my blog post.
 [Read my blogpost](https://ordina-jworks.github.io/iot/2017/01/21/Node-with-TypeScript.html) on the JWorks Tech Blog!
 
 **Functionality to be implemented:**
