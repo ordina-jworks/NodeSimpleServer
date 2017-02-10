@@ -1,4 +1,4 @@
-import {EndPoint} from "./endpoint";
+import {EndPointDefinition} from "./endpoint-definition";
 
 /**
  * EndPointManager singleton class.
@@ -7,8 +7,8 @@ import {EndPoint} from "./endpoint";
  */
 export class EndPointManager {
 
-    private static instance: EndPointManager            = null;
-    public endpoints: Array<EndPoint<any, any, any>>    = null;
+    private static instance: EndPointManager                      = null;
+    public endpoints: Array<EndPointDefinition<any, any, any>>    = null;
 
     /**
      * Private constructor for the singleton.
@@ -34,16 +34,16 @@ export class EndPointManager {
      *
      * @param endpoint The endpoint that should be added to the list of registered endpoints.
      */
-    public registerEndpoint = (endpoint: EndPoint<any, any, any>): void => {
+    public registerEndpoint = (endpoint: EndPointDefinition<any, any, any>): void => {
         this.endpoints.push(endpoint);
     };
 
     /**
      * Use this to get a List of all registered endpoints.
      *
-     * @returns {Array<EndPoint<any, any, any>>} An array containing all the registered endpoints.
+     * @returns {Array<EndPointDefinition<any, any, any>>} An array containing all the registered endpoints.
      */
-    public getEndpoints = (): Array<EndPoint<any, any, any>> => {
+    public getEndpoints = (): Array<EndPointDefinition<any, any, any>> => {
         return this.endpoints;
     };
 
@@ -54,9 +54,9 @@ export class EndPointManager {
      * @param path The path for which an endpoint should be registered.
      * @returns {any} Either an endpoint or null.
      */
-    public getEndpoint = (path: string): EndPoint<any, any, any> => {
+    public getEndpoint = (path: string): EndPointDefinition<any, any, any> => {
         for(let i = 0; i < this.endpoints.length; i++) {
-            let endPoint: EndPoint<any, any, any> = this.endpoints[i];
+            let endPoint: EndPointDefinition<any, any, any> = this.endpoints[i];
 
             if(endPoint.path == path || (endPoint.path + '/' == path && endPoint.parameters.length > 0)) {
                 return this.endpoints[i];

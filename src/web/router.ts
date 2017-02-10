@@ -7,7 +7,7 @@ import {IncomingMessage}    from "http";
 import {ServerResponse}     from "http";
 
 import {Config}             from '../../resources/config';
-import {EndPoint}           from "./endpoints/endpoint";
+import {EndPointDefinition}           from "./endpoints/endpoint-definition";
 import {EndPointManager}    from "./endpoints/endpoint-manager";
 import {Parameter}          from "./endpoints/parameters/parameter";
 
@@ -54,7 +54,7 @@ export class Router {
             this.tryAndServeFile(pathName, response);
 
         } else {
-            let endPoint: EndPoint<any, any, any> = this.endpointManager.getEndpoint(pathName);
+            let endPoint: EndPointDefinition<any, any, any> = this.endpointManager.getEndpoint(pathName);
 
             if(endPoint != null) {
                 this.tryAndHandleRestEndpoint(endPoint, pathName, request, response);
@@ -136,7 +136,7 @@ export class Router {
      * @param request The HTTP Request.
      * @param response The HTTP Response.
      */
-    private tryAndHandleRestEndpoint = (endPoint: EndPoint<any, any, any>, pathName: string, request: IncomingMessage, response: ServerResponse) => {
+    private tryAndHandleRestEndpoint = (endPoint: EndPointDefinition<any, any, any>, pathName: string, request: IncomingMessage, response: ServerResponse) => {
         let requestData: any = url.parse(request.url, true);
 
         console.log('Handling REST request: ' + pathName);

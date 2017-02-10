@@ -3,13 +3,21 @@ import {ServerResponse}     from "http";
 
 import {Parameter}          from "../parameters/parameter";
 import {EndPointManager}    from "../endpoint-manager";
-import {EndPoint}           from "../endpoint";
+import {EndPointDefinition}           from "../endpoint-definition";
+import {BaseEndpoint} from "./base-endpoint";
 
 /**
  * Class containing the generic and application default endpoints.
  * All methods in this class should be static and no state should be kept!
  */
-export class GenericEndpoints {
+export class GenericEndpoints extends BaseEndpoint {
+
+    /**
+     * Constructor for the GenericEndpoints class.
+     */
+    constructor() {
+        super();
+    }
 
     /**
      * Endpoint handler that reroutes to the index page of the welcome application.
@@ -19,13 +27,10 @@ export class GenericEndpoints {
      * @param response The HTTP Response.
      * @param params An array containing the parameters for the endpoint with the desired generic types as defined.
      */
-    public static index(request: IncomingMessage, response: ServerResponse, params: Array<Parameter<null, null, null>>): void {
+    public index(request: IncomingMessage, response: ServerResponse, params: Array<Parameter<null, null, null>>): void {
         console.log('index endpoint called!');
 
-        response.writeHead(301, {
-            "Location" : "/welcome/index.html"
-        });
-        response.end();
+        super.redirect(response, '/welcome/index.html');
     }
 
     /**
@@ -35,11 +40,11 @@ export class GenericEndpoints {
      * @param response The HTTP Response.
      * @param params An array containing the parameters for the endpoint with the desired generic types as defined.
      */
-    public static listEndpoints(request: IncomingMessage, response: ServerResponse, params: Array<Parameter<null, null, null>>): void {
+    public listEndpoints(request: IncomingMessage, response: ServerResponse, params: Array<Parameter<null, null, null>>): void {
         console.log('listEndpoints endpoint called!');
 
         let manager: EndPointManager = EndPointManager.getInstance();
-        let endpoints: Array<EndPoint<any, any, any>> = manager.getEndpoints();
+        let endpoints: Array<EndPointDefinition<any, any, any>> = manager.getEndpoints();
 
         let list:Array<{}> = [];
         for (let endpoint of endpoints) {
@@ -59,9 +64,7 @@ export class GenericEndpoints {
             list.push(endpointDesc);
         }
 
-        response.writeHead(200, {'Content-Type': 'application/javascript'});
-        response.write(JSON.stringify(list, null, 4));
-        response.end();
+        super.respondOK(response, list);
     }
 
     /**
@@ -71,11 +74,13 @@ export class GenericEndpoints {
      * @param response The HTTP Response.
      * @param params An array containing the parameters for the endpoint with the desired generic types as defined.
      */
-    public static helloworld(request: IncomingMessage, response: ServerResponse, params: Array<Parameter<string, null, null>>): void {
+    public helloworld(request: IncomingMessage, response: ServerResponse, params: Array<Parameter<string, null, null>>): void {
         console.log('helloworld endpoint called!');
 
-        response.writeHead(200, {'Content-Type': 'text/plain'});
-        response.write('Hello World! Hello there ' + params[0].getValue() + '!');
-        response.end();
+        super.respondOK(
+            response,
+            'Hello World! Hello there ' + params[0].getValue() + '!',
+            false
+        );
     }
 }

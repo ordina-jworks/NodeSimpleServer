@@ -6,14 +6,22 @@ import {Config}             from "../../../../resources/config";
 import {MessageManager}     from "../../../ipc/message-manager";
 import {IPCMessage}         from "../../../ipc/messages/ipc-message";
 import {MessageTarget}      from "../../../ipc/message-target";
+import {BaseEndpoint} from "./base-endpoint";
 
 /**
  * Class containing the Arduino endpoints.
  * All methods in this class should be static and no state should be kept!
  */
-export class ArduinoEndpoint {
+export class ArduinoEndpoint extends BaseEndpoint {
 
-    private static config: Config = Config.getInstance();
+    private config: Config = Config.getInstance();
+
+    /**
+     * Constructor for the ArduinoEndpoint class.
+     */
+    constructor() {
+        super();
+    }
 
     /**
      * Endpoint handler for setting the method used to communicate with the Arduino. This will restart the Arduino logic.
@@ -22,16 +30,16 @@ export class ArduinoEndpoint {
      * @param response The HTTP Response.
      * @param params An array containing the parameters for the endpoint with the desired generic types as defined.
      */
-    public static setArduinoMethod(request: IncomingMessage, response: ServerResponse, params: Array<Parameter<boolean, null, null>>): void {
+    public setArduinoMethod(request: IncomingMessage, response: ServerResponse, params: Array<Parameter<boolean, null, null>>): void {
         console.log('setArduinoMethod endpoint called!');
 
-        ArduinoEndpoint.config.arduino.useSerialOverJohnnyFive = params[0].getValue();
+        this.config.arduino.useSerialOverJohnnyFive = params[0].getValue();
 
         MessageManager.getInstance().sendMessageWithCallback(null, (message: IPCMessage): void => {
-           console.log('Callback called!');
-            response.writeHead(200, {'Content-Type': 'text/plain'});
-            response.write('Arduino method has been set!');
-            response.end();
+
+            console.log('setArduinoMethod callback called!');
+            super.respondOK(response, 'Arduino method has been set!', false, 'text/plain');
+
         }, MessageTarget.INTERVAL_WORKER, 'restart');
     }
 
@@ -42,7 +50,7 @@ export class ArduinoEndpoint {
      * @param response The HTTP Response.
      * @param params An array containing the parameters for the endpoint with the desired generic types as defined.
      */
-    public static getArduinoScenarios(request: IncomingMessage, response: ServerResponse, params: Array<Parameter<null, null, null>>): void {
+    public getArduinoScenarios(request: IncomingMessage, response: ServerResponse, params: Array<Parameter<null, null, null>>): void {
         console.log('getArduinoImplementations endpoint called!');
 
         //TODO: Implement!
@@ -55,7 +63,7 @@ export class ArduinoEndpoint {
      * @param response The HTTP Response.
      * @param params An array containing the parameters for the endpoint with the desired generic types as defined.
      */
-    public static setArduinoScenario(request: IncomingMessage, response: ServerResponse, params: Array<Parameter<string, null, null>>): void {
+    public setArduinoScenario(request: IncomingMessage, response: ServerResponse, params: Array<Parameter<string, null, null>>): void {
         console.log('setArduinoImplementation endpoint called!');
 
         //TODO: Implement!

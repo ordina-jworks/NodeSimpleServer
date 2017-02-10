@@ -2,7 +2,7 @@ import http     = require('http');
 import url      = require('url');
 
 import {Router}                     from './router';
-import {EndPoint}                   from "./endpoints/endpoint";
+import {EndPointDefinition}                   from "./endpoints/endpoint-definition";
 import {Config}                     from '../../resources/config';
 
 import {IncomingMessage}            from "http";
@@ -53,34 +53,42 @@ export class Server {
      * Maps the default endpoints.
      * Endpoints can always be added at any other location and point in time.
      * This can be done by getting the instance of the EndPointManager and calling the registerEndpoint method.
+     *
+     * It is recommended you create an instance of each wanted endpoint, and use that to get the Function instances to tie to the EndPointDefinition.
+     * Be sure to use the bind() method on the function and pass the specific endpoint instance to it. Otherwise the context will not be correct!
      */
     private mapRestEndpoints = (): void => {
+        let genericEndpoints: GenericEndpoints  = new GenericEndpoints();
+        let arduinoEndpoint: ArduinoEndpoint    = new ArduinoEndpoint();
+
+        //Generic endpoints
         this.endpointManager.registerEndpoint(
-            new EndPoint(
+            new EndPointDefinition(
                 '/',
-                GenericEndpoints.index,
+                genericEndpoints.index.bind(genericEndpoints),
                 null
             )
         );
         this.endpointManager.registerEndpoint(
-            new EndPoint(
+            new EndPointDefinition(
                 '/endpoints',
-                GenericEndpoints.listEndpoints,
+                genericEndpoints.listEndpoints.bind(genericEndpoints),
                 null
             )
         );
         this.endpointManager.registerEndpoint(
-            new EndPoint(
+            new EndPointDefinition(
                 '/helloworld',
-                GenericEndpoints.helloworld,
+                genericEndpoints.helloworld.bind(genericEndpoints),
                 [new Parameter<string, null, null>('name', 'string field containing the name', new HelloWorldValidatorImpl())]
             )
         );
 
+        //Arduino endpoints
         this.endpointManager.registerEndpoint(
-            new EndPoint(
+            new EndPointDefinition(
                 '/arduino/setArduinoMethod',
-                ArduinoEndpoint.setArduinoMethod,
+                arduinoEndpoint.setArduinoMethod.bind(arduinoEndpoint),
                 [new Parameter<string, null, null>('method', 'string field that contains the method used for adruino implementations', new ArduinoMethodValidatorImpl())]
             )
         );

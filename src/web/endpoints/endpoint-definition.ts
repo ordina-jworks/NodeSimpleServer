@@ -1,13 +1,13 @@
 import {Parameter} from "./parameters/parameter";
 
 /**
- * Generic EndPoint class.
+ * Generic EndPointDefinition class.
  *
  * This class represents an Endpoint where the T, P, Q generic parameters are the potential types for the parameters.
  * If you only need one type, provide the other generics as null.
  * If you do not need any parameters you can pass null to all of the generic parameters.
  */
-export class EndPoint<T, P, Q> {
+export class EndPointDefinition<T, P, Q> {
 
     public path: string                             = null;
     private executor: Function                      = null;
@@ -32,7 +32,7 @@ export class EndPoint<T, P, Q> {
      * @param request The HTTP Request.
      * @param response The HTTP Response.
      */
-    public execute(request, response): void {
+    public execute = (request, response): void => {
         this.executor(request, response, this.parameters);
     }
 }
