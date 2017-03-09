@@ -1,14 +1,14 @@
 import {IncomingMessage}    from "http";
 import {ServerResponse}     from "http";
 
-import {Parameter}          from "../parameters/parameter";
-import {EndPointManager}    from "../endpoint-manager";
-import {EndPointDefinition}           from "../endpoint-definition";
-import {BaseEndpoint} from "./base-endpoint";
-import {MessageManager} from "../../../ipc/message-manager";
-import {IPCMessage} from "../../../ipc/messages/ipc-message";
-import {MessageTarget} from "../../../ipc/message-target";
-import {DataBrokerOperation} from "../../../workers/impl/databroker/data-broker-operation";
+import {Parameter}              from "../parameters/parameter";
+import {EndPointManager}        from "../endpoint-manager";
+import {EndPointDefinition}     from "../endpoint-definition";
+import {BaseEndpoint}           from "./base-endpoint";
+import {MessageManager}         from "../../../ipc/message-manager";
+import {IPCMessage}             from "../../../ipc/messages/ipc-message";
+import {MessageTarget}          from "../../../ipc/message-target";
+import {DataBrokerOperation}    from "../../../workers/impl/databroker/data-broker-operation";
 
 /**
  * Class containing the generic and application default endpoints.
@@ -119,13 +119,12 @@ export class GenericEndpoints extends BaseEndpoint {
     public listCaches(request: IncomingMessage, response: ServerResponse, params: Array<Parameter<string, null, null>>) :void {
         console.log('listCaches endpoint called!');
 
-        //TODO: Implement!
-        /*MessageManager.getInstance().sendMessageWithCallback(null, (message: IPCMessage): void => {
+        MessageManager.getInstance().sendMessageWithCallback(null, (message: IPCMessage): void => {
 
-            console.log('setArduinoMethod callback called!');
-            super.respondOK(response, 'Arduino method has been set!', false, 'text/plain');
+            console.log('listCaches callback called!');
+            super.respondOK(response, message.payload);
 
-        }, MessageTarget.DATA_BROKER, DataBrokerOperation.RETRIEVE_CACHES + "");*/
+        }, MessageTarget.DATA_BROKER, DataBrokerOperation.RETRIEVE_CACHES + "");
     }
 
     public listCacheContent(request: IncomingMessage, response: ServerResponse, params: Array<Parameter<string, null, null>>): void {

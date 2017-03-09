@@ -2,7 +2,7 @@ import http     = require('http');
 import url      = require('url');
 
 import {Router}                     from './router';
-import {EndPointDefinition}                   from "./endpoints/endpoint-definition";
+import {EndPointDefinition}         from "./endpoints/endpoint-definition";
 import {Config}                     from '../../resources/config';
 
 import {IncomingMessage}            from "http";
@@ -14,9 +14,9 @@ import {Parameter}                  from "./endpoints/parameters/parameter";
 import {HelloWorldValidatorImpl}    from "./endpoints/impl/parameters/hello-world-param-validator-impl";
 import {ArduinoEndpoint}            from "./endpoints/impl/arduino-endpoint";
 import {ArduinoMethodValidatorImpl} from "./endpoints/impl/parameters/arduino-method-validator-impl";
-import {MessageManager} from "../ipc/message-manager";
-import {MessageTarget} from "../ipc/message-target";
-import {DataBrokerOperation} from "../workers/impl/databroker/data-broker-operation";
+import {MessageManager}             from "../ipc/message-manager";
+import {MessageTarget}              from "../ipc/message-target";
+import {DataBrokerOperation}        from "../workers/impl/databroker/data-broker-operation";
 
 /**
  * Server class.
@@ -106,7 +106,7 @@ export class Server {
             new EndPointDefinition(
                 '/caches',
                 genericEndpoints.listCaches.bind(genericEndpoints),
-                [new Parameter<string, null, null>('name', 'string field containing the name of the cache', null)]
+                null
             )
         );
         this.endpointManager.registerEndpoint(

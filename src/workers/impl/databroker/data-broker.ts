@@ -5,7 +5,7 @@ import {MessageHandler}         from "../../../ipc/message-handler";
 import {IPCRequest}             from "../../../ipc/messages/ipc-request";
 import {DataBrokerOperation}    from "./data-broker-operation";
 import {Cache}                  from "./cache";
-import {MessageManager} from "../../../ipc/message-manager";
+import {MessageManager}         from "../../../ipc/message-manager";
 
 /**
  * DataBroker class.
@@ -110,13 +110,36 @@ export class DataBroker implements NodeWorker {
     };
 
     /**
-     * Returns the Cache instance for the given cache name.
+     * Returns an object containing the definitions of each Cache.
+     * If there are no caches an empty object is returned!
+     *
+     * @returns {{}} An object that contains a definition for each Cache. This details the Cache name, the max size and the actual size.
+     */
+    private retrieveCaches = (): {} => {
+        let caches: Array<{}> = [];
+        for (let cache of this.caches) {
+            let def: {} = {
+                'name' : cache[0],
+                'maxSize' : cache[1].maxSize,
+                'actualSize' : cache[1].actualSize
+            };
+            caches.push(def);
+        }
+        return caches;
+    };
+
+    /**
+     * Returns the Cache contents for the given cache name.
      *
      * @param cacheName The name of the cache to retrieve.
-     * @returns {Cache<any>} The retrieved cache, or null if none was found.
+     * @returns {Array<[string, any]>} The retrieved cache contents, or null if no cache was found.
      */
-    private retrieveCache = (cacheName: string): any => {
-        return this.getCacheByName(cacheName);
+    private retrieveCacheContent = (cacheName: string): Array<[string, any]> => {
+        let cache: Cache<any> = this.getCacheByName(cacheName);
+        if(cache) {
+            return cache.getAllValues()
+        }
+        return null;
     };
 
     /**
@@ -193,8 +216,11 @@ export class DataBroker implements NodeWorker {
                 case DataBrokerOperation.DELETE:
                     this.deleter(m.payload['cacheName'], m.payload['key']);
                     break;
+                case DataBrokerOperation.RETRIEVE_CACHES:
+                    payload = this.retrieveCaches();
+                    break;
                 case DataBrokerOperation.RETRIEVE_CACHE:
-                    payload = this.retrieveCache(m.payload['cacheName']);
+                    payload = this.retrieveCacheContent(m.payload['cacheName']);
                     break;
                 case DataBrokerOperation.CREATE_CACHE:
                     this.createCache(m.payload['cacheName']);

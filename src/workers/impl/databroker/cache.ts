@@ -1,3 +1,5 @@
+import {Config} from "../../../../resources/config";
+
 /**
  * Cache class.
  *
@@ -5,12 +7,20 @@
  */
 export class Cache<T> {
 
-    private values: Array<[string, T]> = null;
+    private config: Config = Config.getInstance();
+
+    private _maxSize: number             = null;
+    private values: Array<[string, T]>  = null;
 
     /**
      * Constructor for the Cache.
      */
-    constructor() {
+    constructor(size?: number) {
+        if(size) {
+            this._maxSize = size;
+        } else {
+            this._maxSize = this.config.settings.defaultCacheSize;
+        }
         this.values = [];
     }
 
@@ -32,12 +42,24 @@ export class Cache<T> {
     };
 
     /**
+     *
+     * @returns {Array<[string,T]>}
+     */
+    public getAllValues = (): Array<[string, T]> => {
+        return this.values;
+    };
+
+    /**
      * Saves the given key with the corresponding value in the cache.
      *
      * @param key The key to store the value with.
      * @param value The actual value to be stored.
      */
     public save = (key: string, value: T): void => {
+        if(this.values.length >= this._maxSize) {
+            console.log('Max cache length reached, shifting data out of cache!');
+            this.values.shift();
+        }
         this.values.push([key, value]);
     };
 
@@ -74,6 +96,24 @@ export class Cache<T> {
     };
 
     /**
+     * Getter for the maxSize field.
+     *
+     * @returns {number} The value that contains the max size for the cache instance.
+     */
+    public get maxSize(): number {
+        return this._maxSize;
+    }
+
+    /**
+     * Getter for the actual cache size.
+     *
+     * @returns {number} The value that contains the actual size for the cache instance.
+     */
+    public get actualSize(): number {
+        return this.values.length;
+    }
+
+    /**
      * For a given key, try to find the index in the cache.
      * If no match is found -1 is returned.
      *
@@ -90,5 +130,5 @@ export class Cache<T> {
         }
 
         return index;
-    }
+    };
 }
