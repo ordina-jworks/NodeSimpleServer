@@ -1,0 +1,57 @@
+<div class="scaling">
+    <header>
+        <img id="registerHeader" src="img/ordinalogo.png">
+    </header>
+
+    <form name="registerForm">
+        <md-content>
+            <form name="userForm">
+                <div id="formIndent" layout="column" layout-wrap>
+                    <md-input-container flex="80">
+                        <label>Full name:</label>
+                        <input flex="80" ng-model="person.name" required name="name"
+                               autocomplete="off">
+
+                        <div ng-messages="registerForm.name.$error">
+                            <div ng-message="required">This is required.</div>
+                        </div>
+                    </md-input-container>
+
+                    <md-input-container flex="70">
+                        <label>Email:</label>
+                        <input flex="80" ng-model="person.email" ng-pattern="/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/"
+                               type="email" required name="email" autocomplete="off">
+
+                        <div ng-messages="registerForm.email.$error">
+                            <div ng-message="required">This is required.</div>
+                            <div ng-message="pattern">Please enter a valid email address!</div>
+
+                        </div>
+                    </md-input-container>
+
+                    <md-input-container flex="70">
+                        <label>Company/school:</label>
+                        <input flex="80" ng-model="person.entity" name="company" autocomplete="off">
+                    </md-input-container>
+
+                    <md-input-container flex="70">
+                        <md-checkbox
+                                ng-model="person.interested"
+                                aria-label="Interested"
+                                class="md-align-top-left">
+                            Interested in a job<br/>
+                            <br/>
+                        </md-checkbox>
+                    </md-input-container>
+                </div>
+
+                <div id="registerFooter">
+                    <md-button id="register"
+                               class="md-raised md-primary"
+                               ng-click="validateAndSend(person)">Start Game
+                    </md-button>
+                </div>
+            </form>
+        </md-content>
+    </form>
+</div>

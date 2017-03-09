@@ -31,10 +31,18 @@ export class EndPointManager {
 
     /**
      * Registers an endpoint and make it available for all future HTTP Requests.
+     * The Path of the given endpoint should be unique, meaning no other endpoint should have been registered with the path of the endpoint to register.
+     * If The path is not unique, the endpoint will not be added and an error message will be logged!
      *
      * @param endpoint The endpoint that should be added to the list of registered endpoints.
      */
     public registerEndpoint = (endpoint: EndPointDefinition<any, any, any>): void => {
+        for (let existingEndpoint of this.endpoints) {
+            if(endpoint.path == existingEndpoint.path) {
+                console.error('An endpoind has already been registered with the same path! Paths have to be unique!');
+                return;
+            }
+        }
         this.endpoints.push(endpoint);
     };
 
@@ -72,6 +80,13 @@ export class EndPointManager {
      * @param path The path for which if an endpoint is found, it should be removed.
      */
     public unRegisterEndpoint(path: string) {
-        //TODO: Implement!
+        for (let existingEndpoint of this.endpoints) {
+            if(existingEndpoint.path == path) {
+                this.endpoints.splice(this.endpoints.indexOf(existingEndpoint), 1);
+                console.log('Endpoint has been removed!');
+                return;
+            }
+        }
+        console.log('No match found for path, no Endpoint removed!')
     };
 }

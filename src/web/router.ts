@@ -184,10 +184,8 @@ export class Router {
                     return;
                 }
 
-                //TODO: List actual folder contents!
-
                 response.writeHead(200, {'Content-Type': 'application/javascript'});
-                response.write(files);
+                response.write(JSON.stringify(files, null, 4));
                 response.end();
             });
 

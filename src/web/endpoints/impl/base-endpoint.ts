@@ -68,7 +68,7 @@ export abstract class BaseEndpoint {
      */
     public redirect(response: ServerResponse, target: string): void {
         response.writeHead(301, {
-            "Location" : "/welcome/index.html"
+            'Location' : target
         });
         response.end();
     }

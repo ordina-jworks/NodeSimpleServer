@@ -21,7 +21,7 @@ export class WorkerFactory {
      * @param messageHandler The MessageHandler instance that will be used to handle IPC messaging.
      */
     public static createWorker(messageHandler: MessageHandler): void {
-        console.log('[id:' + cluster.worker.id + '] Determining type of and starting worker...');
+        console.log('[WORKER id:' + cluster.worker.id + '] Determining type of and starting worker...');
 
         switch (process.env['name']) {
             case 'broker':
@@ -37,7 +37,7 @@ export class WorkerFactory {
                 new HttpWorker(cluster.worker.id);
                 break;
             default:
-                console.error('Unknown worker type, cannot create a worker of type: ' + process.env['name']);
+                console.error('[WORKER id:' + cluster.worker.id + '] Unknown worker type, cannot create a worker of type: ' + process.env['name']);
                 return;
         }
     }

@@ -10,8 +10,10 @@ import {Parameter} from "./parameters/parameter";
 export class EndPointDefinition<T, P, Q> {
 
     public path: string                             = null;
-    private executor: Function                      = null;
+    public description: string                      = null;
     public parameters: Array<Parameter<T, P, Q>>    = null;
+
+    private executor: Function                      = null;
 
     /**
      * Constructor for Endpoint.

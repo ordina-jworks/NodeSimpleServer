@@ -75,7 +75,7 @@ export class MessageHandler {
      * @param msg The IPCMessage as sent by an HTTPWorker.
      */
     public onServerWorkerMessageReceived = (msg: IPCMessage): void => {
-        console.log('Message received from server worker');
+        console.log('[MASTER] Message received from server worker');
         this.targetHandler(msg);
     };
 
@@ -86,7 +86,7 @@ export class MessageHandler {
      * @param msg The IPCMessage as sent by the IntervalWorker.
      */
     public onIntervalWorkerMessageReceived = (msg: IPCMessage): void => {
-        console.log('Message received from interval worker');
+        console.log('[MASTER] Message received from interval worker');
         this.targetHandler(msg);
     };
 
@@ -97,8 +97,8 @@ export class MessageHandler {
      * @param msg The IPCMessage as sent by the DataBroker.
      */
     public onDataBrokerMessageReceived = (msg: IPCMessage): void => {
-        console.log('Message received from data broker');
-        cluster.workers[msg.workerId].send(msg);
+        console.log('[MASTER] Message received from data broker');
+        this.targetHandler(msg);
     };
 
     /**
@@ -110,7 +110,6 @@ export class MessageHandler {
     private targetHandler = (msg: IPCMessage) => {
         if(msg.type == IPCMessage.TYPE_REQUEST) {
             let m: IPCRequest = <IPCRequest> msg;
-            console.log('Master received request');
 
             switch (m.target){
                 case MessageTarget.DATA_BROKER:
@@ -125,13 +124,11 @@ export class MessageHandler {
                     this.httpWorkers[index].send(msg);
                     break;
                 default:
-                    console.error('Cannot find message target: ' + m.target);
+                    console.error('[MASTER] Cannot find message target: ' + m.target);
             }
 
         } else if(msg.type == IPCMessage.TYPE_REPLY) {
             let m: IPCReply = <IPCReply>msg;
-            console.log('Master received reply!');
-
             cluster.workers[m.originalMessage.workerId].send(msg);
         }
     };
@@ -152,14 +149,14 @@ export class MessageHandler {
         if(msg.type == IPCMessage.TYPE_REQUEST) {
             let m: IPCRequest = <IPCRequest>msg;
 
-            console.log('[id:' + cluster.worker.id  + '] Received request from master: routing to: ' + MessageTarget[m.target] + '.' + m.targetFunction);
+            console.log('[WORKER id:' + cluster.worker.id  + '] Received request from master: routing to: ' + MessageTarget[m.target] + '.' + m.targetFunction);
             this.emitter.emit(MessageTarget[m.target] + '', m);
 
         } else if(msg.type == IPCMessage.TYPE_REPLY) {
             let m: IPCReply = <IPCReply>msg;
-            console.log('Slave received reply!');
+            console.log('[WORKER id:' + cluster.worker.id + '] Received reply from [WORKER id:' + m.workerId + ']');
 
-            MessageManager.getInstance().executeCallbackForId(m.originalMessage.callbackId);
+            MessageManager.getInstance().executeCallbackForId(m);
         }
     };
 }
