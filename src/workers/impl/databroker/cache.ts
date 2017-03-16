@@ -9,7 +9,7 @@ export class Cache<T> {
 
     private config: Config = Config.getInstance();
 
-    private _maxSize: number             = null;
+    private _maxSize: number            = null;
     private values: Array<[string, T]>  = null;
 
     /**

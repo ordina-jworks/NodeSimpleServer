@@ -86,7 +86,9 @@ export class GenericEndpoints extends BaseEndpoint {
                 let paramDesc: {} = {};
                 paramDesc['name'] = parameter.name;
                 paramDesc['desc'] = parameter.description;
-                paramDesc['valid'] = parameter.validator.description();
+                if(parameter.validator) {
+                    paramDesc['valid'] = parameter.validator.description();
+                }
                 params.push(paramDesc);
             }
 
