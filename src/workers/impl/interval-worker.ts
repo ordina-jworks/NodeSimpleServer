@@ -1,4 +1,5 @@
-import Timer = NodeJS.Timer;
+import Timer        = NodeJS.Timer;
+import socketIo     = require('socket.io');
 
 import {clearInterval}  from "timers";
 
@@ -51,6 +52,20 @@ export class IntervalWorker implements NodeWorker {
      */
     public start = (): void => {
         console.log('[WORKER id:' + this.workerId + '] IntervalWorker starting...');
+
+        //TODO: This does not seem to be working!
+        //TODO: Find out why!
+        let server: SocketIO.Server = socketIo(7081);
+        server.on('connection', (socket: SocketIO.Server) => {
+            console.log('Websocket connected');
+
+            socket.on('message', () => {
+                console.log('Websocket message received');
+            });
+            socket.on('disconnect', () => {
+                console.log('Websocket disconnected');
+            });
+        });
 
         this.setupArduino();
         this.interval = setInterval(this.loop, this.config.settings.intervalTimeoutInSeconds * 1000);
