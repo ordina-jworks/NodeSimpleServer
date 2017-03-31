@@ -1,0 +1,125 @@
+$fill_animation_duration: 10s;
+
+body{
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  #background {
+    background-size: cover;
+    background: url("../img/wood.jpg") center;
+    width: 100%;
+    height: 100%;
+
+    > div {
+      height: 100%;
+      width: 100%;
+
+      svg {
+        width: 100%;
+        height: 100%;
+        position: relative;
+
+        #rect4384-5 {
+          fill: #FFAA00;
+          display:inline;
+          fill-opacity:1;
+          transition-duration: 6s;
+          transition-timing-function: linear;
+        }
+
+        #layer8 {
+          //bierglass
+          animation-name: hide;
+          animation-duration: $fill_animation_duration;
+          animation-iteration-count: infinite;
+        }
+
+        #path4455 {
+          //bier
+          animation-name: fill;
+          animation-duration: $fill_animation_duration;
+          animation-iteration-count: infinite;
+        }
+
+        #path4449 {
+          //shuim
+          animation-name: raise;
+          animation-duration: $fill_animation_duration;
+          animation-iteration-count: infinite;
+        }
+
+        #rect4466 {
+          //stroom
+          animation-name: flow;
+          animation-duration: $fill_animation_duration;
+          animation-iteration-count: infinite;
+        }
+
+        $vertical_translate:100px;
+        $horizontal_translate:20px;
+        @keyframes hide {
+          0% {opacity: 0;transform: translate($vertical_translate,-$horizontal_translate)}
+          15% {opacity: 1;transform: translate(0px,0px)}
+          70% {opacity: 1;transform: translate(0px,0px);}
+          85% {opacity: 0;transform: translate(-$vertical_translate,-$horizontal_translate)}
+          100% {opacity: 0;transform: translate($vertical_translate,-$horizontal_translate)}
+        }
+
+        $beer_height:150px;
+        @keyframes fill {
+          0% {-webkit-clip-path: inset($beer_height 0px 0px 0px);clip-path: inset($beer_height 0px 0px 0px)}
+          15% {-webkit-clip-path: inset($beer_height 0px 0px 0px);clip-path: inset($beer_height 0px 0px 0px)}
+          70% {-webkit-clip-path: inset(0px 0px 0px 0px);clip-path: inset(0px 0px 0px 0px)}
+          85% {-webkit-clip-path: inset(0px 0px 0px 0px);clip-path: inset(0px 0px 0px 0px)}
+        }
+
+        $top_left_indraw:5px;
+        $bottom_left_indraw:7px;
+        $top_right_indraw:73px;
+        $bottom_right_indraw:76px;
+        @keyframes raise {
+          0% {
+            -webkit-clip-path: polygon($top_left_indraw 100%, $top_right_indraw 100%, $top_right_indraw 105%, $bottom_left_indraw 105%);
+            clip-path: polygon($top_left_indraw 100%, $top_right_indraw 100%, $top_right_indraw 105%, $bottom_left_indraw 105%);
+            transform: translate(0px,$beer_height);
+            opacity: 0
+          }
+          15% {
+            -webkit-clip-path: polygon($top_left_indraw 100%, $top_right_indraw 100%, $top_right_indraw 105%, $bottom_left_indraw 105%);
+            clip-path: polygon($top_left_indraw 100%, $top_right_indraw 100%, $top_right_indraw 105%, $bottom_left_indraw 105%);
+            transform: translate(0px,$beer_height);
+          }
+          20% {opacity: 0}
+          30% {opacity: 1}
+          70% {
+            -webkit-clip-path: polygon(0 0, 100% 0, 100% 105%, 0% 105%);
+            clip-path: polygon(0 0, 100% 0, 100% 105%, 0% 105%);
+            transform: translate(0px,0px)
+          }
+          85% {
+            -webkit-clip-path: polygon(0 0, 100% 0, 100% 105%, 0% 105%);
+            clip-path: polygon(0 0, 100% 0, 100% 105%, 0% 105%);
+            transform: translate(0px,0px)
+          }
+        }
+
+        @keyframes flow {
+          0% {opacity: 0}
+          15% {opacity: 0}
+          20% {opacity: 1}
+          60% {opacity: 1}
+          70% {opacity: 0}
+          100% {opacity: 0}
+        }
+
+        #tspan5194, #tspan5198, #tspan5202, #path5135, #rect5140, #path5154 {
+          fill:#FFFFFF !important;
+          fill-opacity: 0.5 !important;
+        }
+
+      }
+
+    }
+
+  }
+}

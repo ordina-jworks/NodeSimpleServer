@@ -1,0 +1,64 @@
+#endGameWrapper {
+    font-family: Verdana, Helvetica, sans-serif;
+    margin: auto;
+    text-align: center;
+    width: 650px;
+    background-color: #F5F5F5;
+    overflow: hidden;
+}
+
+.endGamecon {
+    margin: auto;
+    width: 100%;
+}
+
+.endGamecon > p {
+    background: #E68524;
+    color: #F5F5F5;
+    padding: 10px;
+    text-transform: uppercase;
+    font-size: 25px;
+}
+
+#imgCup {
+    height: 150px;
+    margin: 30px 10px 40px;
+}
+
+#imgTroll {
+    height: 200px;
+    margin: 10px 10px 25px;
+}
+
+#results {
+    font-size: 20px;
+    padding-bottom: 15px;
+}
+
+#results > img {
+    display: inline-block;
+    width: 25%;
+}
+
+.thanks {
+    font-size: 20px;
+    margin: 25px auto;
+    width: 100%;
+}
+
+.thanks p {
+    font-weight: bold;
+    color: #F5F5F5;
+}
+
+#newGame {
+    padding: 2px 10px 2px 10px;
+    color: #E68524;
+    background-color: #F5F5F5;
+    margin-bottom: 25px;
+}
+
+#newGameFooter {
+    background-color: #E68524;
+    padding-top: 1px;
+}

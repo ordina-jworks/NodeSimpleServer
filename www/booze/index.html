@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link rel="stylesheet" href="/bower_components/angular-material/angular-material.css"/>
+        <link rel="stylesheet" href="/bower_components/angular-material-icons/angular-material-icons.css"/>
+        <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css"/>
+        <link rel="stylesheet" href="style/style.css"/>
+
+        <meta charset="UTF-8">
+        <meta name="viewport"
+              content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+
+        <title>Booze</title>
+    </head>
+    <body ng-app="booze" style="background-color: #000000">
+    <div class="container" id="background">
+        <div ng-view=""></div>
+    </div>
+    </body>
+</html>
+
+
+<script src="/bower_components/angular/angular.js"></script>
+<script src="/bower_components/jquery/dist/jquery.js"></script>
+<script src="/bower_components/angular-messages/angular-messages.js"></script>
+
+<script src="/bower_components/angular-route/angular-route.js"></script>
+<script src="/bower_components/angular-sanitize/angular-sanitize.js"></script>
+
+<script src="/bower_components/angular-material-icons/angular-material-icons.min.js"></script>
+<script src="/bower_components/angular-material/angular-material.js"></script>
+<script src="/bower_components/lodash/lodash.js"></script>
+<script src="/bower_components/restangular/dist/restangular.js"></script>
+<script src="/bower_components/angular-animate/angular-animate.js"></script>
+
+<script src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
+<script src="/bower_components/angular-aria/angular-aria.js"></script>
+
+<script src="/booze/app.js"></script>
+<script src="/booze/meter.controller.js"></script>
+<script src="/booze/socket.service.js"></script>

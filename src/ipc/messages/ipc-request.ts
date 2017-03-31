@@ -10,7 +10,7 @@ export class IPCRequest extends IPCMessage {
 
     public callbackId: string               = null;
     public target: MessageTarget            = null;
-    public targetFunctionName: string       = null;
+    public targetFunction: string | number  = null;
 
     /**
      * constructor for IPCRequest.
@@ -19,15 +19,15 @@ export class IPCRequest extends IPCMessage {
      * @param callbackId The callbackId for the function that is to be called when a reply is received.
      * @param payload The payload to go with the message. This can be data of any type and is meant for the callee.
      * @param target The target worker that the message should be sent too.
-     * @param targetFunctionName The name of the function that should be executed on the target.
+     * @param targetFunction The name of the function that should be executed on the target.
      */
-    constructor(workerId: string, callbackId: string, payload: any, target: MessageTarget, targetFunctionName: string) {
+    constructor(workerId: string, callbackId: string, payload: any, target: MessageTarget, targetFunction: string | number) {
         super(IPCMessage.TYPE_REQUEST);
 
         this.workerId           = workerId;
         this.callbackId         = callbackId;
         this.payload            = payload;
         this.target             = target;
-        this.targetFunctionName = targetFunctionName;
+        this.targetFunction     = targetFunction;
     }
 }
