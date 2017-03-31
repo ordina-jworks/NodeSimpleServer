@@ -10,7 +10,7 @@
     "prestart": "bower install --allow-root && tsc -p ./",
     "dev-test-watch": "mocha-typescript-watch -o ./test-config/mocha.opts",
     "start": "forever --minUptime 10000 -o output.log src/app.js",
-    "stop": "forever stopall"
+    "stop": "forever stopall",
     "test": "tsc -p . && mocha --opts ./test-config/mocha.opts"
   },
 
