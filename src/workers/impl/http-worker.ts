@@ -27,7 +27,7 @@ export class HttpWorker implements NodeWorker {
         this.handler = MessageHandler.getInstance();
         this.handler.emitter.on(MessageTarget[MessageTarget.HTTP_WORKER] + '', this.onMessage);
 
-        console.log('[id:' + workerId + '] HttpWorker created');
+        console.log('[WORKER id:' + workerId + '] HttpWorker created');
         this.start();
     }
 
@@ -36,7 +36,7 @@ export class HttpWorker implements NodeWorker {
      * Creates a new server on the shared port and allows it to handle requests.
      */
     public start = (): void => {
-        console.log('[id:' + this.workerId + '] HttpWorker starting...');
+        console.log('[WORKER id:' + this.workerId + '] HttpWorker starting...');
         this.server = new Server(this.workerId);
     };
 
@@ -46,8 +46,8 @@ export class HttpWorker implements NodeWorker {
      * @param message The IPCMessage that is received. Can be of subtypes IPCRequest or IPCReply.
      */
     public onMessage = (message: IPCMessage): void => {
-        console.log('HTTPWorker message received');
+        console.log('[WORKER id:' + this.workerId + '] Message received');
 
-        //TODO: Handle messages!
+        //TODO: Is this needed? Handle messages!
     };
 }

@@ -10,7 +10,9 @@ export class Config {
         webContentFolder:               "www",
         allowFolderListing:             true,
 
-        intervalTimeoutInSeconds:       480
+        intervalTimeoutInSeconds:       480,
+
+        defaultCacheSize:               250
     };
 
     public keys = {

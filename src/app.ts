@@ -60,7 +60,7 @@ class SimpleNodeServer {
         //Fork normal server worker instances. These will handle all HTTP requests.
         let cores:number                = os.cpus().length;
         let numberOfHttpWorkers:number  = cores - 2 > 0 ? cores - 2 : 1;
-        console.log('There are ' + cores + ' cores available, starting ' + numberOfHttpWorkers + ' HTTP workers...');
+        console.log('[MASTER] There are ' + cores + ' cores available, starting ' + numberOfHttpWorkers + ' HTTP workers...');
 
         for (let i:number = 0; i < numberOfHttpWorkers; i++) {
             let worker = cluster.fork({name: 'http', debug: this.isDebug});
@@ -97,7 +97,7 @@ class SimpleNodeServer {
      */
     private reviveWorker = (worker: cluster.Worker, code: number, signal: string): void => {
         //CHARGING...
-        console.log('worker ' + worker.id + ' died! (details => code: ' + code + ' signal: ' + signal);
+        console.log('[MASTER] Worker ' + worker.id + ' died! (details => code: ' + code + ' signal: ' + signal);
 
         //CLEAR!
         switch (worker.id) {

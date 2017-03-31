@@ -52,6 +52,7 @@ export class MessageManager {
      * @param targetFunctionName The name of the function to be executed on the target. This value is NOT evaluated by eval for security reasons.
      */
     public sendMessage(payload: any, messageTarget: MessageTarget, targetFunctionName: string): void {
+        console.log('[WORKER id:' + this.workerId + '] Sending request message.');
         let message: IPCMessage = new IPCRequest(this.workerId, null, payload, messageTarget, targetFunctionName);
         process.send(message);
     }
@@ -72,6 +73,7 @@ export class MessageManager {
         let callbackId: string = process.hrtime()  + "--" + (Math.random() * 6);
         this.callbacks.push([callbackId, callback]);
 
+        console.log('[WORKER id:' + this.workerId + '] Sending request message with callback (' + callbackId + ')');
         let message: IPCMessage = new IPCRequest(this.workerId, callbackId, payload, messageTarget, targetFunctionName);
         process.send(message);
     }
@@ -83,6 +85,7 @@ export class MessageManager {
      * @param originalMessage The message the sender originally sent.
      */
     public sendReply(payload: any, originalMessage: IPCRequest): void {
+        console.log('[WORKER id:' + this.workerId + '] Sending reply message (callback: ' + originalMessage.callbackId + ')');
         let reply: IPCMessage = new IPCReply(this.workerId, payload, originalMessage);
         process.send(reply);
     }
@@ -92,12 +95,13 @@ export class MessageManager {
      *
      * @param callbackId The callbackId for which to execute the callback function.
      */
-    public executeCallbackForId(callbackId: string) :void {
+    public executeCallbackForId(reply: IPCReply) :void {
         for (let callbackEntry of this.callbacks) {
-            if(callbackEntry[0] == callbackId) {
-                callbackEntry[1]();
+            if(callbackEntry[0] == reply.originalMessage.callbackId) {
+                callbackEntry[1](reply);
                 return;
             }
         }
+        console.log('[WORKER id:' + this.workerId + '] No matching callback found to execute!');
     }
 }

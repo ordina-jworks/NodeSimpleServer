@@ -1,0 +1,143 @@
+/**
+Main wrappers
+**/
+#scalingWrapper {
+    text-align: center;
+}
+
+#gameWrapper {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
+#machineBackground {
+    position: relative;
+    z-index: 100;
+}
+
+#machineWrapper {
+    position: relative;
+}
+
+/**
+Slot machine slots
+**/
+#slotContainer {
+    padding: 5px 1px 5px 1px;
+    overflow: hidden;
+    height: 240px;
+    position: absolute;
+    top: -558px;
+    left: 207px;
+    width: 900px;
+}
+
+.slotMachine {
+    width: 250px;
+    height: 240px;
+    padding: 0;
+    margin-right: 14px;
+    overflow: hidden;
+    display: inline-block;
+    text-align: center;
+    background-color: #fefefe;
+}
+
+.slotMachine .slot {
+    height: 240px;
+    background-position-x: 55%;
+    background-repeat: no-repeat;
+}
+
+.slot1 {
+    background-image: url("../img/slot1.png");
+}
+
+.slot2 {
+    background-image: url("../img/slot2.png");
+}
+
+.slot3 {
+    background-image: url("../img/slot3.png");
+}
+
+.slot4 {
+    background-image: url("../img/slot4.png");
+}
+
+.slot5 {
+    background-image: url("../img/slot5.png");
+}
+
+.slot6 {
+    background-image: url("../img/slot6.png");
+}
+
+/**
+Play button and coins
+**/
+#playButtonContainer {
+    position: absolute;
+    width: 1135px;
+    top: -135px;
+    margin: 0 auto;
+    z-index: 200;
+    text-align: center;
+}
+
+#coins {
+    background-color: transparent;
+    position: absolute;
+    left: 803px;
+    top: 79px;
+    z-index: 900;
+}
+
+.coin {
+    display: inline-block;
+    width: 65px;
+    left: 795px;
+    top: 900px;
+}
+
+.playButton {
+    width: 200px;
+    height: 200px;
+
+    margin-top: 10px;
+    margin-left: 152px;
+
+    -moz-box-shadow: inset 0 1px 0 0 #ff0000;
+    -webkit-box-shadow: inset 0 1px 0 0 #ff0000;
+    box-shadow: inset 0 1px 0 0 #ff0000;
+    background-color: #ff1212;
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ff3d3d), color-stop(1, #ff0000));
+
+    border-radius: 100px;
+    border: 6px solid #cc0000;
+
+    overflow: hidden;
+    display: inline-block;
+
+    color: #ffffff;
+    text-indent: 0;
+    font-size: 45px;
+    font-weight: bold;
+    font-style: normal;
+    line-height: 190px;
+    text-decoration: none;
+    text-align: center;
+    text-shadow: 1px 1px 0 #cc9f52;
+    cursor: pointer;
+}
+
+.playButton:hover {
+    background-color: #ff3d3d;
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ff0000), color-stop(1, #ff3d3d));
+}
+
+.playButton:active {
+    position: relative;
+    top: 1px;
+}

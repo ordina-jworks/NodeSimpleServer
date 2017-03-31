@@ -5,6 +5,7 @@ import {MessageHandler}         from "../../../ipc/message-handler";
 import {IPCRequest}             from "../../../ipc/messages/ipc-request";
 import {DataBrokerOperation}    from "./data-broker-operation";
 import {Cache}                  from "./cache";
+import {MessageManager}         from "../../../ipc/message-manager";
 
 /**
  * DataBroker class.
@@ -16,7 +17,7 @@ export class DataBroker implements NodeWorker {
     workerId: string                            = null;
     handler: MessageHandler                     = null;
 
-    private caches: Array<[string, Cache<any>]> = null;
+    private caches: Array<[string, Cache<any>]> = [];
 
     /**
      * Constructor for the DataBroker.
@@ -27,23 +28,19 @@ export class DataBroker implements NodeWorker {
         this.workerId = workerId;
 
         this.handler = MessageHandler.getInstance();
-        this.handler.emitter.on(MessageTarget[MessageTarget.DATA_BROKER] + '', this.onMessage);
+        this.handler.emitter.on(MessageTarget[MessageTarget.DATA_BROKER] + '', this.onMessage.bind(this));
 
-        console.log('[id:' + workerId + '] DataBroker created');
+        console.log('[WORKER id:' + workerId + '] DataBroker created');
     }
 
     /**
      * Starts the DataBroker instance.
      */
     public start = (): void => {
-        console.log('DataBroker starting...');
+        console.log('[WORKER id:' + this.workerId + '] DataBroker starting...');
 
         this.caches = [];
     };
-
-    //TODO: Null checks on the getCacheByName result!
-    //TODO: Check when adding a new key/value pair that the key is not used!
-    //TODO: Check when adding a new cache that the name is not used!
 
     /**
      * Retrieves the value for a specific key in a specific cache.
@@ -53,18 +50,30 @@ export class DataBroker implements NodeWorker {
      * @returns {any} The value if any was found, null if not.
      */
     private retrieve = (cacheName: string, key: string): any => {
-        return this.getCacheByName(cacheName).retrieve(key);
+        let cache: Cache<any> = this.getCacheByName(cacheName);
+
+        if(cache) {
+            return cache.retrieve(key);
+        } else {
+            return null;
+        }
     };
 
     /**
      * Saves the given key/value pair in the given cache.
+     * If the cache does not exist yet it will first be created!
      *
      * @param cacheName The name of the cache to save to.
      * @param key The key under which to save the value.
      * @param value the value to save.
      */
     private save = (cacheName: string, key: string, value: any): void => {
-        this.getCacheByName(cacheName).save(key, value);
+        let cache: Cache<any> = this.getCacheByName(cacheName);
+
+        if(!cache) {
+            cache = this.createCache(cacheName);
+        }
+        cache.save(key, value);
     };
 
     /**
@@ -75,7 +84,13 @@ export class DataBroker implements NodeWorker {
      * @param value The value of the key/value pair to update.
      */
     private update = (cacheName: string, key: string, value: any): void => {
-        this.getCacheByName(cacheName).update(key, value);
+        let cache: Cache<any> = this.getCacheByName(cacheName);
+
+        if(cache) {
+            cache.update(key, value);
+        } else {
+            console.log('Cache not found, could not update value, please use save!');
+        }
     };
 
     /**
@@ -85,26 +100,58 @@ export class DataBroker implements NodeWorker {
      * @param key The key for which to delete the entry (key/value) in the cache.
      */
     private deleter = (cacheName: string, key: string): void => {
-        return this.getCacheByName(cacheName).deleter(key);
+        let cache: Cache<any> = this.getCacheByName(cacheName);
+
+        if(cache) {
+            cache.deleter(key);
+        } else {
+            console.log('Cache not found, could not delete value!');
+        }
     };
 
     /**
-     * Returns the Cache instance for the given cache name.
+     * Returns an object containing the definitions of each Cache.
+     * If there are no caches an empty object is returned!
+     *
+     * @returns {{}} An object that contains a definition for each Cache. This details the Cache name, the max size and the actual size.
+     */
+    private retrieveCaches = (): {} => {
+        let caches: Array<{}> = [];
+        for (let cache of this.caches) {
+            let def: {} = {
+                'name' : cache[0],
+                'maxSize' : cache[1].maxSize,
+                'actualSize' : cache[1].actualSize
+            };
+            caches.push(def);
+        }
+        return caches;
+    };
+
+    /**
+     * Returns the Cache contents for the given cache name.
      *
      * @param cacheName The name of the cache to retrieve.
-     * @returns {Cache<any>} The retrieved cache, or null if none was found.
+     * @returns {Array<[string, any]>} The retrieved cache contents, or null if no cache was found.
      */
-    private retrieveCache = (cacheName: string): any => {
-        return this.getCacheByName(cacheName);
+    private retrieveCacheContent = (cacheName: string): Array<[string, any]> => {
+        let cache: Cache<any> = this.getCacheByName(cacheName);
+        if(cache) {
+            return cache.getAllValues()
+        }
+        return null;
     };
 
     /**
      * Creates a new Cache for the given cache name.
      *
      * @param cacheName The name of the cache to create.
+     * @returns {Cache<any>} The newly created cache.
      */
-    private createCache = (cacheName: string): void => {
-        this.caches.push([cacheName, new Cache<any>()]);
+    private createCache = (cacheName: string): Cache<any> => {
+        let cache: Cache<any> = new Cache<any>();
+        this.caches.push([cacheName, cache]);
+        return cache;
     };
 
     /**
@@ -149,15 +196,16 @@ export class DataBroker implements NodeWorker {
      * @param message The IPCMessage that is received. Can be of subtypes IPCRequest or IPCReply.
      */
     public onMessage(message: IPCMessage): void {
-        console.log('Databroker message received');
+        console.log('[WORKER id:' + this.workerId + '] Databroker message received');
 
         if(message.type == IPCMessage.TYPE_REQUEST) {
             let m: IPCRequest = <IPCRequest>message;
+            let payload: any = null;
 
             //While this requires more manual work than working with an eval() statement. It is much much safer.
-            switch (m.targetFunction) {
+            switch (Number(m.targetFunction)) {
                 case DataBrokerOperation.RETRIEVE:
-                    this.retrieve(m.payload['cacheName'], m.payload['key']);
+                    payload = this.retrieve(m.payload['cacheName'], m.payload['key']);
                     break;
                 case DataBrokerOperation.SAVE:
                     this.save(m.payload['cacheName'], m.payload['key'], m.payload['value']);
@@ -168,8 +216,11 @@ export class DataBroker implements NodeWorker {
                 case DataBrokerOperation.DELETE:
                     this.deleter(m.payload['cacheName'], m.payload['key']);
                     break;
+                case DataBrokerOperation.RETRIEVE_CACHES:
+                    payload = this.retrieveCaches();
+                    break;
                 case DataBrokerOperation.RETRIEVE_CACHE:
-                    this.retrieveCache(m.payload['cacheName']);
+                    payload = this.retrieveCacheContent(m.payload['cacheName']);
                     break;
                 case DataBrokerOperation.CREATE_CACHE:
                     this.createCache(m.payload['cacheName']);
@@ -178,8 +229,10 @@ export class DataBroker implements NodeWorker {
                     this.deleteCache(m.payload['cacheName']);
                     break;
                 default:
-                    console.log('No valid target handler found!');
+                    console.log('[WORKER id:' + this.workerId + '] No valid target handler found! (' + m.targetFunction + ')');
             }
+
+            MessageManager.getInstance().sendReply({'payload' : payload}, <IPCRequest>message);
         }
     }
 }

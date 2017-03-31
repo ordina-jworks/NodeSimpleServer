@@ -1,4 +1,5 @@
-import Timer = NodeJS.Timer;
+import Timer        = NodeJS.Timer;
+import socketIo     = require('socket.io');
 
 import {clearInterval}  from "timers";
 
@@ -40,9 +41,9 @@ export class IntervalWorker implements NodeWorker {
         this.config = Config.getInstance();
 
         this.handler = MessageHandler.getInstance();
-        this.handler.emitter.on(MessageTarget[MessageTarget.INTERVAL_WORKER] + '', this.onMessage);
+        this.handler.emitter.on(MessageTarget[MessageTarget.INTERVAL_WORKER] + '', this.onMessage.bind(this));
 
-        console.log('[id:' + workerId + '] IntervalWorker created');
+        console.log('[WORKER id:' + workerId + '] IntervalWorker created');
     }
 
     /**
@@ -50,7 +51,21 @@ export class IntervalWorker implements NodeWorker {
      * Sets up the Arduino if enabled and starts the main interval loop.
      */
     public start = (): void => {
-        console.log('IntervalWorker starting...');
+        console.log('[WORKER id:' + this.workerId + '] IntervalWorker starting...');
+
+        //TODO: This does not seem to be working!
+        //TODO: Find out why!
+        let server: SocketIO.Server = socketIo(7081);
+        server.on('connection', (socket: SocketIO.Server) => {
+            console.log('Websocket connected');
+
+            socket.on('message', () => {
+                console.log('Websocket message received');
+            });
+            socket.on('disconnect', () => {
+                console.log('Websocket disconnected');
+            });
+        });
 
         this.setupArduino();
         this.interval = setInterval(this.loop, this.config.settings.intervalTimeoutInSeconds * 1000);
@@ -82,10 +97,12 @@ export class IntervalWorker implements NodeWorker {
      * Can be used to restart all the logic when configuration changes have been made.
      */
     private restart() {
-        console.log('Restarting IntervalWorker...');
+        console.log('[WORKER id:' + this.workerId + '] Restarting IntervalWorker...');
 
         clearInterval(this.interval);
-        this.arduino.cleanup();
+        if(this.config.arduino.enableArduino && this.arduino) {
+            this.arduino.cleanup();
+        }
 
         this.start();
     }
@@ -118,7 +135,7 @@ export class IntervalWorker implements NodeWorker {
                     this.restart();
                     break;
                 default:
-                    console.log('No valid target handler found!');
+                    console.log('[WORKER id:' + this.workerId + '] No valid target handler found!');
             }
         }
 

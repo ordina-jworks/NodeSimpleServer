@@ -1,0 +1,31 @@
+<md-dialog id="endGameDialog">
+    <div id="endGameWrapper">
+
+        <div id="divWinner" ng-if="winner" class="endGamecon">
+            <p>You won, ask for your reward!</p>
+            <img id="imgCup" src="img/cup.png"/>
+        </div>
+
+        <div id="divLoser" ng-if="!winner" class="endGamecon">
+            <p ng-if="closeButNoCigar">Close, but no cigar...</p>
+
+            <p ng-if="!closeButNoCigar">Oops, looks like you didn't win...<br/>Better luck next time!</p>
+            <img id="imgTroll" src="img/trollcigar.png"/>
+        </div>
+
+        <div id="results">
+            <p>Your last result:</p>
+            <img ng-src="{{active1}}" alt="Active 1"/>
+            <img ng-src="{{active2}}" alt="Active 2"/>
+            <img ng-src="{{active3}}" alt="Active 3"/>
+        </div>
+
+        <div id="newGameFooter">
+            <div class="thanks">
+                <p>Thanks for visiting!</p>
+            </div>
+
+            <md-button id="newGame" ng-click="newGame()" class="md-raised md-primary">New game</md-button>
+        </div>
+    </div>
+</md-dialog>

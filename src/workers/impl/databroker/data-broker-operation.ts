@@ -6,7 +6,8 @@ export enum DataBrokerOperation {
     SAVE            = 2,
     UPDATE          = 3,
     DELETE          = 4,
-    RETRIEVE_CACHE  = 5,
-    CREATE_CACHE    = 6,
-    DELETE_CACHE    = 7
+    RETRIEVE_CACHES = 5,
+    RETRIEVE_CACHE  = 6,
+    CREATE_CACHE    = 7,
+    DELETE_CACHE    = 8
 }
