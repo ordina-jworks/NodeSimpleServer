@@ -1,9 +1,38 @@
-import {ServerResponse} from "http";
+import {IncomingMessage, ServerResponse} from "http";
 
 /**
  * Base class for and endpoint implementations.
  */
 export abstract class BaseEndpoint {
+
+    /**
+     * Parses the payload which should be a JSON message.
+     *
+     * @param request The request on which the payload is received.
+     * @param response The response object on which the respond should be written.
+     * @param callback The callback function that should be executed when the data has been processed.
+     */
+    public parsePayload (request: IncomingMessage, response: ServerResponse, callback: Function): void {
+        let data: {} = null;
+        let fullBody: string = '';
+
+        request.on('data', (chunk) => {
+            fullBody += chunk.toString();
+        });
+
+        request.on('end', () => {
+            try {
+                response.writeHead(200, {'Content-Type': 'text/plain'});
+                data = JSON.parse(fullBody);
+            } catch (error) {
+                response.writeHead(500, {'Content-Type': 'text/plain'});
+                response.write('Cannot parse request body! Make sure that it is proper JSON!');
+            }
+            response.end();
+
+            callback(data);
+        });
+    }
 
     /**
      * Basic respond method. Can be used to write a reponse and send it to the client.

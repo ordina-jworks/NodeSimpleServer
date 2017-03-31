@@ -134,6 +134,9 @@ export class IntervalWorker implements NodeWorker {
                 case 'restart':
                     this.restart();
                     break;
+                case 'broadcastMessage':
+                    console.log('Broadcast of message: ' + m.payload + ' requested!');
+                    break;
                 default:
                     console.log('[WORKER id:' + this.workerId + '] No valid target handler found!');
             }

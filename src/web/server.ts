@@ -12,7 +12,7 @@ import {GenericEndpoints}           from "./endpoints/impl/generic-endpoints";
 import {EndPointManager}            from "./endpoints/endpoint-manager";
 import {Parameter}                  from "./endpoints/parameters/parameter";
 import {HelloWorldValidatorImpl}    from "./endpoints/impl/parameters/hello-world-param-validator-impl";
-import {ArduinoEndpoint}            from "./endpoints/impl/arduino-endpoint";
+import {ArduinoEndpoint}            from "./endpoints/impl/arduino/arduino-endpoint";
 import {ArduinoMethodValidatorImpl} from "./endpoints/impl/parameters/arduino-method-validator-impl";
 import {MessageManager}             from "../ipc/message-manager";
 import {MessageTarget}              from "../ipc/message-target";
