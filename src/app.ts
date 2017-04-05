@@ -28,7 +28,7 @@ class SimpleNodeServer {
     /**
      * Use this method to start the application!
      */
-    public start = (): void => {
+    public start(): void {
         if (cluster.isMaster) {
             console.log('--------------------------------------------------------------------------');
             console.log('--------------------------------------------------------------------------');
@@ -50,7 +50,7 @@ class SimpleNodeServer {
      * HTTPWorker will be created based on the number of cpu cores. If less than two cores are available
      * two http workers will be created.
      */
-    private forkWorkers = (): void =>{
+    private forkWorkers(): void {
         //Fork data broker.
         this.databroker = cluster.fork({name: 'broker', debug: this.isDebug});
 
@@ -76,7 +76,7 @@ class SimpleNodeServer {
     /**
      * Binds the message handling for the master process!
      */
-    private bindMessageHandling = (): void => {
+    private bindMessageHandling(): void {
         this.messageHandler = MessageHandler.getInstance();
         this.messageHandler.initForMaster(this.databroker, this.intervalWorker, this.httpWorkers);
 

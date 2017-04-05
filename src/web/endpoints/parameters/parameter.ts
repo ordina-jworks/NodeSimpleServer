@@ -31,7 +31,7 @@ export class Parameter<T, P, Q> {
      *
      * @param value The value to set, should be of any of the T, P, or Q types.
      */
-    public setValue = (value: T | P | Q): void => {
+    public setValue (value: T | P | Q): void {
         this.value = value;
     };
 
@@ -40,7 +40,7 @@ export class Parameter<T, P, Q> {
      *
      * @returns {T|P|Q} The value of the parameter, will be of any of the T, P, or Q types.
      */
-    public getValue = (): T | P | Q => {
+    public getValue (): T | P | Q {
       return this.value;
     };
 
@@ -52,7 +52,7 @@ export class Parameter<T, P, Q> {
      *
      * @returns {boolean} True if valid, false if not.
      */
-    public validate = (): boolean => {
+    public validate (): boolean {
         if(this.validator != null) {
             let result: boolean = this.validator.validate(this.value);
 

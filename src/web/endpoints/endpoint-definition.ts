@@ -1,13 +1,13 @@
 import {Parameter} from "./parameters/parameter";
 
 /**
- * Generic EndPointDefinition class.
+ * Generic EndpointDefinition class.
  *
  * This class represents an Endpoint where the T, P, Q generic parameters are the potential types for the parameters.
  * If you only need one type, provide the other generics as null.
  * If you do not need any parameters you can pass null to all of the generic parameters.
  */
-export class EndPointDefinition<T, P, Q> {
+export class EndpointDefinition<T, P, Q> {
 
     public path: string                             = null;
     public description: string                      = null;

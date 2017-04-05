@@ -1,33 +1,82 @@
-import {BaseEndpoint}                       from '../base-endpoint';
 import {IncomingMessage, ServerResponse}    from 'http';
+
+import {BaseEndpoint}                       from '../../base-endpoint';
 import {MessageManager}                     from "../../../../ipc/message-manager";
 import {MessageTarget}                      from "../../../../ipc/message-target";
+import {EndpointManager}                    from "../../endpoint-manager";
+import {EndpointDefinition}                 from "../../endpoint-definition";
+import {Parameter}                          from "../../parameters/parameter";
 
 /**
  * Class containing the Booze endpoints.
  * No state should be kept in this class.
  */
-export class BoozeEndPoint extends BaseEndpoint {
+export class BoozeEndpoint extends BaseEndpoint {
 
     private messageManager: MessageManager;
 
     /**
-     * Constructor for BoozeEndPoint.
+     * Constructor for BoozeEndpoint.
      */
     constructor() {
         super();
 
         this.messageManager = MessageManager.getInstance();
+        this.mapEntryPoints();
     }
+
+    public mapEntryPoints = (): void => {
+        let endpointManager: EndpointManager = EndpointManager.getInstance();
+        endpointManager.registerEndpoint(
+            new EndpointDefinition(
+                '/booze/levelFull',
+                this.levelFull.bind(this),
+                null
+            )
+        );
+        endpointManager.registerEndpoint(
+            new EndpointDefinition(
+                '/booze/levelHigh',
+                this.levelHigh.bind(this),
+                null
+            )
+        );
+        endpointManager.registerEndpoint(
+            new EndpointDefinition(
+                '/booze/levelMedium',
+                this.levelMedium.bind(this),
+                null
+            )
+        );
+        endpointManager.registerEndpoint(
+            new EndpointDefinition(
+                '/booze/levelLow',
+                this.levelLow.bind(this),
+                null
+            )
+        );
+        endpointManager.registerEndpoint(
+            new EndpointDefinition(
+                '/booze/levelEmpty',
+                this.levelEmpty.bind(this),
+                null
+            )
+        );
+        endpointManager.registerEndpoint(
+            new EndpointDefinition(
+                '/booze/levelExact',
+                this.levelExact.bind(this),
+                [new Parameter<number, null, null>('level', 'number field containing the exact level of the booze meter.', null)]
+            )
+        );
+    };
 
     public levelTrigger = (request: IncomingMessage, response: ServerResponse): void => {
         console.log('Request received for levelTrigger...');
 
         switch (request.method) {
             case 'GET':
-                response.writeHead(200, {'Content-Type': 'text/plain'});
-                response.write('To use this service, post JSON data to it!');
-                response.end();
+                super.respondOK(response, 'To use this service, post JSON data to it!', false, 'text/plain');
                 break;
             case 'POST':
                 super.parsePayload(request, response, this.handleLevelTrigger);
@@ -37,45 +86,32 @@ export class BoozeEndPoint extends BaseEndpoint {
 
     public levelFull = (request: IncomingMessage, response: ServerResponse): void => {
         this.messageManager.sendMessage({level: 'FULL'}, MessageTarget.INTERVAL_WORKER, 'broadcastMessage');
-        response.writeHead(200, {'Content-Type': 'text/plain'});
-        response.write('Level set to FULL');
-        response.end();
+        super.respondOK(response, 'Level set to FULL', false, 'text/plain');
     };
 
     public levelHigh = (request: IncomingMessage, response: ServerResponse): void => {
         this.messageManager.sendMessage({level: 'HIGH'}, MessageTarget.INTERVAL_WORKER, 'broadcastMessage');
-        response.writeHead(200, {'Content-Type': 'text/plain'});
-        response.write('Level set to HIGH');
-        response.end();
+        super.respondOK(response, 'Level set to HIGH', false, 'text/plain');
     };
 
     public levelMedium = (request: IncomingMessage, response: ServerResponse): void => {
         this.messageManager.sendMessage({level: 'MEDIUM'}, MessageTarget.INTERVAL_WORKER, 'broadcastMessage');
-        response.writeHead(200, {'Content-Type': 'text/plain'});
-        response.write('Level set to MEDIUM');
-        response.end();
+        super.respondOK(response, 'Level set to MEDIUM', false, 'text/plain');
     };
 
     public levelLow = (request: IncomingMessage, response: ServerResponse): void => {
         this.messageManager.sendMessage({level: 'LOW'}, MessageTarget.INTERVAL_WORKER, 'broadcastMessage');
-        response.writeHead(200, {'Content-Type': 'text/plain'});
-        response.write('Level set to LOW');
-        response.end();
+        super.respondOK(response, 'Level set to LOW', false, 'text/plain');
     };
 
     public levelEmpty = (request: IncomingMessage, response: ServerResponse): void => {
         this.messageManager.sendMessage({level: 'EMPTY'}, MessageTarget.INTERVAL_WORKER, 'broadcastMessage');
-        response.writeHead(200, {'Content-Type': 'text/plain'});
-        response.write('Level set to EMPTY');
-        response.end();
+        super.respondOK(response, 'Level set to EMPTY', false, 'text/plain');
     };
 
-    public levelExact = (request: IncomingMessage, response: ServerResponse, params: any): void => {
-        //messageFactory.sendSimpleMessage(messageFactory.TARGET_INTERVAL_WORKER, 'broadcastMessage', {level: params.level});
-        this.messageManager.sendMessage({level: params.level}, MessageTarget.INTERVAL_WORKER, 'broadcastMessage');
-        response.writeHead(200, {'Content-Type': 'text/plain'});
-        response.write('Level set to ' + params.level + '%');
-        response.end();
+    public levelExact = (request: IncomingMessage, response: ServerResponse, params: [Parameter<number, null, null>]): void => {
+        this.messageManager.sendMessage({level: params[0].getValue()}, MessageTarget.INTERVAL_WORKER, 'broadcastMessage');
+        super.respondOK(response, 'Level set to ' + params[0].getValue() + '%', false, 'text/plain');
     };
 
     private handleLevelTrigger = (data: any): void => {

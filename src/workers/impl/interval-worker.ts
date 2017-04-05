@@ -50,7 +50,7 @@ export class IntervalWorker implements NodeWorker {
      * Starts the IntervalWorker instance.
      * Sets up the Arduino if enabled and starts the main interval loop.
      */
-    public start = (): void => {
+    public start(): void {
         console.log('[WORKER id:' + this.workerId + '] IntervalWorker starting...');
 
         //TODO: This does not seem to be working!
@@ -69,12 +69,12 @@ export class IntervalWorker implements NodeWorker {
 
         this.setupArduino();
         this.interval = setInterval(this.loop, this.config.settings.intervalTimeoutInSeconds * 1000);
-    };
+    }
 
     /**
      * Sets up the connection to the Arduino and starts the desired Arduino Scenario.
      */
-    private setupArduino = (): void => {
+    private setupArduino(): void {
         if(this.config.arduino.enableArduino) {
 
             if(this.config.arduino.useSerialOverJohnnyFive) {
@@ -90,7 +90,7 @@ export class IntervalWorker implements NodeWorker {
         } else {
             console.log('Skipping arduino setup, disabled in settings!');
         }
-    };
+    }
 
     /**
      * Used to restart the IntervalWorker instance.
@@ -123,7 +123,7 @@ export class IntervalWorker implements NodeWorker {
      *
      * @param message The IPCMessage that is received. Can be of subtypes IPCRequest or IPCReply.
      */
-    public onMessage = (message: IPCMessage): void => {
+    public onMessage(message: IPCMessage): void {
         console.log('Intervalworker message received');
 
         if(message.type == IPCMessage.TYPE_REQUEST) {

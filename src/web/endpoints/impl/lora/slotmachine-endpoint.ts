@@ -1,4 +1,4 @@
-import {BaseEndpoint}                       from "../base-endpoint";
+import {BaseEndpoint}                       from "../../base-endpoint";
 import {IncomingMessage, ServerResponse}    from "http";
 import {MessageManager}                     from "../../../../ipc/message-manager";
 import {MessageTarget}                      from "../../../../ipc/message-target";
@@ -18,7 +18,12 @@ export class SlotmachineEndpoint extends BaseEndpoint {
         super();
 
         this.messageManager = MessageManager.getInstance();
+        this.mapEntryPoints();
     }
+
+    public mapEntryPoints = (): void => {
+        //TODO: Implement!
+    };
 
     /**
      * Executed when the slotmachine LoRa button is pressed.
@@ -31,9 +36,7 @@ export class SlotmachineEndpoint extends BaseEndpoint {
 
         switch (request.method) {
             case 'GET':
-                response.writeHead(200, {'Content-Type': 'text/plain'});
-                response.write('To use this service, post JSON data to it!');
-                response.end();
+                super.respondOK(response, 'To use this service, post JSON data to it!', false, 'text/plain');
                 break;
             case 'POST':
                 super.parsePayload(request, response, this.handleButtonTrigger);

@@ -1,22 +1,17 @@
 import http     = require('http');
 import url      = require('url');
+import fs       = require('fs');
 
-import {Router}                     from './router';
-import {EndPointDefinition}         from "./endpoints/endpoint-definition";
-import {Config}                     from '../../resources/config';
+import {Router}                 from './router';
+import {Config}                 from '../../resources/config';
 
-import {IncomingMessage}            from "http";
-import {ServerResponse}             from "http";
+import {IncomingMessage}        from "http";
+import {ServerResponse}         from "http";
+import {Stats}                  from "fs";
 
-import {GenericEndpoints}           from "./endpoints/impl/generic-endpoints";
-import {EndPointManager}            from "./endpoints/endpoint-manager";
-import {Parameter}                  from "./endpoints/parameters/parameter";
-import {HelloWorldValidatorImpl}    from "./endpoints/impl/parameters/hello-world-param-validator-impl";
-import {ArduinoEndpoint}            from "./endpoints/impl/arduino/arduino-endpoint";
-import {ArduinoMethodValidatorImpl} from "./endpoints/impl/parameters/arduino-method-validator-impl";
-import {MessageManager}             from "../ipc/message-manager";
-import {MessageTarget}              from "../ipc/message-target";
-import {DataBrokerOperation}        from "../workers/impl/databroker/data-broker-operation";
+import {MessageManager}         from "../ipc/message-manager";
+import {MessageTarget}          from "../ipc/message-target";
+import {DataBrokerOperation}    from "../workers/impl/databroker/data-broker-operation";
 
 /**
  * Server class.
@@ -28,7 +23,6 @@ import {DataBrokerOperation}        from "../workers/impl/databroker/data-broker
 export class Server {
 
     private config: Config                      = null;
-    private endpointManager: EndPointManager    = null;
     private messageManager: MessageManager      = null;
 
     private id: string                          = null;
@@ -42,7 +36,6 @@ export class Server {
     constructor(workerId: string) {
         this.id = workerId;
         this.config = Config.getInstance();
-        this.endpointManager = EndPointManager.getInstance();
         this.messageManager = MessageManager.getInstance();
 
         this.mapRestEndpoints();
@@ -55,76 +48,72 @@ export class Server {
     }
 
     /**
-     * Maps the default endpoints.
-     * Endpoints can always be added at any other location and point in time.
-     * This can be done by getting the instance of the EndPointManager and calling the registerEndpoint method.
-     *
-     * It is recommended you create an instance of each wanted endpoint, and use that to get the Function instances to tie to the EndPointDefinition.
-     * Be sure to use the bind() method on the function and pass the specific endpoint instance to it. Otherwise the context will not be correct!
+     * Starts the loading of the endpoint classes.
+     * Each endpoint class should have a call to the mapEntryPoints() method in its constructor.
+     * This will allow for all endpoints to map their entry points on creation.
      */
-    private mapRestEndpoints = (): void => {
-        let genericEndpoints: GenericEndpoints  = new GenericEndpoints();
-        let arduinoEndpoint: ArduinoEndpoint    = new ArduinoEndpoint();
+    private mapRestEndpoints(): void {
+        console.log('[WORKER id:' + this.id + '] Scanning for endpoints...');
 
-        //Generic endpoints
-        this.endpointManager.registerEndpoint(
-            new EndPointDefinition(
-                '/',
-                genericEndpoints.index.bind(genericEndpoints),
-                null
-            )
-        );
-        this.endpointManager.registerEndpoint(
-            new EndPointDefinition(
-                '/slotmachine',
-                genericEndpoints.slotmachineIndex.bind(genericEndpoints),
-                null
-            )
-        );
-        this.endpointManager.registerEndpoint(
-            new EndPointDefinition(
-                '/booze',
-                genericEndpoints.boozeIndex.bind(genericEndpoints),
-                null
-            )
-        );
-        this.endpointManager.registerEndpoint(
-            new EndPointDefinition(
-                '/endpoints',
-                genericEndpoints.listEndpoints.bind(genericEndpoints),
-                null
-            )
-        );
-        this.endpointManager.registerEndpoint(
-            new EndPointDefinition(
-                '/helloworld',
-                genericEndpoints.helloworld.bind(genericEndpoints),
-                [new Parameter<string, null, null>('name', 'string field containing the name', new HelloWorldValidatorImpl())]
-            )
-        );
-        this.endpointManager.registerEndpoint(
-            new EndPointDefinition(
-                '/caches',
-                genericEndpoints.listCaches.bind(genericEndpoints),
-                null
-            )
-        );
-        this.endpointManager.registerEndpoint(
-            new EndPointDefinition(
-                '/cache',
-                genericEndpoints.listCacheContent.bind(genericEndpoints),
-                [new Parameter<string, null, null>('name', 'string field containing the name of the cache', null)]
-            )
-        );
+        //TODO: Get this path from config!
+        this.endpointClassLoader('src/web/endpoints/impl/');
+    };
 
-        //Arduino endpoints
-        this.endpointManager.registerEndpoint(
-            new EndPointDefinition(
-                '/arduino/setArduinoMethod',
-                arduinoEndpoint.setArduinoMethod.bind(arduinoEndpoint),
-                [new Parameter<string, null, null>('method', 'string field that contains the method used for adruino implementations', new ArduinoMethodValidatorImpl())]
-            )
-        );
+    /**
+     * Will create an instance for each endpoint implementation that is found in the path that is provided.
+     * The loader will convert the filenames to the classnames. Therefor it is important that the filename and classname math
+     * e.g. this-is-a-test-class.js will map to a class with the name ThisIsATestClass.
+     *
+     * @param pathToScanForEndpoints A string that contains the path to the folder where all endpoint implementations ate located.
+     */
+    private endpointClassLoader(pathToScanForEndpoints: string): void {
+        let files: string[] = this.getFilesInFolder(pathToScanForEndpoints);
+        console.log('[WORKER id:' + this.id + '] Endpoints found to map: ' + JSON.stringify(files, null, 4));
+
+        files.forEach((fullFilePath) => {
+            //Strip all the path info and get the filename parts by splitting on the dash symbol.
+            let filenameParts: string[] = fullFilePath.split('/').pop().split('-');
+            //Convert each part of the filename to start with an uppercase letter.
+            for(let i: number = 0; i < filenameParts.length; i++) {
+                filenameParts[i] = (filenameParts[i].charAt(0).toUpperCase() + filenameParts[i].slice(1));
+            }
+            //Join the filename back together and remove the .js extension.
+            let filename: string = filenameParts.join('');
+            filename = filename.slice(0, filename.length - 3);
+            //Create an instance of the 'class', remove the 'src/web' from the path and prepend with a dot symbol.
+            eval('new require(".' + fullFilePath.slice(7, fullFilePath.length - 3) + '").' + filename + '();');
+        });
+    };
+
+    /**
+     * Scans the given path (which is assumed to be a folder) for all javascript files.
+     * If a sub folder is encountered it's contents will also be listed.
+     * Only files that adhere to the typescript naming convention are taken into account (e.g. this-is-a-test-file.js)
+     * Test files (file.test.ts/file.test.js) and files with extensions other than .js are ignored.
+     *
+     * @param path The path of the folder for which all files (including ones in sub folders) should be listed.
+     * @returns {string[]} An array of strings in which each item represents a single file prepended with the path.
+     */
+    private getFilesInFolder(path: string): string[] {
+        let files: string[] = [];
+
+        let items: string[] = fs.readdirSync(path);
+        //Go over all the items in the folder.
+        items.forEach((item: string) => {
+            let stats: Stats = fs.statSync(path + '/' + item);
+            //We don't want to list folders, but go in them recursively and scan for more files.
+            if(stats.isDirectory()) {
+                this.getFilesInFolder(path + item).forEach((file) => {
+                    files.push(file);
+                });
+            } else if(item.split('.').length == 2 && item.indexOf('.js') == item.length - 3){
+                //We only add files that have one dot symbol in their name and end on the .js extension.
+                //This will ignore any other files (or unit tests)
+                files.push((path + '/' + item).replace('//', '/'));
+            }
+        });
+
+        return files;
     };
 
     /**
@@ -141,7 +130,7 @@ export class Server {
         console.log(requestLine);
         this.messageManager.sendMessage({
             'cacheName' : 'requests',
-            'key' : new Date().getTime() + '-' + this.id + '-' + request.connection.remoteAddress,
+            'key' : process.hrtime()[1] + '-' + this.id + '-' + request.connection.remoteAddress,
             'value' : requestLine
         }, MessageTarget.DATA_BROKER, DataBrokerOperation.SAVE + "");
 

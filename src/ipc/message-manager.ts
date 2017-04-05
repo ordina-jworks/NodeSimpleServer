@@ -93,7 +93,7 @@ export class MessageManager {
     /**
      * For a given callbackId execute the callback function.
      *
-     * @param callbackId The callbackId for which to execute the callback function.
+     * @param reply The IPCReply that contains the callback that needs to be executed.
      */
     public executeCallbackForId(reply: IPCReply) :void {
         for (let callbackEntry of this.callbacks) {

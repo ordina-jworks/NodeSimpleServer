@@ -6,6 +6,12 @@ import {IncomingMessage, ServerResponse} from "http";
 export abstract class BaseEndpoint {
 
     /**
+     * Maps the entry points for this endpoint.
+     * This method should be called from the constructor!
+     */
+    public abstract mapEntryPoints: Function;
+
+    /**
      * Parses the payload which should be a JSON message.
      *
      * @param request The request on which the payload is received.
@@ -62,7 +68,7 @@ export abstract class BaseEndpoint {
      * @param contentType The content type for the payload to have when it is sent back to the client. (defaults to json)
      */
     public respondOK (response: ServerResponse, payload: {}, formatAsJSON: boolean = true, contentType: string = 'application/json'): void {
-        this.respond(response, 200, payload, formatAsJSON, contentType);
+        BaseEndpoint.prototype.respond(response, 200, payload, formatAsJSON, contentType);
     }
 
     /**
@@ -74,7 +80,7 @@ export abstract class BaseEndpoint {
      * @param contentType The content type for the payload to have when it is sent back to the client. (defaults to json)
      */
     public respondServerError (response: ServerResponse, payload: {}, formatAsJSON: boolean = true, contentType: string = 'application/json'): void {
-        this.respond(response, 500, payload, formatAsJSON, contentType);
+        BaseEndpoint.prototype.respond(response, 500, payload, formatAsJSON, contentType);
     }
 
     /**
@@ -86,7 +92,7 @@ export abstract class BaseEndpoint {
      * @param contentType The content type for the payload to have when it is sent back to the client. (defaults to plain text)
      */
     public respondNotFound (response: ServerResponse, payload: {}, formatAsJSON: boolean = false, contentType: string = 'text/plain'): void {
-        this.respond(response, 404, payload, formatAsJSON, contentType);
+        BaseEndpoint.prototype.respond(response, 404, payload, formatAsJSON, contentType);
     }
 
     /**

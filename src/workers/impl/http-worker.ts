@@ -35,19 +35,19 @@ export class HttpWorker implements NodeWorker {
      * Starts the HTTPWorker instance.
      * Creates a new server on the shared port and allows it to handle requests.
      */
-    public start = (): void => {
+    public start (): void {
         console.log('[WORKER id:' + this.workerId + '] HttpWorker starting...');
         this.server = new Server(this.workerId);
-    };
+    }
 
     /**
      * Handler for IPC messages. This method is called when an IPCMessage is received from any other worker.
      *
      * @param message The IPCMessage that is received. Can be of subtypes IPCRequest or IPCReply.
      */
-    public onMessage = (message: IPCMessage): void => {
+    public onMessage (message: IPCMessage): void {
         console.log('[WORKER id:' + this.workerId + '] Message received');
 
         //TODO: Is this needed? Handle messages!
-    };
+    }
 }

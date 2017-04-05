@@ -7,8 +7,8 @@ import {IncomingMessage}    from "http";
 import {ServerResponse}     from "http";
 
 import {Config}             from '../../resources/config';
-import {EndPointDefinition}           from "./endpoints/endpoint-definition";
-import {EndPointManager}    from "./endpoints/endpoint-manager";
+import {EndpointDefinition} from "./endpoints/endpoint-definition";
+import {EndpointManager}    from "./endpoints/endpoint-manager";
 import {Parameter}          from "./endpoints/parameters/parameter";
 
 /**
@@ -23,7 +23,7 @@ import {Parameter}          from "./endpoints/parameters/parameter";
 export class Router {
 
     private config: Config                      = null;
-    private endpointManager: EndPointManager    = null;
+    private endpointManager: EndpointManager    = null;
 
     private pathParts: Array<string>            = null;
     private rootFolder: string                  = null;
@@ -33,7 +33,7 @@ export class Router {
      */
     constructor() {
         this.config = Config.getInstance();
-        this.endpointManager = EndPointManager.getInstance();
+        this.endpointManager = EndpointManager.getInstance();
 
         this.pathParts  = process.argv[1].split(/([/\\])/);
         this.rootFolder = this.pathParts.splice(0, (this.pathParts.length - 3)).join('');
@@ -49,12 +49,12 @@ export class Router {
      * @param request The HTTP Request.
      * @param response The HTTP Response.
      */
-    public route = (pathName: string, request: IncomingMessage, response: ServerResponse): void => {
+    public route(pathName: string, request: IncomingMessage, response: ServerResponse): void {
         if(this.isFile(pathName)) {
             this.tryAndServeFile(pathName, response);
 
         } else {
-            let endPoint: EndPointDefinition<any, any, any> = this.endpointManager.getEndpoint(pathName);
+            let endPoint: EndpointDefinition<any, any, any> = this.endpointManager.getEndpoint(pathName);
 
             if(endPoint != null) {
                 this.tryAndHandleRestEndpoint(endPoint, pathName, request, response);
@@ -72,7 +72,7 @@ export class Router {
      * @param pathName The path of the requested resource.
      * @returns {boolean} True if a valid filename, false if not.
      */
-    private isFile = (pathName: string): boolean => {
+    private isFile (pathName: string): boolean {
         let path: string = pathName.replace('/','');
         let isFile: boolean = path.indexOf('.') > -1;
         return isFile && path.search('.') == 0;
@@ -88,7 +88,7 @@ export class Router {
      * @param pathName The path to the requested file.
      * @param response The HTTP Response.
      */
-    private tryAndServeFile = (pathName: string, response: ServerResponse): void => {
+    private tryAndServeFile (pathName: string, response: ServerResponse): void {
         let fullPath = path.normalize(this.rootFolder + '/' + this.config.settings.webContentFolder + pathName);
 
         //Read and present the file.
@@ -136,7 +136,7 @@ export class Router {
      * @param request The HTTP Request.
      * @param response The HTTP Response.
      */
-    private tryAndHandleRestEndpoint = (endPoint: EndPointDefinition<any, any, any>, pathName: string, request: IncomingMessage, response: ServerResponse) => {
+    private tryAndHandleRestEndpoint (endPoint: EndpointDefinition<any, any, any>, pathName: string, request: IncomingMessage, response: ServerResponse) {
         let requestData: any = url.parse(request.url, true);
 
         console.log('Handling REST request: ' + pathName);
@@ -172,7 +172,7 @@ export class Router {
      * @param pathName The path of the requested folder.
      * @param response The HTTP Response.
      */
-    private listFolderContents = (pathName: string, response: ServerResponse): void => {
+    private listFolderContents (pathName: string, response: ServerResponse): void {
         if(this.config.settings.allowFolderListing) {
             let fullPath = path.normalize(this.rootFolder + '/' + this.config.settings.webContentFolder + pathName);
 
@@ -202,7 +202,7 @@ export class Router {
      * @param message The message to display with the given type.
      * @param pathName The path for which the error occurred.
      */
-    private displayError = (response: ServerResponse, type:number , message: string, pathName: string): void => {
+    private displayError(response: ServerResponse, type:number , message: string, pathName: string): void {
         console.error(message + ' (' + pathName + ')');
 
         response.writeHead(type, {'Content-Type': 'text/plain'});

@@ -1,14 +1,14 @@
-import {EndPointDefinition} from "./endpoint-definition";
+import {EndpointDefinition} from "./endpoint-definition";
 
 /**
- * EndPointManager singleton class.
+ * EndpointManager singleton class.
  *
  * This singleton can be used to manage endpoints.
  */
-export class EndPointManager {
+export class EndpointManager {
 
-    private static instance: EndPointManager                      = null;
-    public endpoints: Array<EndPointDefinition<any, any, any>>    = null;
+    private static instance: EndpointManager                      = null;
+    public endpoints: Array<EndpointDefinition<any, any, any>>    = null;
 
     /**
      * Private constructor for the singleton.
@@ -20,13 +20,13 @@ export class EndPointManager {
     /**
      * Use this method to get the instance of this singleton class.
      *
-     * @returns {EndPointManager} The instance of this singleton class.
+     * @returns {EndpointManager} The instance of this singleton class.
      */
-    static getInstance = (): EndPointManager => {
-        if (!EndPointManager.instance) {
-            EndPointManager.instance = new EndPointManager();
+    static getInstance = (): EndpointManager => {
+        if (!EndpointManager.instance) {
+            EndpointManager.instance = new EndpointManager();
         }
-        return EndPointManager.instance;
+        return EndpointManager.instance;
     };
 
     /**
@@ -36,10 +36,10 @@ export class EndPointManager {
      *
      * @param endpoint The endpoint that should be added to the list of registered endpoints.
      */
-    public registerEndpoint = (endpoint: EndPointDefinition<any, any, any>): void => {
+    public registerEndpoint = (endpoint: EndpointDefinition<any, any, any>): void => {
         for (let existingEndpoint of this.endpoints) {
             if(endpoint.path == existingEndpoint.path) {
-                console.error('An endpoind has already been registered with the same path! Paths have to be unique!');
+                console.error('An endpoint has already been registered with the same path! Paths have to be unique!');
                 return;
             }
         }
@@ -49,9 +49,9 @@ export class EndPointManager {
     /**
      * Use this to get a List of all registered endpoints.
      *
-     * @returns {Array<EndPointDefinition<any, any, any>>} An array containing all the registered endpoints.
+     * @returns {Array<EndpointDefinition<any, any, any>>} An array containing all the registered endpoints.
      */
-    public getEndpoints = (): Array<EndPointDefinition<any, any, any>> => {
+    public getEndpoints = (): Array<EndpointDefinition<any, any, any>> => {
         return this.endpoints;
     };
 
@@ -62,9 +62,9 @@ export class EndPointManager {
      * @param path The path for which an endpoint should be registered.
      * @returns {any} Either an endpoint or null.
      */
-    public getEndpoint = (path: string): EndPointDefinition<any, any, any> => {
+    public getEndpoint = (path: string): EndpointDefinition<any, any, any> => {
         for(let i = 0; i < this.endpoints.length; i++) {
-            let endPoint: EndPointDefinition<any, any, any> = this.endpoints[i];
+            let endPoint: EndpointDefinition<any, any, any> = this.endpoints[i];
 
             if(endPoint.path == path || (endPoint.path + '/' == path && endPoint.parameters.length > 0)) {
                 return this.endpoints[i];

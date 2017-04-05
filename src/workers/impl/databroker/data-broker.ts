@@ -36,11 +36,11 @@ export class DataBroker implements NodeWorker {
     /**
      * Starts the DataBroker instance.
      */
-    public start = (): void => {
+    public start(): void {
         console.log('[WORKER id:' + this.workerId + '] DataBroker starting...');
 
         this.caches = [];
-    };
+    }
 
     /**
      * Retrieves the value for a specific key in a specific cache.
@@ -49,7 +49,7 @@ export class DataBroker implements NodeWorker {
      * @param key The key for which the value should be returned.
      * @returns {any} The value if any was found, null if not.
      */
-    private retrieve = (cacheName: string, key: string): any => {
+    private retrieve(cacheName: string, key: string): any {
         let cache: Cache<any> = this.getCacheByName(cacheName);
 
         if(cache) {
@@ -57,7 +57,7 @@ export class DataBroker implements NodeWorker {
         } else {
             return null;
         }
-    };
+    }
 
     /**
      * Saves the given key/value pair in the given cache.
@@ -67,14 +67,14 @@ export class DataBroker implements NodeWorker {
      * @param key The key under which to save the value.
      * @param value the value to save.
      */
-    private save = (cacheName: string, key: string, value: any): void => {
+    private save(cacheName: string, key: string, value: any): void {
         let cache: Cache<any> = this.getCacheByName(cacheName);
 
         if(!cache) {
             cache = this.createCache(cacheName);
         }
         cache.save(key, value);
-    };
+    }
 
     /**
      * Updates the given key/value pair in the given cache.
@@ -83,7 +83,7 @@ export class DataBroker implements NodeWorker {
      * @param key The key of the key/value pair to update.
      * @param value The value of the key/value pair to update.
      */
-    private update = (cacheName: string, key: string, value: any): void => {
+    private update(cacheName: string, key: string, value: any): void {
         let cache: Cache<any> = this.getCacheByName(cacheName);
 
         if(cache) {
@@ -91,7 +91,7 @@ export class DataBroker implements NodeWorker {
         } else {
             console.log('Cache not found, could not update value, please use save!');
         }
-    };
+    }
 
     /**
      * Deletes the given key (with its value) from the given cache.
@@ -99,7 +99,7 @@ export class DataBroker implements NodeWorker {
      * @param cacheName The cache name to delete the key/value pair from.
      * @param key The key for which to delete the entry (key/value) in the cache.
      */
-    private deleter = (cacheName: string, key: string): void => {
+    private deleter(cacheName: string, key: string): void {
         let cache: Cache<any> = this.getCacheByName(cacheName);
 
         if(cache) {
@@ -107,7 +107,7 @@ export class DataBroker implements NodeWorker {
         } else {
             console.log('Cache not found, could not delete value!');
         }
-    };
+    }
 
     /**
      * Returns an object containing the definitions of each Cache.
@@ -115,7 +115,7 @@ export class DataBroker implements NodeWorker {
      *
      * @returns {{}} An object that contains a definition for each Cache. This details the Cache name, the max size and the actual size.
      */
-    private retrieveCaches = (): {} => {
+    private retrieveCaches(): {} {
         let caches: Array<{}> = [];
         for (let cache of this.caches) {
             let def: {} = {
@@ -126,7 +126,7 @@ export class DataBroker implements NodeWorker {
             caches.push(def);
         }
         return caches;
-    };
+    }
 
     /**
      * Returns the Cache contents for the given cache name.
@@ -134,13 +134,13 @@ export class DataBroker implements NodeWorker {
      * @param cacheName The name of the cache to retrieve.
      * @returns {Array<[string, any]>} The retrieved cache contents, or null if no cache was found.
      */
-    private retrieveCacheContent = (cacheName: string): Array<[string, any]> => {
+    private retrieveCacheContent(cacheName: string): Array<[string, any]> {
         let cache: Cache<any> = this.getCacheByName(cacheName);
         if(cache) {
             return cache.getAllValues()
         }
         return null;
-    };
+    }
 
     /**
      * Creates a new Cache for the given cache name.
@@ -148,18 +148,18 @@ export class DataBroker implements NodeWorker {
      * @param cacheName The name of the cache to create.
      * @returns {Cache<any>} The newly created cache.
      */
-    private createCache = (cacheName: string): Cache<any> => {
+    private createCache(cacheName: string): Cache<any> {
         let cache: Cache<any> = new Cache<any>();
         this.caches.push([cacheName, cache]);
         return cache;
-    };
+    }
 
     /**
      * Deletes the cache with the given cache name.
      *
      * @param cacheName The name of the cache to delete.
      */
-    private deleteCache = (cacheName: string): void => {
+    private deleteCache(cacheName: string): void {
         let index: number = -1;
         for(let i: number = 0; i < this.caches.length; i++) {
             if(this.caches[i][0] == cacheName) {
@@ -173,7 +173,7 @@ export class DataBroker implements NodeWorker {
         } else {
             console.error('Could not delete, key/value not found!');
         }
-    };
+    }
 
     /**
      * Get the cache by the name of the cache.
@@ -181,14 +181,14 @@ export class DataBroker implements NodeWorker {
      * @param cacheName The name of the cache to get.
      * @returns {any} The Cache instance for which the name matches.
      */
-    private getCacheByName = (cacheName: string): Cache<any> => {
+    private getCacheByName(cacheName: string): Cache<any>  {
         for (let cache of this.caches) {
             if(cache[0] == cacheName) {
                 return cache[1];
             }
         }
         return null;
-    };
+    }
 
     /**
      * Handler for IPC messages. This method is called when an IPCMessage is received from any other worker.

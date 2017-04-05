@@ -31,7 +31,7 @@ export class Cache<T> {
      * @param key The key for which to retrieve the value.
      * @returns {any} The value that goes with the key.
      */
-    public retrieve = (key: string): T => {
+    public retrieve(key: string): T {
         for (let valuePair of this.values) {
             if(valuePair[0] == key) {
                 return valuePair[1];
@@ -39,15 +39,15 @@ export class Cache<T> {
         }
 
         return null;
-    };
+    }
 
     /**
      *
      * @returns {Array<[string,T]>}
      */
-    public getAllValues = (): Array<[string, T]> => {
+    public getAllValues(): Array<[string, T]> {
         return this.values;
-    };
+    }
 
     /**
      * Saves the given key with the corresponding value in the cache.
@@ -55,13 +55,13 @@ export class Cache<T> {
      * @param key The key to store the value with.
      * @param value The actual value to be stored.
      */
-    public save = (key: string, value: T): void => {
+    public save (key: string, value: T): void {
         if(this.values.length >= this._maxSize) {
             console.log('Max cache length reached, shifting data out of cache!');
             this.values.shift();
         }
         this.values.push([key, value]);
-    };
+    }
 
     /**
      * Update the value for the given key/value combination.
@@ -70,7 +70,7 @@ export class Cache<T> {
      * @param key The key for which to update the value.
      * @param value The new value to be stored with the key.
      */
-    public update = (key: string, value: T): void => {
+    public update(key: string, value: T): void {
         let index: number = this.getIndexForKey(key);
 
         if(index >= 0) {
@@ -78,14 +78,14 @@ export class Cache<T> {
         } else {
             console.error('Could not update, key/value not found!');
         }
-    };
+    }
 
     /**
      * Delete the value (and key) for the given key from the cache.
      *
      * @param key The key which should be deleted (with its value).
      */
-    public deleter = (key: string): void => {
+    public deleter(key: string): void {
         let index: number = this.getIndexForKey(key);
 
         if (index > -1) {
@@ -93,7 +93,7 @@ export class Cache<T> {
         } else {
             console.error('Could not delete, cache not found!');
         }
-    };
+    }
 
     /**
      * Getter for the maxSize field.
@@ -120,7 +120,7 @@ export class Cache<T> {
      * @param key The key for which to find the index in the cache.
      * @returns {number} The index in the cache or -1 if none was found.
      */
-    private getIndexForKey = (key: string): number => {
+    private getIndexForKey(key: string): number {
         let index: number = -1;
         for(let i: number = 0; i < this.values.length; i++) {
             if(this.values[i][0] == key) {
@@ -130,5 +130,5 @@ export class Cache<T> {
         }
 
         return index;
-    };
+    }
 }

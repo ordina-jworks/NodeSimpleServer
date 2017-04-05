@@ -1,4 +1,4 @@
-import {ParameterValidator} from "../../parameters/parameter-validator";
+import {ParameterValidator} from "../parameter-validator";
 
 /**
  * Validator implementation for the HelloWorld example.

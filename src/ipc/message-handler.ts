@@ -46,20 +46,20 @@ export class MessageHandler {
      * @param intervalWorker The IntervalWorker worker instance.
      * @param httpWorkers The HTTPWorker worker instance.
      */
-    public initForMaster = (dataBroker: cluster.Worker, intervalWorker: cluster.Worker, httpWorkers: Array<cluster.Worker>): void => {
+    public initForMaster(dataBroker: cluster.Worker, intervalWorker: cluster.Worker, httpWorkers: Array<cluster.Worker>): void {
         this.dataBroker     = dataBroker;
         this.intervalWorker = intervalWorker;
         this.httpWorkers    = httpWorkers;
 
         this.emitter        = new EventEmitter();
-    };
+    }
 
     /**
      * Initialises the MessageHandler for being a handler for a slave (worker) NodeJS process.
      */
-    public initForSlave = (): void => {
+    public initForSlave(): void {
         this.emitter        = new EventEmitter();
-    };
+    }
 
     /*-----------------------------------------------------------------------------
      ------------------------------------------------------------------------------
@@ -107,7 +107,7 @@ export class MessageHandler {
      *
      * @param msg The IPCMessage that is to be forwarded to the correct target.
      */
-    private targetHandler = (msg: IPCMessage) => {
+    private targetHandler(msg: IPCMessage): void {
         if(msg.type == IPCMessage.TYPE_REQUEST) {
             let m: IPCRequest = <IPCRequest> msg;
 
