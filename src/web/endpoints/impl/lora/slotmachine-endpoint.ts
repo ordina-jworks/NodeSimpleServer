@@ -27,10 +27,28 @@ export class SlotmachineEndpoint extends BaseEndpoint {
         let endpointManager: EndpointManager = EndpointManager.getInstance();
         endpointManager.registerEndpoint(
             new EndpointDefinition(
+                '/slotmachine/click',
+                this.fakeClick.bind(this)
+            )
+        );
+
+        endpointManager.registerEndpoint(
+            new EndpointDefinition(
                 '/pxm/buttonTrigger',
                 this.buttonTrigger.bind(this)
             )
         );
+    };
+
+    /**
+     * Can be used to dispatch a fake click event on the webs ocket.
+     *
+     * @param request The HTTP Request.
+     * @param response The HTTP Response.
+     */
+    private fakeClick = (request: IncomingMessage, response: ServerResponse): void => {
+        this.messageManager.sendMessage({buttonPressed: true}, MessageTarget.INTERVAL_WORKER, 'broadcastMessage');
+        super.respondOK(response, 'Fake click dispatched', false, 'text/plain');
     };
 
     /**

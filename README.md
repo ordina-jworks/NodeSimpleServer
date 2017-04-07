@@ -39,7 +39,7 @@ The server application is written in TypeScript.
 
 - [`http://localhost:7080/endpoints`](http://localhost:7080/endpoints)
   - This lists all the registered endpoints with parameters and descriptions.
-- [`http://localhost:7080/helloworld/?name=test`](http://localhost:7080/helloworld/?name=test)
+- [`http://localhost:7080/helloworld?name=test`](http://localhost:7080/helloworld/?name=test)
   - This is a demo endpoint that prints a welcome message with the given name.
 
 **Application architecture**
