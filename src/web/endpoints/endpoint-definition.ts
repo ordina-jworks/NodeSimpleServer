@@ -22,10 +22,10 @@ export class EndpointDefinition<T, P, Q> {
      * @param executor The executor function that will be executed when the endpoint is executed.
      * @param parameters An array containing the parameters with the provided generic types.
      */
-    constructor(path: string, executor: Function, parameters: Array<Parameter<T, P, Q>>) {
+    constructor(path: string, executor: Function, parameters?: Array<Parameter<T, P, Q>>) {
         this.path = path;
         this.executor = executor;
-        this.parameters = parameters != null ? parameters : [];
+        this.parameters = parameters ? parameters : [];
     }
 
     /**

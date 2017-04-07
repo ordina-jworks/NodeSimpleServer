@@ -31,29 +31,25 @@ export class GenericEndpoints extends BaseEndpoint {
         endpointManager.registerEndpoint(
             new EndpointDefinition(
                 '/',
-                this.index.bind(this),
-                null
+                this.index.bind(this)
             )
         );
         endpointManager.registerEndpoint(
             new EndpointDefinition(
                 '/slotmachine',
-                this.slotmachineIndex.bind(this),
-                null
+                this.slotmachineIndex.bind(this)
             )
         );
         endpointManager.registerEndpoint(
             new EndpointDefinition(
                 '/booze',
-                this.boozeIndex.bind(this),
-                null
+                this.boozeIndex.bind(this)
             )
         );
         endpointManager.registerEndpoint(
             new EndpointDefinition(
                 '/endpoints',
-                this.listEndpoints.bind(this),
-                null
+                this.listEndpoints.bind(this)
             )
         );
         endpointManager.registerEndpoint(
@@ -66,8 +62,7 @@ export class GenericEndpoints extends BaseEndpoint {
         endpointManager.registerEndpoint(
             new EndpointDefinition(
                 '/caches',
-                this.listCaches.bind(this),
-                null
+                this.listCaches.bind(this)
             )
         );
         endpointManager.registerEndpoint(

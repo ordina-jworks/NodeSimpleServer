@@ -1,5 +1,5 @@
 import Timer        = NodeJS.Timer;
-import socketIo     = require('socket.io');
+import WebSocket    = require('ws');
 
 import {clearInterval}  from "timers";
 
@@ -27,9 +27,10 @@ export class IntervalWorker implements NodeWorker {
     workerId: string                = null;
     handler: MessageHandler         = null;
 
-    private interval: Timer         = null;
-    private config: Config          = null;
-    private arduino: Arduino        = null;
+    private interval: Timer             = null;
+    private config: Config              = null;
+    private arduino: Arduino            = null;
+    private socket: WebSocket.Server    = null;
 
     /**
      * Constructor for the IntervalWorker.
@@ -53,18 +54,14 @@ export class IntervalWorker implements NodeWorker {
     public start(): void {
         console.log('[WORKER id:' + this.workerId + '] IntervalWorker starting...');
 
-        //TODO: This does not seem to be working!
-        //TODO: Find out why!
-        let server: SocketIO.Server = socketIo(7081);
-        server.on('connection', (socket: SocketIO.Server) => {
-            console.log('Websocket connected');
+        this.socket = new WebSocket.Server({ port: this.config.settings.socketPort, clientTracking: true });
+        this.socket.on('connection', (ws) => {
+            ws.on('message', (message) => {
+                console.log('received: %s', message);
+                //TODO: handle message from client!
+            });
 
-            socket.on('message', () => {
-                console.log('Websocket message received');
-            });
-            socket.on('disconnect', () => {
-                console.log('Websocket disconnected');
-            });
+            ws.send('Welcome!');
         });
 
         this.setupArduino();
@@ -110,13 +107,25 @@ export class IntervalWorker implements NodeWorker {
     /**
      * Main interval loop. This method is called periodically to execute logic.
      */
-    private loop = (): void => {
+    private loop(): void {
         console.log('IntervalWorker loop start...');
 
         //TODO: Do recurring things!
 
         console.log('IntervalWorker loop end!');
     };
+
+    /**
+     * Broadcasts the given message to all connected clients.
+     * The given message can be an object, it will be converted to a json string.
+     *
+     * @param message The message to broadcast to all connected clients.
+     */
+    private broadcastMessage(message: any): void {
+        this.socket.clients.forEach((client: WebSocket) => {
+           client.send(JSON.stringify(message));
+        });
+    }
 
     /**
      * Handler for IPC messages. This method is called when an IPCMessage is received from any other worker.
@@ -136,6 +145,7 @@ export class IntervalWorker implements NodeWorker {
                     break;
                 case 'broadcastMessage':
                     console.log('Broadcast of message: ' + m.payload + ' requested!');
+                    this.broadcastMessage(m.payload);
                     break;
                 default:
                     console.log('[WORKER id:' + this.workerId + '] No valid target handler found!');

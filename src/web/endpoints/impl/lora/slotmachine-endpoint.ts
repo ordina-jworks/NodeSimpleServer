@@ -2,6 +2,8 @@ import {BaseEndpoint}                       from "../../base-endpoint";
 import {IncomingMessage, ServerResponse}    from "http";
 import {MessageManager}                     from "../../../../ipc/message-manager";
 import {MessageTarget}                      from "../../../../ipc/message-target";
+import {EndpointManager}                    from "../../endpoint-manager";
+import {EndpointDefinition}                 from "../../endpoint-definition";
 
 /**
  * Class containing the Slotmachine endpoints.
@@ -22,7 +24,13 @@ export class SlotmachineEndpoint extends BaseEndpoint {
     }
 
     public mapEntryPoints = (): void => {
-        //TODO: Implement!
+        let endpointManager: EndpointManager = EndpointManager.getInstance();
+        endpointManager.registerEndpoint(
+            new EndpointDefinition(
+                '/pxm/buttonTrigger',
+                this.buttonTrigger.bind(this)
+            )
+        );
     };
 
     /**

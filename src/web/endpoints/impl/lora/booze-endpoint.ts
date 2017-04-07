@@ -30,36 +30,31 @@ export class BoozeEndpoint extends BaseEndpoint {
         endpointManager.registerEndpoint(
             new EndpointDefinition(
                 '/booze/levelFull',
-                this.levelFull.bind(this),
-                null
+                this.levelFull.bind(this)
             )
         );
         endpointManager.registerEndpoint(
             new EndpointDefinition(
                 '/booze/levelHigh',
-                this.levelHigh.bind(this),
-                null
+                this.levelHigh.bind(this)
             )
         );
         endpointManager.registerEndpoint(
             new EndpointDefinition(
                 '/booze/levelMedium',
-                this.levelMedium.bind(this),
-                null
+                this.levelMedium.bind(this)
             )
         );
         endpointManager.registerEndpoint(
             new EndpointDefinition(
                 '/booze/levelLow',
-                this.levelLow.bind(this),
-                null
+                this.levelLow.bind(this)
             )
         );
         endpointManager.registerEndpoint(
             new EndpointDefinition(
                 '/booze/levelEmpty',
-                this.levelEmpty.bind(this),
-                null
+                this.levelEmpty.bind(this)
             )
         );
         endpointManager.registerEndpoint(
@@ -67,6 +62,13 @@ export class BoozeEndpoint extends BaseEndpoint {
                 '/booze/levelExact',
                 this.levelExact.bind(this),
                 [new Parameter<number, null, null>('level', 'number field containing the exact level of the booze meter.', null)]
+            )
+        );
+
+        endpointManager.registerEndpoint(
+            new EndpointDefinition(
+                '/pxm/levelTrigger',
+                this.levelTrigger.bind(this)
             )
         );
     };

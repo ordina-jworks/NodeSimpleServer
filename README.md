@@ -3,6 +3,8 @@
 [![Build Status](https://travis-ci.org/ordina-jworks/NodeSimpleServer.svg?branch=master)](https://travis-ci.org/ordina-jworks/NodeSimpleServer)
 
 Simple node server application for hosting web content and web services.
+This application is not meant to be used in production environments. 
+Instead it should be used for prototyping, demos, proof of concepts and value discovery scenarios.
 
 This is a work in progress, note that there may be bugs and incomplete features! 
 Found a bug? Fixed a bug? Open an issue or make a pull request!
@@ -35,9 +37,9 @@ The server application is written in TypeScript.
 
 **Some useful endpoints:**
 
-- `http://localhost:7080/endpoints`
+- [`http://localhost:7080/endpoints`](http://localhost:7080/endpoints)
   - This lists all the registered endpoints with parameters and descriptions.
-- `http://localhost:7080/helloworld/?name=test`
+- [`http://localhost:7080/helloworld/?name=test`](http://localhost:7080/helloworld/?name=test)
   - This is a demo endpoint that prints a welcome message with the given name.
 
 **Application architecture**
@@ -66,8 +68,10 @@ There are always at least two `HTPPWorker` instances. This number increases as t
 The separate node processes do not directly share memory but can communicate via IPC messaging.
 
 Web content is served from the `www` folder. All file types are supported. Images have an extra caching header set to ease strain on the HTTPWorkers.
-Services or Endpoints can easily be added. The `EndPointManager` singleton can be retrieved an be used to add new Endpoints to the application.
-It is possible to change endpoints at runtime, any change made to the registered endpoints is reflected immediately and will be used for all following HTTP Requests.
+Services or Endpoints can easily be added. The `EndpointManager` singleton can be retrieved an be used to add new Endpoints to the application.
+Endpoints should be placed in the `src/web/endpoints/impl` folder. They will be auto discovered and instantiated at runtime. In the constructor of your Endpoind implementation
+you should perform a call to the `mapEntryPoints` method which is required to be implemented! EndpointDefinitions can (but should not) be altered at runtime.
+Each next request will take into account the changes made.
 
 **Multiple workers: IPC**
 -------------------------
@@ -100,12 +104,12 @@ consult these examples when making new Scenarios.
 
 **Blogpost about this application**
 -----------------------------------
-I've written a blogpost that features this application. You can find a lot more information about the architecture of the application in my blog post.
+I've written a blog post that features this application. You can find a lot more information about the architecture of the application in my blog post.
 [Read my blogpost](https://ordina-jworks.github.io/iot/2017/01/21/Node-with-TypeScript.html) on the JWorks Tech Blog!
+The blog post is based on the code up to [this commit!](https://github.com/ordina-jworks/NodeSimpleServer/commit/020d9e7a449d4ba939f43e879326a0a77dded220)
 
 **Functionality to be implemented:**
 ====================================
 - Implement decent custom logger
-- Implement Web socket
-- Port over slotmachine and booze-o-meter
-- Set up testing
+- Finish porting over slotmachine and booze-o-meter
+- HTTPS 
