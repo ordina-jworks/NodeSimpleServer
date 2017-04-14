@@ -3,17 +3,16 @@ import {Parameter} from "./parameters/parameter";
 /**
  * Generic EndpointDefinition class.
  *
- * This class represents an Endpoint where the T, P, Q generic parameters are the potential types for the parameters.
- * If you only need one type, provide the other generics as null.
+ * This class represents an Endpoint where the T generic parameter is the type for the parameter.
  * If you do not need any parameters you can pass null to all of the generic parameters.
  */
-export class EndpointDefinition<T, P, Q> {
+export class EndpointDefinition<T> {
 
-    public path: string                             = null;
-    public description: string                      = null;
-    public parameters: Array<Parameter<T, P, Q>>    = null;
+    public path: string                     = null;
+    public description: string              = null;
+    public parameters: Array<Parameter<T>>  = null;
 
-    private executor: Function                      = null;
+    private executor: Function              = null;
 
     /**
      * Constructor for Endpoint.
@@ -22,7 +21,7 @@ export class EndpointDefinition<T, P, Q> {
      * @param executor The executor function that will be executed when the endpoint is executed.
      * @param parameters An array containing the parameters with the provided generic types.
      */
-    constructor(path: string, executor: Function, parameters?: Array<Parameter<T, P, Q>>) {
+    constructor(path: string, executor: Function, parameters?: Array<Parameter<T>>) {
         this.path = path;
         this.executor = executor;
         this.parameters = parameters ? parameters : [];

@@ -3,15 +3,15 @@ import {ParameterValidator} from "./parameter-validator";
 /**
  * Generic Parameter class.
  *
- * This class represents a parameter where the T, P, Q generic parameters are the potential types for the parameter.
+ * This class represents a parameter where the T generic parameters are the potential types for the parameter.
  */
-export class Parameter<T, P, Q> {
+export class Parameter<T> {
 
-    public name: string                             = null;
-    public description: string                      = null;
-    public validator: ParameterValidator<T, P, Q>   = null;
+    public name: string                         = null;
+    public description: string                  = null;
+    public validator: ParameterValidator<T>     = null;
 
-    private value: T | P | Q                        = null;
+    private value: T                            = null;
 
     /**
      * Constructor for Parameter.
@@ -20,7 +20,7 @@ export class Parameter<T, P, Q> {
      * @param description The description for this parameter.
      * @param validator The validator for this parameter. Or null if no validation is required.
      */
-    constructor(name: string, description: string, validator: ParameterValidator<T, P, Q>) {
+    constructor(name: string, description: string, validator: ParameterValidator<T>) {
         this.name = name;
         this.description = description;
         this.validator = validator;
@@ -29,18 +29,18 @@ export class Parameter<T, P, Q> {
     /**
      * Sets the value for the parameter.
      *
-     * @param value The value to set, should be of any of the T, P, or Q types.
+     * @param value The value to set, should be of any of the T type.
      */
-    public setValue (value: T | P | Q): void {
+    public setValue (value: T): void {
         this.value = value;
     };
 
     /**
      * Gets the value of the parameter.
      *
-     * @returns {T|P|Q} The value of the parameter, will be of any of the T, P, or Q types.
+     * @returns {T} The value of the parameter, will be of the T type.
      */
-    public getValue (): T | P | Q {
+    public getValue (): T {
       return this.value;
     };
 

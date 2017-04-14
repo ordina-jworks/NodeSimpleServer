@@ -54,7 +54,7 @@ export class Router {
             this.tryAndServeFile(pathName, response);
 
         } else {
-            let endPoint: EndpointDefinition<any, any, any> = this.endpointManager.getEndpoint(pathName);
+            let endPoint: EndpointDefinition<any> = this.endpointManager.getEndpoint(pathName);
 
             if(endPoint != null) {
                 this.tryAndHandleRestEndpoint(endPoint, pathName, request, response);
@@ -65,7 +65,7 @@ export class Router {
     };
 
     /**
-     * Method to see if a path points to a (may be a non-existant) file or not.
+     * Method to see if a path points to a (may be a non-existent) file or not.
      * If the path most likely represents a file which may or may not exist true is returned.
      * If the path does not seem to point to a valid file false it returned.
      *
@@ -136,7 +136,7 @@ export class Router {
      * @param request The HTTP Request.
      * @param response The HTTP Response.
      */
-    private tryAndHandleRestEndpoint (endPoint: EndpointDefinition<any, any, any>, pathName: string, request: IncomingMessage, response: ServerResponse) {
+    private tryAndHandleRestEndpoint (endPoint: EndpointDefinition<any>, pathName: string, request: IncomingMessage, response: ServerResponse) {
         let requestData: any = url.parse(request.url, true);
 
         console.log('Handling REST request: ' + pathName);
@@ -147,7 +147,7 @@ export class Router {
 
             if(endPoint.parameters.length === Object.keys(urlParams).length) {
                 for (let i = 0; i < endPoint.parameters.length; i++) {
-                    let param: Parameter<any, any, any> = endPoint.parameters[i];
+                    let param: Parameter<any> = endPoint.parameters[i];
                     param.setValue(urlParams[endPoint.parameters[i].name]);
 
                     if (!param.validate()) {

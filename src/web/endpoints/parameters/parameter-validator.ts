@@ -1,7 +1,7 @@
 /**
  * Interface for all the ParameterValidator implementations.
  */
-export interface ParameterValidator<T , P , Q> {
+export interface ParameterValidator<T> {
 
     /**
      * Validates the parameter.
@@ -9,7 +9,7 @@ export interface ParameterValidator<T , P , Q> {
      * @param value The value that should be validated.
      * @returns {boolean} True if valid, false if not.
      */
-    validate(value: T | P | Q): boolean;
+    validate(value: T): boolean;
 
     /**
      * Gets the description for the validator. This should describe the validation that is performed.

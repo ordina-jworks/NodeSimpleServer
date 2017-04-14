@@ -34,7 +34,7 @@ export class ArduinoEndpoint extends BaseEndpoint {
             new EndpointDefinition(
                 '/arduino/setArduinoMethod',
                 this.setArduinoMethod.bind(this),
-                [new Parameter<string, null, null>('method', 'string field that contains the method used for adruino implementations', new ArduinoMethodValidatorImpl())]
+                [new Parameter<string>('method', 'string field that contains the method used for arduino implementations', new ArduinoMethodValidatorImpl())]
             )
         );
     };

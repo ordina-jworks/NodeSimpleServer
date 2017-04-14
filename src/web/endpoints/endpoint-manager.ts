@@ -7,8 +7,8 @@ import {EndpointDefinition} from "./endpoint-definition";
  */
 export class EndpointManager {
 
-    private static instance: EndpointManager                      = null;
-    public endpoints: Array<EndpointDefinition<any, any, any>>    = null;
+    private static instance: EndpointManager            = null;
+    public endpoints: Array<EndpointDefinition<any>>    = null;
 
     /**
      * Private constructor for the singleton.
@@ -36,7 +36,7 @@ export class EndpointManager {
      *
      * @param endpoint The endpoint that should be added to the list of registered endpoints.
      */
-    public registerEndpoint = (endpoint: EndpointDefinition<any, any, any>): void => {
+    public registerEndpoint = (endpoint: EndpointDefinition<any>): void => {
         for (let existingEndpoint of this.endpoints) {
             if(endpoint.path == existingEndpoint.path) {
                 console.error('An endpoint has already been registered with the same path! Paths have to be unique!');
@@ -49,9 +49,9 @@ export class EndpointManager {
     /**
      * Use this to get a List of all registered endpoints.
      *
-     * @returns {Array<EndpointDefinition<any, any, any>>} An array containing all the registered endpoints.
+     * @returns {Array<EndpointDefinition<any>>} An array containing all the registered endpoints.
      */
-    public getEndpoints = (): Array<EndpointDefinition<any, any, any>> => {
+    public getEndpoints = (): Array<EndpointDefinition<any>> => {
         return this.endpoints;
     };
 
@@ -62,9 +62,9 @@ export class EndpointManager {
      * @param path The path for which an endpoint should be registered.
      * @returns {any} Either an endpoint or null.
      */
-    public getEndpoint = (path: string): EndpointDefinition<any, any, any> => {
+    public getEndpoint = (path: string): EndpointDefinition<any> => {
         for(let i = 0; i < this.endpoints.length; i++) {
-            let endPoint: EndpointDefinition<any, any, any> = this.endpoints[i];
+            let endPoint: EndpointDefinition<any> = this.endpoints[i];
 
             if(endPoint.path == path || (endPoint.path + '/' == path && endPoint.parameters.length > 0)) {
                 return this.endpoints[i];

@@ -56,7 +56,7 @@ export class GenericEndpoints extends BaseEndpoint {
             new EndpointDefinition(
                 '/helloworld',
                 this.helloworld.bind(this),
-                [new Parameter<string, null, null>('name', 'string field containing the name', new HelloWorldValidatorImpl())]
+                [new Parameter<string>('name', 'string field containing the name', new HelloWorldValidatorImpl())]
             )
         );
         endpointManager.registerEndpoint(
@@ -69,7 +69,7 @@ export class GenericEndpoints extends BaseEndpoint {
             new EndpointDefinition(
                 '/cache',
                 this.listCacheContent.bind(this),
-                [new Parameter<string, null, null>('name', 'string field containing the name of the cache', null)]
+                [new Parameter<string>('name', 'string field containing the name of the cache', null)]
             )
         );
     };
@@ -82,7 +82,7 @@ export class GenericEndpoints extends BaseEndpoint {
      * @param response The HTTP Response.
      * @param params An array containing the parameters for the endpoint with the desired generic types as defined.
      */
-    public index = (request: IncomingMessage, response: ServerResponse, params: [Parameter<null, null, null>]): void => {
+    public index = (request: IncomingMessage, response: ServerResponse, params: [Parameter<null>]): void => {
         console.log('index endpoint called!');
 
         super.redirect(response, '/welcome/index.html');
@@ -96,7 +96,7 @@ export class GenericEndpoints extends BaseEndpoint {
      * @param response The HTTP Response.
      * @param params An array containing the parameters for the endpoint with the desired generic types as defined.
      */
-    public slotmachineIndex = (request: IncomingMessage, response: ServerResponse, params: [Parameter<null, null, null>]): void => {
+    public slotmachineIndex = (request: IncomingMessage, response: ServerResponse, params: [Parameter<null>]): void => {
         console.log('slotmachine index endpoint called!');
 
         super.redirect(response, '/slotmachine/index.html');
@@ -110,7 +110,7 @@ export class GenericEndpoints extends BaseEndpoint {
      * @param response The HTTP Response.
      * @param params An array containing the parameters for the endpoint with the desired generic types as defined.
      */
-    public boozeIndex = (request: IncomingMessage, response: ServerResponse, params: [Parameter<null, null, null>]): void => {
+    public boozeIndex = (request: IncomingMessage, response: ServerResponse, params: [Parameter<null>]): void => {
         console.log('booze index endpoint called!');
 
         super.redirect(response, '/booze/index.html');
@@ -123,11 +123,11 @@ export class GenericEndpoints extends BaseEndpoint {
      * @param response The HTTP Response.
      * @param params An array containing the parameters for the endpoint with the desired generic types as defined.
      */
-    public listEndpoints = (request: IncomingMessage, response: ServerResponse, params: [Parameter<null, null, null>]): void => {
+    public listEndpoints = (request: IncomingMessage, response: ServerResponse, params: [Parameter<null>]): void => {
         console.log('listEndpoints endpoint called!');
 
         let manager: EndpointManager = EndpointManager.getInstance();
-        let endpoints: Array<EndpointDefinition<any, any, any>> = manager.getEndpoints();
+        let endpoints: Array<EndpointDefinition<any>> = manager.getEndpoints();
 
         let list:Array<{}> = [];
         for (let endpoint of endpoints) {
@@ -159,7 +159,7 @@ export class GenericEndpoints extends BaseEndpoint {
      * @param response The HTTP Response.
      * @param params An array containing the parameters for the endpoint with the desired generic types as defined.
      */
-    public helloworld = (request: IncomingMessage, response: ServerResponse, params: [Parameter<string, null, null>]): void => {
+    public helloworld = (request: IncomingMessage, response: ServerResponse, params: [Parameter<string>]): void => {
         console.log('helloworld endpoint called!');
 
         super.respondOK(
@@ -175,7 +175,7 @@ export class GenericEndpoints extends BaseEndpoint {
      * @param response
      * @param params
      */
-    public listCaches = (request: IncomingMessage, response: ServerResponse, params: [Parameter<string, null, null>]) :void => {
+    public listCaches = (request: IncomingMessage, response: ServerResponse, params: [Parameter<string>]) :void => {
         console.log('listCaches endpoint called!');
 
         MessageManager.getInstance().sendMessageWithCallback(null, (message: IPCMessage): void => {
@@ -192,7 +192,7 @@ export class GenericEndpoints extends BaseEndpoint {
      * @param response
      * @param params
      */
-    public listCacheContent = (request: IncomingMessage, response: ServerResponse, params: [Parameter<string, null, null>]): void => {
+    public listCacheContent = (request: IncomingMessage, response: ServerResponse, params: [Parameter<string>]): void => {
         console.log('listCacheContent endpoint called!');
 
         MessageManager.getInstance().sendMessageWithCallback({'cacheName' : params[0].getValue()}, (message: IPCMessage): void => {

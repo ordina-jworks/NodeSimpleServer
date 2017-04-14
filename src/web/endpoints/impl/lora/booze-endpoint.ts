@@ -61,7 +61,7 @@ export class BoozeEndpoint extends BaseEndpoint {
             new EndpointDefinition(
                 '/booze/levelExact',
                 this.levelExact.bind(this),
-                [new Parameter<number, null, null>('level', 'number field containing the exact level of the booze meter.', null)]
+                [new Parameter<number>('level', 'number field containing the exact level of the booze meter.', null)]
             )
         );
 
