@@ -46,7 +46,7 @@ export class ArduinoEndpoint extends BaseEndpoint {
      * @param response The HTTP Response.
      * @param params An array containing the parameters for the endpoint with the desired generic types as defined.
      */
-    public setArduinoMethod = (request: IncomingMessage, response: ServerResponse, params: Array<Parameter<boolean, null, null>>): void => {
+    public setArduinoMethod = (request: IncomingMessage, response: ServerResponse, params: Array<Parameter<boolean>>): void => {
         console.log('setArduinoMethod endpoint called!');
 
         this.config.arduino.useSerialOverJohnnyFive = params[0].getValue();
@@ -66,7 +66,7 @@ export class ArduinoEndpoint extends BaseEndpoint {
      * @param response The HTTP Response.
      * @param params An array containing the parameters for the endpoint with the desired generic types as defined.
      */
-    public getArduinoScenarios = (request: IncomingMessage, response: ServerResponse, params: Array<Parameter<null, null, null>>): void => {
+    public getArduinoScenarios = (request: IncomingMessage, response: ServerResponse, params: Array<Parameter<any>>): void => {
         console.log('getArduinoImplementations endpoint called!');
 
         //TODO: Implement!
@@ -79,7 +79,7 @@ export class ArduinoEndpoint extends BaseEndpoint {
      * @param response The HTTP Response.
      * @param params An array containing the parameters for the endpoint with the desired generic types as defined.
      */
-    public setArduinoScenario = (request: IncomingMessage, response: ServerResponse, params: Array<Parameter<string, null, null>>): void => {
+    public setArduinoScenario = (request: IncomingMessage, response: ServerResponse, params: Array<Parameter<string>>): void => {
         console.log('setArduinoImplementation endpoint called!');
 
         //TODO: Implement!

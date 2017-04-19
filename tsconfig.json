@@ -21,11 +21,5 @@
   },
   "exclude": [
     "node_modules"
-  ],
-  "include": [
-    "**/*.test.ts"
-  ],
-  "files": [
-    "test-config/test.ts"
   ]
 }
