@@ -18,9 +18,9 @@ export class Parameter<T> {
      *
      * @param name The name of the parameter. This is the name that needs to be given in the url address bar.
      * @param description The description for this parameter.
-     * @param validator The validator for this parameter. Or null if no validation is required.
+     * @param validator The optional validator for this parameter.
      */
-    constructor(name: string, description: string, validator: ParameterValidator<T>) {
+    constructor(name: string, description: string, validator?: ParameterValidator<T>) {
         this.name = name;
         this.description = description;
         this.validator = validator;

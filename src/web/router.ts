@@ -54,7 +54,7 @@ export class Router {
             this.tryAndServeFile(pathName, response);
 
         } else {
-            let endPoint: EndpointDefinition<any> = this.endpointManager.getEndpoint(pathName);
+            let endPoint: EndpointDefinition = this.endpointManager.getEndpoint(pathName);
 
             if(endPoint != null) {
                 this.tryAndHandleRestEndpoint(endPoint, pathName, request, response);
@@ -136,7 +136,7 @@ export class Router {
      * @param request The HTTP Request.
      * @param response The HTTP Response.
      */
-    private tryAndHandleRestEndpoint (endPoint: EndpointDefinition<any>, pathName: string, request: IncomingMessage, response: ServerResponse) {
+    private tryAndHandleRestEndpoint (endPoint: EndpointDefinition, pathName: string, request: IncomingMessage, response: ServerResponse) {
         let requestData: any = url.parse(request.url, true);
 
         console.log('Handling REST request: ' + pathName);
@@ -145,17 +145,48 @@ export class Router {
         } else {
             let urlParams: Array<any> = requestData.query;
 
-            if(endPoint.parameters.length === Object.keys(urlParams).length) {
+            //Handle query params
+            if(urlParams && Object.keys(urlParams).length > 0) {
+                if(endPoint.parameters.length === Object.keys(urlParams).length) {
+                    for (let i = 0; i < endPoint.parameters.length; i++) {
+                        let param: Parameter<any> = endPoint.parameters[i];
+                        param.setValue(urlParams[endPoint.parameters[i].name]);
+
+                        if (!param.validate()) {
+                            this.displayError(response, 400, 'Validation failed: ' + param.validator.description(), pathName);
+                            return;
+                        }
+                    }
+                    endPoint.execute(request, response);
+                } else {
+                    this.displayError(response, 400, 'Parameters incorrect => Required: ' + JSON.stringify(endPoint.parameters), pathName);
+                }
+                return;
+            }
+
+            //Handle restful URL params
+            if(pathName.split('/').length == endPoint.path.split('/').length) {
+
+                let pathAndParams: string[] = pathName.split('/');
+                let endpointPath: string[] = endPoint.path.split('/');
+
+                let params: {} = {};
+                for(let i: number = 0; i < pathAndParams.length; i++) {
+                    if(pathAndParams[i] != endpointPath[i]) {
+                        console.log('Param found in url: '+ endpointPath[i] + ' with value: ' + pathAndParams[i]);
+                        params[endpointPath[i].substring(1, endpointPath[i].length - 1)] = pathAndParams[i];
+                    }
+                }
+
                 for (let i = 0; i < endPoint.parameters.length; i++) {
                     let param: Parameter<any> = endPoint.parameters[i];
-                    param.setValue(urlParams[endPoint.parameters[i].name]);
+                    param.setValue(params[endPoint.parameters[i].name]);
 
                     if (!param.validate()) {
                         this.displayError(response, 400, 'Validation failed: ' + param.validator.description(), pathName);
                         return;
                     }
                 }
-
                 endPoint.execute(request, response);
             } else {
                 this.displayError(response, 400, 'Parameters incorrect => Required: ' + JSON.stringify(endPoint.parameters), pathName);

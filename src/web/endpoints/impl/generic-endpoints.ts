@@ -9,7 +9,8 @@ import {MessageManager}         from "../../../ipc/message-manager";
 import {IPCMessage}             from "../../../ipc/messages/ipc-message";
 import {MessageTarget}          from "../../../ipc/message-target";
 import {DataBrokerOperation}    from "../../../workers/impl/databroker/data-broker-operation";
-import {HelloWorldValidatorImpl}from "../parameters/impl/hello-world-param-validator-impl";
+import {StringNotEmptyValidatorImpl}from "../parameters/impl/string-not-empty-validator-impl";
+import {NumberIsPositiveValidatorImpl}from "../parameters/impl/number_is_positive_validator_impl";
 
 /**
  * Class containing the generic and application default endpoints.
@@ -36,18 +37,6 @@ export class GenericEndpoints extends BaseEndpoint {
         );
         endpointManager.registerEndpoint(
             new EndpointDefinition(
-                '/slotmachine',
-                this.slotmachineIndex.bind(this)
-            )
-        );
-        endpointManager.registerEndpoint(
-            new EndpointDefinition(
-                '/booze',
-                this.boozeIndex.bind(this)
-            )
-        );
-        endpointManager.registerEndpoint(
-            new EndpointDefinition(
                 '/endpoints',
                 this.listEndpoints.bind(this)
             )
@@ -56,7 +45,14 @@ export class GenericEndpoints extends BaseEndpoint {
             new EndpointDefinition(
                 '/helloworld',
                 this.helloworld.bind(this),
-                [new Parameter<string>('name', 'string field containing the name', new HelloWorldValidatorImpl())]
+                [new Parameter<string>('name', 'string field containing the name', new StringNotEmptyValidatorImpl())]
+            )
+        );
+        endpointManager.registerEndpoint(
+            new EndpointDefinition(
+                '/helloworld/{name}',
+                this.helloworld.bind(this),
+                [new Parameter<string>('name', 'string field containing the name', new StringNotEmptyValidatorImpl())]
             )
         );
         endpointManager.registerEndpoint(
@@ -69,7 +65,24 @@ export class GenericEndpoints extends BaseEndpoint {
             new EndpointDefinition(
                 '/cache',
                 this.listCacheContent.bind(this),
-                [new Parameter<string>('name', 'string field containing the name of the cache', null)]
+                [new Parameter<string>('name', 'string field containing the name of the cache')]
+            )
+        );
+        endpointManager.registerEndpoint(
+            new EndpointDefinition(
+                '/cache/{name}',
+                this.listCacheContent.bind(this),
+                [new Parameter<string>('name', 'string field containing the name of the cache')]
+            )
+        );
+        endpointManager.registerEndpoint(
+            new EndpointDefinition(
+                '/cache/{name}/worker/{id}',
+                this.listCacheContentForWorker.bind(this),
+                [
+                    new Parameter<string>('name', 'string field containing the name of the cache', new StringNotEmptyValidatorImpl()),
+                    new Parameter<number>('id', 'number field containing the worker id for which to display all items in the cache', new NumberIsPositiveValidatorImpl())
+                ]
             )
         );
     };
@@ -89,34 +102,6 @@ export class GenericEndpoints extends BaseEndpoint {
     };
 
     /**
-     * Endpoint handler that reroutes to the index page of the slotmachine application.
-     * This allow the /slotmachine endpoint to point to the web page, so index.html can be omitted.
-     *
-     * @param request The HTTP Request.
-     * @param response The HTTP Response.
-     * @param params An array containing the parameters for the endpoint with the desired generic types as defined.
-     */
-    public slotmachineIndex = (request: IncomingMessage, response: ServerResponse, params: [Parameter<null>]): void => {
-        console.log('slotmachine index endpoint called!');
-
-        super.redirect(response, '/slotmachine/index.html');
-    };
-
-    /**
-     * Endpoint handler that reroutes to the index page of the booze application.
-     * This allow the /booze endpoint to point to the web page, so index.html can be omitted.
-     *
-     * @param request The HTTP Request.
-     * @param response The HTTP Response.
-     * @param params An array containing the parameters for the endpoint with the desired generic types as defined.
-     */
-    public boozeIndex = (request: IncomingMessage, response: ServerResponse, params: [Parameter<null>]): void => {
-        console.log('booze index endpoint called!');
-
-        super.redirect(response, '/booze/index.html');
-    };
-
-    /**
      * Endpoint handler that generates a list of all registered endpoints.
      *
      * @param request The HTTP Request.
@@ -127,7 +112,7 @@ export class GenericEndpoints extends BaseEndpoint {
         console.log('listEndpoints endpoint called!');
 
         let manager: EndpointManager = EndpointManager.getInstance();
-        let endpoints: Array<EndpointDefinition<any>> = manager.getEndpoints();
+        let endpoints: Array<EndpointDefinition> = manager.getEndpoints();
 
         let list:Array<{}> = [];
         for (let endpoint of endpoints) {
@@ -201,5 +186,15 @@ export class GenericEndpoints extends BaseEndpoint {
             super.respondOK(response, message.payload);
 
         }, MessageTarget.DATA_BROKER, DataBrokerOperation.RETRIEVE_CACHE + "");
+    };
+
+    /**
+     *
+     * @param request
+     * @param response
+     * @param params
+     */
+    public listCacheContentForWorker = (request: IncomingMessage, response: ServerResponse, params: [Parameter<any>]) => {
+        super.respondServerError(response, {error: 'Functionality not implemented!', parameters: params});
     };
 }

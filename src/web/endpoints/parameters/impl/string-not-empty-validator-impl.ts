@@ -3,7 +3,7 @@ import {ParameterValidator} from "../parameter-validator";
 /**
  * Validator implementation for the HelloWorld example.
  */
-export class HelloWorldValidatorImpl implements ParameterValidator<string, null, null> {
+export class StringNotEmptyValidatorImpl implements ParameterValidator<string> {
 
     validate(value: string): boolean {
         return value != null && value.trim().length > 0;

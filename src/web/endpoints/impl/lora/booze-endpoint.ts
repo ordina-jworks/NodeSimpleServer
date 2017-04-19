@@ -29,6 +29,12 @@ export class BoozeEndpoint extends BaseEndpoint {
         let endpointManager: EndpointManager = EndpointManager.getInstance();
         endpointManager.registerEndpoint(
             new EndpointDefinition(
+                '/booze',
+                this.boozeIndex.bind(this)
+            )
+        );
+        endpointManager.registerEndpoint(
+            new EndpointDefinition(
                 '/booze/levelFull',
                 this.levelFull.bind(this)
             )
@@ -61,16 +67,36 @@ export class BoozeEndpoint extends BaseEndpoint {
             new EndpointDefinition(
                 '/booze/levelExact',
                 this.levelExact.bind(this),
-                [new Parameter<number>('level', 'number field containing the exact level of the booze meter.', null)]
+                [new Parameter<number>('level', 'number field containing the exact level of the booze meter.')]
             )
         );
-
+        endpointManager.registerEndpoint(
+            new EndpointDefinition(
+                '/booze/levelExact/{level}',
+                this.levelExact.bind(this),
+                [new Parameter<number>('level', 'number field containing the exact level of the booze meter.')]
+            )
+        );
         endpointManager.registerEndpoint(
             new EndpointDefinition(
                 '/pxm/levelTrigger',
                 this.levelTrigger.bind(this)
             )
         );
+    };
+
+    /**
+     * Endpoint handler that reroutes to the index page of the booze application.
+     * This allow the /booze endpoint to point to the web page, so index.html can be omitted.
+     *
+     * @param request The HTTP Request.
+     * @param response The HTTP Response.
+     * @param params An array containing the parameters for the endpoint with the desired generic types as defined.
+     */
+    public boozeIndex = (request: IncomingMessage, response: ServerResponse, params: [Parameter<null>]): void => {
+        console.log('booze index endpoint called!');
+
+        super.redirect(response, '/booze/index.html');
     };
 
     public levelTrigger = (request: IncomingMessage, response: ServerResponse): void => {
@@ -111,7 +137,7 @@ export class BoozeEndpoint extends BaseEndpoint {
         super.respondOK(response, 'Level set to EMPTY', false, 'text/plain');
     };
 
-    public levelExact = (request: IncomingMessage, response: ServerResponse, params: [Parameter<number, null, null>]): void => {
+    public levelExact = (request: IncomingMessage, response: ServerResponse, params: [Parameter<number>]): void => {
         this.messageManager.sendMessage({level: params[0].getValue()}, MessageTarget.INTERVAL_WORKER, 'broadcastMessage');
         super.respondOK(response, 'Level set to ' + params[0].getValue() + '%', false, 'text/plain');
     };

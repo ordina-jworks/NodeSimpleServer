@@ -1,6 +1,6 @@
-import {suite, test} from "mocha-typescript";
+import {suite, test}    from "mocha-typescript";
 import {IntervalWorker} from "./interval-worker";
-import {expect} from 'chai';
+import {expect}         from 'chai';
 import {MessageHandler} from "../../ipc/message-handler";
 
 @suite("Interval worker")

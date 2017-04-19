@@ -4,6 +4,7 @@ import {MessageManager}                     from "../../../../ipc/message-manage
 import {MessageTarget}                      from "../../../../ipc/message-target";
 import {EndpointManager}                    from "../../endpoint-manager";
 import {EndpointDefinition}                 from "../../endpoint-definition";
+import {Parameter}                          from "../../parameters/parameter";
 
 /**
  * Class containing the Slotmachine endpoints.
@@ -27,17 +28,36 @@ export class SlotmachineEndpoint extends BaseEndpoint {
         let endpointManager: EndpointManager = EndpointManager.getInstance();
         endpointManager.registerEndpoint(
             new EndpointDefinition(
+                '/slotmachine',
+                this.slotmachineIndex.bind(this)
+            )
+        );
+        endpointManager.registerEndpoint(
+            new EndpointDefinition(
                 '/slotmachine/click',
                 this.fakeClick.bind(this)
             )
         );
-
         endpointManager.registerEndpoint(
             new EndpointDefinition(
                 '/pxm/buttonTrigger',
                 this.buttonTrigger.bind(this)
             )
         );
+    };
+
+    /**
+     * Endpoint handler that reroutes to the index page of the slotmachine application.
+     * This allow the /slotmachine endpoint to point to the web page, so index.html can be omitted.
+     *
+     * @param request The HTTP Request.
+     * @param response The HTTP Response.
+     * @param params An array containing the parameters for the endpoint with the desired generic types as defined.
+     */
+    public slotmachineIndex = (request: IncomingMessage, response: ServerResponse, params: [Parameter<null>]): void => {
+        console.log('slotmachine index endpoint called!');
+
+        super.redirect(response, '/slotmachine/index.html');
     };
 
     /**

@@ -3,7 +3,7 @@ import {ParameterValidator} from "../parameter-validator";
 /**
  * Validator implementation for the ArduinoMethod endpoint.
  */
-export class ArduinoMethodValidatorImpl implements ParameterValidator<string, null, null> {
+export class ArduinoMethodValidatorImpl implements ParameterValidator<string> {
 
     validate(value: string): boolean {
         let isNotEmpty: boolean = value != null && value.trim().length > 0;
