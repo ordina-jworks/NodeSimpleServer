@@ -7,7 +7,7 @@ import {EndpointDefinition} from "./endpoint-definition";
  */
 export class EndpointManager {
 
-    private static instance: EndpointManager            = null;
+    private static instance: EndpointManager       = null;
     public endpoints: Array<EndpointDefinition>    = null;
 
     /**
@@ -39,7 +39,7 @@ export class EndpointManager {
     public registerEndpoint = (endpoint: EndpointDefinition): void => {
         for (let existingEndpoint of this.endpoints) {
             if(endpoint.path == existingEndpoint.path) {
-                console.error('An endpoint has already been registered with the same path! Paths have to be unique!');
+                console.error('An endpoint has already been registered with the same path! Paths have to be unique! (' + endpoint.path + ')');
                 return;
             }
         }
@@ -71,7 +71,10 @@ export class EndpointManager {
                 return this.endpoints[i];
             }
 
-            //TODO: Rework and clean up code!
+            //TODO: Fix bug when requesting closely matching urls:
+            //TODO: E.g. /content/value1 where value1 is a param
+            //TODO: and /content/someOtherPath where someOtherPath is actually part of the endpoint path
+            //TODO: In some cases the wrong endpoint may be returned!
             //Complex restful matcher
             let matches: string[] = endPoint.path.match('{(.*?)}');
             if(matches && matches.length > 0){
@@ -107,7 +110,7 @@ export class EndpointManager {
         for (let existingEndpoint of this.endpoints) {
             if(existingEndpoint.path == path) {
                 this.endpoints.splice(this.endpoints.indexOf(existingEndpoint), 1);
-                console.log('Endpoint has been removed!');
+                console.log('Endpoint (' + path + ') has been removed!');
                 return;
             }
         }

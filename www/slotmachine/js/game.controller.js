@@ -4,9 +4,9 @@
     angular.module('devoxx')
         .controller('GameCtrl', GameCtrl);
 
-    GameCtrl.$inject = ['$scope', '$mdDialog', 'nodeSocketService', '$timeout', '$localForage', 'settingsService'];
+    GameCtrl.$inject = ['$scope', '$mdDialog', 'nodeSocketService', '$timeout', 'settingsService'];
 
-    function GameCtrl($scope, $mdDialog, nodeSocketService, $timeout, $localForage, settingsService) {
+    function GameCtrl($scope, $mdDialog, nodeSocketService, $timeout, settingsService) {
 
         var settings = settingsService.getSettings(),
             NUMBER_OF_ROUNDS = settings.numberOfRounds,
@@ -15,10 +15,6 @@
             LOOP = settings.loopAfterLastWonGame;
 
         $scope.roundCounter = NUMBER_OF_ROUNDS;
-        $localForage.bind($scope, {
-            key: 'gameCounter', // required
-            defaultValue: 1 // a default value (needed if it is not already in the database)
-        });
         $scope.gameCounter = 1;
 
         var state = {
@@ -52,7 +48,6 @@
         var clearCounter = 0;
         $scope.clearLocalStorage = function() {
             if(clearCounter === 2) {
-                $localForage.clear('gameCounter');
                 $scope.gameCounter = 1;
             }else{
                 clearCounter++;

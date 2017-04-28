@@ -16,7 +16,8 @@
       "serialport",
       "chai",
       "sinon",
-      "sinon-chai"
+      "sinon-chai",
+      "mocha"
     ]
   },
   "exclude": [

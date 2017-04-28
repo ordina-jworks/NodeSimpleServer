@@ -1,6 +1,7 @@
 import {suite, test}    from "mocha-typescript";
-import {IntervalWorker} from "./interval-worker";
 import {expect}         from 'chai';
+
+import {IntervalWorker} from "./interval-worker";
 import {MessageHandler} from "../../ipc/message-handler";
 
 @suite("Interval worker")
@@ -15,7 +16,7 @@ class IntervalWorkerTest {
         this.worker = new IntervalWorker(IntervalWorkerTest.id);
     }
 
-    @test("should set id")
+    @test()
     testSetId() {
         expect(this.worker.workerId).to.eql(IntervalWorkerTest.id);
     }
