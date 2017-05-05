@@ -1,22 +1,29 @@
+import * as fs from "fs";
+
+import {Stats}              from "fs";
 import {IncomingMessage}    from "http";
 import {ServerResponse}     from "http";
 
-import {Parameter}              from "../parameters/parameter";
-import {EndpointManager}        from "../endpoint-manager";
-import {EndpointDefinition}     from "../endpoint-definition";
-import {BaseEndpoint}           from "../base-endpoint";
-import {MessageManager}         from "../../../ipc/message-manager";
-import {IPCMessage}             from "../../../ipc/messages/ipc-message";
-import {MessageTarget}          from "../../../ipc/message-target";
-import {DataBrokerOperation}    from "../../../workers/impl/databroker/data-broker-operation";
-import {StringNotEmptyValidatorImpl}from "../parameters/impl/string-not-empty-validator-impl";
-import {NumberIsPositiveValidatorImpl}from "../parameters/impl/number_is_positive_validator_impl";
+import {Parameter}                      from "../parameters/parameter";
+import {EndpointManager}                from "../endpoint-manager";
+import {EndpointDefinition}             from "../endpoint-definition";
+import {BaseEndpoint}                   from "../base-endpoint";
+import {MessageManager}                 from "../../../ipc/message-manager";
+import {IPCMessage}                     from "../../../ipc/messages/ipc-message";
+import {MessageTarget}                  from "../../../ipc/message-target";
+import {DataBrokerOperation}            from "../../../workers/impl/databroker/data-broker-operation";
+import {StringNotEmptyValidatorImpl}    from "../parameters/impl/string-not-empty-validator-impl";
+import {NumberIsPositiveValidatorImpl}  from "../parameters/impl/number_is_positive_validator_impl";
+import {Config}                         from "../../../../resources/config";
 
 /**
  * Class containing the generic and application default endpoints.
  * All methods in this class should be static and no state should be kept!
  */
 export class GenericEndpoints extends BaseEndpoint {
+
+    private config: Config              = null;
+    private webContentFolder: string    = null;
 
     /**
      * Constructor for the GenericEndpoints class.
@@ -25,6 +32,9 @@ export class GenericEndpoints extends BaseEndpoint {
         super();
 
         this.mapEntryPoints();
+        this.config = Config.getInstance();
+
+        this.webContentFolder = this.config.settings.webContentFolder;
     }
 
     public mapEntryPoints = (): void => {
@@ -39,6 +49,12 @@ export class GenericEndpoints extends BaseEndpoint {
             new EndpointDefinition(
                 '/endpoints',
                 this.listEndpoints.bind(this)
+            )
+        );
+        endpointManager.registerEndpoint(
+            new EndpointDefinition(
+                '/apps',
+                this.listWebapps.bind(this)
             )
         );
         endpointManager.registerEndpoint(
@@ -135,6 +151,28 @@ export class GenericEndpoints extends BaseEndpoint {
         }
 
         super.respondOK(response, list);
+    };
+
+    /**
+     * Endpoint handler that generates a list of available webapps.
+     *
+     * @param request The HTTP Request.
+     * @param response The HTTP Response.
+     * @param params An array containing the parameters for the endpoint with the desired generic types as defined.
+     */
+    public listWebapps = (request: IncomingMessage, response: ServerResponse, params: [Parameter<null>]): void => {
+        console.log('listWebapps endpoint called!');
+
+        let apps: string[] = [];
+        let items: string[] = fs.readdirSync(this.webContentFolder);
+        items.forEach((item: string) => {
+            let stats: Stats = fs.statSync(this.webContentFolder + '/' + item);
+            if(stats.isDirectory() && item.search('bower_components') == -1) {
+                apps.push(this.webContentFolder + '/' + item);
+            }
+        });
+
+        super.respondOK(response, {apps: apps});
     };
 
     /**
