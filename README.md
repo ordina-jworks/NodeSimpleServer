@@ -111,5 +111,5 @@ The blog post is based on the code up to [this commit!](https://github.com/ordin
 **Functionality to be implemented:**
 ====================================
 - Implement decent custom logger
-- Convert slotmachine and booze-o-meter frontends to TypeScript and AngularJS
+- Convert slotmachine and booze-o-meter frontends to TypeScript and Angular
 - Add OAuth2 support 

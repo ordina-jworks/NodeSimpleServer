@@ -8,10 +8,12 @@
     "postinstall": "npm install forever -g && npm install -g bower && npm install typescript -g",
     "build": "tsc -p ./",
     "prestart": "bower install --allow-root && tsc -p ./",
-    "dev-test-watch": "mocha-typescript-watch -o ./test-config/mocha.opts",
     "start": "forever --minUptime 10000 -o output.log src/app.js",
     "stop": "forever stopall",
-    "test": "tsc -p . && mocha --opts ./test-config/mocha.opts"
+    "test": "tsc -p . && mocha --opts ./test-config/mocha.opts",
+    "dev-test-watch": "mocha-typescript-watch -o ./test-config/mocha.opts",
+    "create-docker": "docker build -t node-simple-server .",
+    "run-docker": "docker run -it -p 7080:7080 -p 7081:7081 node-simple-server"
   },
 
   "dependencies": {
