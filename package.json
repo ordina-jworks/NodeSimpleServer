@@ -13,7 +13,7 @@
     "test": "tsc -p . && mocha --opts ./test-config/mocha.opts",
     "dev-test-watch": "mocha-typescript-watch -o ./test-config/mocha.opts",
     "create-docker": "docker build -t node-simple-server .",
-    "run-docker": "docker run -it -p 7080:7080 -p 7081:7081 node-simple-server"
+    "run-docker": "docker run -it -p 8080:8080 -p 8000:8000 node-simple-server"
   },
 
   "dependencies": {

@@ -4,8 +4,8 @@ export class Config {
 
     //Config variables:
     public settings = {
-        httpPort:                       7080,
-        socketPort:                     7081,
+        httpPort:                       8080,
+        socketPort:                     8000,
 
         webContentFolder:               "www",
         allowFolderListing:             true,

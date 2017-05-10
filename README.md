@@ -25,21 +25,21 @@ The server application is written in TypeScript.
 - Open a terminal or command window and go to the root folder of the project
 - Execute the command: `npm install`
 - Execute the command: `npm start`
-- Open a browser and go to: [http://localhost:7080/](http://localhost:7080/)
+- Open a browser and go to: [http://localhost:8080/](http://localhost:8080/)
 - You should now see the web page with a big NodeJS logo
 
 **Running with Docker:**
 - Make sure you have Docker installed
 - Go to the root folder of the project
-- Execute the following command: `docker build -t node-simple-server .`
-- Then run the newly created docker image by executing the following command: `docker run -p 7080:7080 -d -it node-simple-server`
+- Execute the following command: `npm run create-docker`
+- Then run the newly created docker image by executing the following command: `npm run docker-run`
 - For now docker will always pull the latest files from the master branch. Change this to meet your needs!
 
 **Some useful endpoints:**
 
-- [`http://localhost:7080/endpoints`](http://localhost:7080/endpoints)
+- [`http://localhost:8080/endpoints`](http://localhost:8080/endpoints)
   - This lists all the registered endpoints with parameters and descriptions.
-- [`http://localhost:7080/helloworld?name=test`](http://localhost:7080/helloworld/?name=test)
+- [`http://localhost:8080/helloworld?name=test`](http://localhost:8080/helloworld/?name=test)
   - This is a demo endpoint that prints a welcome message with the given name.
 
 **Application architecture**

@@ -1,6 +1,6 @@
 FROM node:boron
 
-EXPOSE 7080 7081
+EXPOSE 8080 8000
 
 RUN git clone https://github.com/ordina-jworks/NodeSimpleServer.git nss
 
