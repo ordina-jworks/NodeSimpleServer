@@ -44,7 +44,7 @@ export class Server {
         let port: number = this.config.settings.httpPort;
         //Create a http server that listens on the given port. the second param is for making the localhost loopback work.
         http.createServer(this.onRequest).listen(process.env.PORT || port, '0.0.0.0');
-        console.log('[WORKER id:' + workerId + '] Server started => Listening at port: ' + process.env.PORT || port);
+        console.log('[WORKER id:' + workerId + '] Server started => Listening at port: ' + (process.env.PORT || port));
     }
 
     /**

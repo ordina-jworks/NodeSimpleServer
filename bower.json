@@ -24,6 +24,7 @@
     "clipboard": "1.5.15",
     "jquery": "~2.1.4",
     "bootstrap": "~3.3.5",
+    "socket.io-client": "~2.0.1",
 
     "angular": "~1.6.4",
     "angular-route": "~1.6.4",

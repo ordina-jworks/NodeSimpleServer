@@ -1,7 +1,8 @@
 import Timer        = NodeJS.Timer;
-import WebSocket    = require('ws');
+import socketIO		= require('socket.io');
 
 import {clearInterval}  from "timers";
+import * as http        from "http";
 
 import {NodeWorker}     from '../node-worker';
 import {Config}         from "../../../resources/config";
@@ -16,6 +17,7 @@ import {IPCMessage}     from "../../ipc/messages/ipc-message";
 import {MessageManager} from "../../ipc/message-manager";
 import {IPCRequest}     from "../../ipc/messages/ipc-request";
 
+
 /**
  * IntervalWorker class.
  *
@@ -27,10 +29,10 @@ export class IntervalWorker implements NodeWorker {
     workerId: string                = null;
     handler: MessageHandler         = null;
 
-    private interval: Timer             = null;
-    private config: Config              = null;
-    private arduino: Arduino            = null;
-    private socket: WebSocket.Server    = null;
+    private interval: Timer         = null;
+    private config: Config          = null;
+    private arduino: Arduino        = null;
+    private sio: SocketIO.Server    = null;
 
     /**
      * Constructor for the IntervalWorker.
@@ -54,14 +56,22 @@ export class IntervalWorker implements NodeWorker {
     public start(): void {
         console.log('[WORKER id:' + this.workerId + '] IntervalWorker starting...');
 
-        this.socket = new WebSocket.Server({ port: process.env.PORT || this.config.settings.socketPort, clientTracking: true });
-        this.socket.on('connection', (ws) => {
-            ws.on('message', (message) => {
-                console.log('received: %s', message);
-                //TODO: handle message from client!
-            });
+        this.sio = socketIO(
+            http.createServer()
+                .listen(process.env.SOCKETPORT || this.config.settings.socketPort, '0.0.0.0')
+        );
+        this.sio.serveClient(true);
 
-            ws.send('Welcome!');
+        this.sio
+            .of('/socket')
+            .on('connection', (socket: SocketIO.Socket) => {
+            console.log(socket.id + ' connected');
+            socket.emit('welcome', 'You have successfully connected to the web socket!');
+
+            socket.on('app-event', (data: any) => {
+                //TODO: Test this! It seems not to work yet!!!
+               console.log('Message received from client:' + data);
+            });
         });
 
         this.setupArduino();
@@ -110,7 +120,7 @@ export class IntervalWorker implements NodeWorker {
     private loop(): void {
         console.log('IntervalWorker loop start...');
 
-        //TODO: Do recurring things!
+        //Do recurring things!
 
         console.log('IntervalWorker loop end!');
     };
@@ -122,9 +132,8 @@ export class IntervalWorker implements NodeWorker {
      * @param message The message to broadcast to all connected clients.
      */
     private broadcastMessage(message: any): void {
-        this.socket.clients.forEach((client: WebSocket) => {
-           client.send(JSON.stringify(message));
-        });
+        console.log('Broadcasting web socket message');
+        this.sio.of('/socket').emit('app-event', JSON.stringify(message));
     }
 
     /**
@@ -133,7 +142,7 @@ export class IntervalWorker implements NodeWorker {
      * @param message The IPCMessage that is received. Can be of subtypes IPCRequest or IPCReply.
      */
     public onMessage(message: IPCMessage): void {
-        console.log('Intervalworker message received');
+        console.log('Interval worker message received');
 
         if(message.type == IPCMessage.TYPE_REQUEST) {
             let m: IPCRequest = <IPCRequest>message;
