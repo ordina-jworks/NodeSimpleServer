@@ -54,7 +54,7 @@ export class IntervalWorker implements NodeWorker {
     public start(): void {
         console.log('[WORKER id:' + this.workerId + '] IntervalWorker starting...');
 
-        this.socket = new WebSocket.Server({ port: this.config.settings.socketPort, clientTracking: true });
+        this.socket = new WebSocket.Server({ port: process.env.PORT || this.config.settings.socketPort, clientTracking: true });
         this.socket.on('connection', (ws) => {
             ws.on('message', (message) => {
                 console.log('received: %s', message);
