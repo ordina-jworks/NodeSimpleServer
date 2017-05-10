@@ -31,17 +31,22 @@
     "ws": "^2.2.3"
   },
   
-    "devDependencies": {
-      "@types/mocha" : "^2.2.41",
-      "@types/chai": "^3.4.34",
-      "@types/sinon": "^1.16.34",
-      "@types/sinon-chai": "^2.7.27",
-      
-      "chai": "^3.5.0",
-      "sinon": "^1.17.7",
-      "sinon-chai": "^2.8.0",
-      
-      "mocha": "^3.3.0",
-      "mocha-typescript": "^1.1.0"
-    }
+  "devDependencies": {
+    "@types/mocha" : "^2.2.41",
+    "@types/chai": "^3.4.34",
+    "@types/sinon": "^1.16.34",
+    "@types/sinon-chai": "^2.7.27",
+
+    "chai": "^3.5.0",
+    "sinon": "^1.17.7",
+    "sinon-chai": "^2.8.0",
+
+    "mocha": "^3.3.0",
+    "mocha-typescript": "^1.1.0"
+  },
+
+  "engines": {
+    "node": "7.8.0",
+    "npm": "4.2.0"
+  }
 }
