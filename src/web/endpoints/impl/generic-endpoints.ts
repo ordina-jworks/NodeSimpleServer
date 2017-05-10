@@ -187,7 +187,7 @@ export class GenericEndpoints extends BaseEndpoint {
 
         super.respondOK(
             response,
-            'Hello World! Hello there ' + params[0].getValue() + '!',
+            'Hello World!\n\nHello there ' + params[0].getValue() + '!',
             false
         );
     };
@@ -233,6 +233,7 @@ export class GenericEndpoints extends BaseEndpoint {
      * @param params
      */
     public listCacheContentForWorker = (request: IncomingMessage, response: ServerResponse, params: [Parameter<any>]) => {
+        //TODO: Implement correct functionality!
         super.respondServerError(response, {error: 'Functionality not implemented!', parameters: params});
     };
 }
