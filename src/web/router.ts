@@ -159,7 +159,11 @@ export class Router {
                     }
                     endPoint.execute(request, response);
                 } else {
-                    this.displayError(response, 400, 'Parameters incorrect => Required: ' + JSON.stringify(endPoint.parameters), pathName);
+                    if(endPoint.parameters.length == 0) {
+                        this.displayError(response, 400, 'Parameters incorrect => This endpoint takes no parameters!', pathName);
+                    } else {
+                        this.displayError(response, 400, 'Parameters incorrect => Required: ' + JSON.stringify(endPoint.parameters), pathName);
+                    }
                 }
                 return;
             }
@@ -189,7 +193,11 @@ export class Router {
                 }
                 endPoint.execute(request, response);
             } else {
-                this.displayError(response, 400, 'Parameters incorrect => Required: ' + JSON.stringify(endPoint.parameters), pathName);
+                if(endPoint.parameters.length == 0) {
+                    this.displayError(response, 400, 'Parameters incorrect => This endpoint takes no parameters!', pathName);
+                } else {
+                    this.displayError(response, 400, 'Parameters incorrect => Required: ' + JSON.stringify(endPoint.parameters), pathName);
+                }
             }
         }
     };

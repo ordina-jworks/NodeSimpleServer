@@ -8,6 +8,7 @@ export class Config {
         socketPort:                     8000,
 
         webContentFolder:               "www",
+        endpointScanFolder:             "src/web/endpoints/impl/",
         allowFolderListing:             true,
 
         intervalTimeoutInSeconds:       480,
@@ -16,6 +17,7 @@ export class Config {
     };
 
     public keys = {
+        openweatherMapApiKey:           ''
     };
 
     public arduino = {

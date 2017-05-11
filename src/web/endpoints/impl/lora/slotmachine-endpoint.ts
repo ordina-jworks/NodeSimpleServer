@@ -40,7 +40,7 @@ export class SlotmachineEndpoint extends BaseEndpoint {
         );
         endpointManager.registerEndpoint(
             new EndpointDefinition(
-                '/pxm/buttonTrigger',
+                '/slotmachine/buttonTrigger',
                 this.buttonTrigger.bind(this)
             )
         );

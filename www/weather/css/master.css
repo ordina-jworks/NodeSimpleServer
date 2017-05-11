@@ -1,0 +1,361 @@
+/******************************
+***  CSS for page content   ***
+******************************/
+html {
+    font-family: 'Lato', sans-serif !important;
+    color: #fffaeb;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+
+    color: #fffaeb;
+}
+
+h1, h2, h3, h4, h5 {
+    color: #fffaeb;
+    margin: 0 0 0 0;
+}
+
+.innerTitle {
+    font-size: 10px;
+}
+
+.topSpacing {
+    margin-top: 80px;
+}
+
+.bottomSpacing {
+    margin-bottom: 20px;
+}
+
+article {
+    height: 250px;
+    padding: 15px;
+
+    background-color: rgba(20, 20, 20, 0.4);
+}
+
+.animationDiv {
+    width: 450px;
+    height: 100%;
+    margin: -15px auto 0;
+}
+
+.mapDiv {
+    width: 350px;
+    height: 100%;
+    overflow: hidden;
+}
+
+.graphDiv {
+    width: 350px;
+    height: 100%;
+}
+
+.transparent {
+    opacity: 0;
+}
+
+.hidden {
+    visibility: hidden;
+}
+
+.centeredText {
+    text-align: center;
+}
+
+a:link {
+    color: #fffaeb;
+}
+a:visited {
+    color: #fffaeb;
+}
+a:hover {
+    color: #a4a39e;
+}
+a:active {
+    color: #4b4944;
+}
+
+/******************************
+***   CSS for page header   ***
+******************************/
+#headerTitle {
+    float: left;
+    margin-top: 10px;
+}
+
+#headerTitle h1 {
+    margin: 0;
+}
+
+#headerSearch {
+    float: right;
+}
+
+#headerWrapper {
+    background-color: rgba(20, 20, 20, 0.8);
+
+    width: 100%;
+    height: 60px;
+
+    top: 0;
+    left: 0;
+    position: fixed;
+
+    z-index: 1000;
+}
+
+#headerContent {
+    height: 60px;
+    padding-left: 15px;
+    padding-right: 15px;
+
+    line-height: 60px;
+    text-align: center;
+    margin: 0 auto;
+}
+
+@media (max-width: 370px) {
+
+    #headerTitleText {
+        display: none;
+    }
+
+    #shortHeaderTitleText {
+        margin-left: -10px !important;
+        display: inline;
+        font-size: 20pt;
+    }
+
+    #headerSearch {
+        margin-top: 7px;
+        margin-right: -10px;
+    }
+}
+
+@media (min-width: 370px) {
+
+    #headerTitleText {
+        display: none;
+    }
+
+    #shortHeaderTitleText {
+        display: inline;
+    }
+
+    #headerSearch {
+        margin-top: 5px;
+        /* margin-right: 85px; */
+    }
+}
+
+@media (min-width: 768px) {
+
+    #headerTitleText {
+        display: inline;
+    }
+
+    #shortHeaderTitleText {
+        display: none;
+    }
+
+    #headerSearch {
+        margin-right: 0;
+    }
+
+    #headerContent {
+        width: 767px;
+    }
+}
+
+@media (min-width: 992px) {
+    #headerContent {
+        width: 960px;
+    }
+}
+
+@media (min-width: 1200px) {
+    #headerContent {
+        width: 1200px;
+    }
+}
+
+/*********************************
+***   CSS for welcome search   ***
+*********************************/
+#initialSearch {
+    overflow-x: hidden;
+    overflow-y: hidden;
+
+    position: absolute;
+    margin: auto;
+
+    padding: 20px;
+    height: 400px;
+
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+
+    background-color: rgba(20, 20, 20, 0.6);
+}
+
+@media (max-width: 370px) {
+    #initialSearchTitle {
+        width: auto;
+        font-size: 400%;
+        text-align: center;
+    }
+
+    #initialImages {
+        margin: 50px auto 0 auto;
+        width: 350px;
+    }
+
+    .svgFirst {
+        margin-right: 5px;
+    }
+
+    .svgInbetween {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .svgLast {
+        margin-left: -15px;
+    }
+}
+
+@media (min-width: 370px) {
+    #initialSearchTitle {
+        width: 350px;
+        font-size: 400%;
+        text-align: center;
+    }
+
+    #initialImages {
+        margin: 50px auto;
+        width: 350px;
+    }
+
+    .svgFirst {
+        margin-right: 15px;
+    }
+
+    .svgInbetween {
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+
+    .svgLast {
+        margin-left: 0;
+    }
+}
+
+@media (min-width: 550px) {
+    #initialSearchTitle {
+        width: 500px;
+        font-size: 520%;
+    }
+
+    #initialImages {
+        margin: 80px auto 0 auto;
+        width: 500px;
+    }
+
+    .svgFirst {
+        margin-right: 40px;
+    }
+
+    .svgInbetween {
+        margin-left: 25px;
+        margin-right: 25px;
+    }
+
+    .svgLast {
+        margin-left: 40px;
+    }
+}
+
+#initialSearchTitle {
+    margin: 0 auto;
+}
+
+/******************************
+***   CSS for page footer   ***
+******************************/
+#footer {
+    background-color: rgba(20, 20, 20, 0.8);
+
+    width: 100%;
+    margin: 0 auto;
+    padding-left: 15px;
+    padding-right: 15px;
+
+    line-height: 30px;
+    text-align: center;
+}
+
+/******************************
+*** CSS for page background ***
+******************************/
+#backgroundWrapper {
+    margin: 0 auto;
+
+    width: 100%;
+    height: 100%;
+
+    top: 0;
+    left: 0;
+    z-index: -1;
+    position: fixed;
+}
+
+.bgImage {
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+
+    transition: opacity 1s ease-in-out;
+}
+
+#bgImage1 {
+    background-image: url(../img/bgs/bg_ClearSky.jpg);
+}
+
+#bgImage2 {
+    background-image: url(../img/bgs/bg_FewClouds.jpg);
+}
+
+#bgImage3 {
+    background-image: url(../img/bgs/bg_FewClouds2.jpg);
+}
+
+#bgImage4 {
+    background-image: url(../img/bgs/bg_BrokenClouds.jpg);
+}
+
+#bgImage5 {
+    background-image: url(../img/bgs/bg_ShowerRain.jpg);
+}
+
+#bgImage6 {
+    background-image: url(../img/bgs/bg_Rain.jpg);
+}
+
+#bgImage7 {
+    background-image: url(../img/bgs/bg_Thunderstorm.jpg);
+}
+
+#bgImage8 {
+    background-image: url(../img/bgs/bg_Snow.jpg);
+}
+
+#bgImage9 {
+    background-image: url(../img/bgs/bg_Mist.jpg);
+}

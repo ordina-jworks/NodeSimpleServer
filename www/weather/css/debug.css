@@ -1,0 +1,34 @@
+body {
+    background-color: #999999;
+    font-family: "Trebuchet MS", Helvetica, sans-serif;
+}
+
+#printout {
+    margin-left: 600px;
+}
+
+#buienraderImg {
+    position: fixed;
+}
+
+#container {
+    position: fixed;
+
+    width: 550px;
+    height: 512px;
+
+    padding: 0;
+    margin: 0;
+}
+
+.box {
+    opacity: 0.5;
+    float:left;
+
+    width: 8px;
+    height: 6px;
+    border: 1px solid white;
+
+    padding: 0;
+    margin: 0;
+}

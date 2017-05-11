@@ -32,11 +32,31 @@ export class ArduinoEndpoint extends BaseEndpoint {
         let endpointManager: EndpointManager = EndpointManager.getInstance();
         endpointManager.registerEndpoint(
             new EndpointDefinition(
+                '/arduino/',
+                this.index.bind(this)
+            )
+        );
+        endpointManager.registerEndpoint(
+            new EndpointDefinition(
                 '/arduino/setArduinoMethod',
                 this.setArduinoMethod.bind(this),
                 [new Parameter<string>('method', 'string field that contains the method used for arduino implementations', new ArduinoMethodValidatorImpl())]
             )
         );
+    };
+
+    /**
+     * Endpoint handler that reroutes to the index page of the welcome application.
+     * This allows the root / endpoint to point to the web page, so index.html can be omitted.
+     *
+     * @param request The HTTP Request.
+     * @param response The HTTP Response.
+     * @param params An array containing the parameters for the endpoint with the desired generic types as defined.
+     */
+    public index = (request: IncomingMessage, response: ServerResponse, params: [Parameter<null>]): void => {
+        console.log('index endpoint called!');
+
+        super.redirect(response, '/arduino/index.html');
     };
 
     /**

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html ng-app="weatherGenieApp" lang="en">
+    <head lang="en">
+        <!-- Meta information -->
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible"                  content="IE=edge"/>
+        <meta name="viewport"                               content="width=device-width, initial-scale=1"/>
+        <meta name="author"                                 content="Kevin Van den Abeele"/>
+        <meta name="keywords"                               content="Weather Belgium forecast rain wind mist fog drizzle sun sunshine thunder thunderstorm precipitation conditions"/>
+        <meta name="description"                            content="Your number one source for weather information!"/>
+        <meta property="og:description"                     content="Your number one source for weather information!"/>
+        <meta name="apple-mobile-web-app-capable"           content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style"  content="black">
+        <meta name="theme-color"                            content="#000000">
+
+        <!-- Page title -->
+        <title>Weather Genie</title>
+
+        <!-- Icons and thumbnail image -->
+        <link rel="shortcut icon"                       href="img/logo/favicon.ico" type="image/x-icon" />
+        <link rel="image_src"                           href="img/thumb.jpg" />
+        <link rel="apple-touch-icon"                    href="img/logo/apple-touch-icon.png" />
+        <link rel="apple-touch-icon" sizes="57x57"      href="img/logo/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon" sizes="72x72"      href="img/logo/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="76x76"      href="img/logo/apple-touch-icon-76x76.png" />
+        <link rel="apple-touch-icon" sizes="114x114"    href="img/logo/apple-touch-icon-114x114.png" />
+        <link rel="apple-touch-icon" sizes="120x120"    href="img/logo/apple-touch-icon-120x120.png" />
+        <link rel="apple-touch-icon" sizes="144x144"    href="img/logo/apple-touch-icon-144x144.png" />
+        <link rel="apple-touch-icon" sizes="152x152"    href="img/logo/apple-touch-icon-152x152.png" />
+        <link rel="apple-touch-icon" sizes="180x180"    href="img/logo/apple-touch-icon-180x180.png" />
+
+        <!-- Web fonts! -->
+        <link href='https://fonts.googleapis.com/css?family=Lato:400' rel='stylesheet' type='text/css' />
+
+        <!-- Stylesheets -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap.min.css"   rel="stylesheet" />
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.8.1/css/lightbox.min.css"            rel="stylesheet" />
+
+        <!-- TODO: CDN fallback to local files -->
+        <!--<link href="css/lib/bootstrap.min.css"  rel="stylesheet" />
+        <link href="css/lib/lightbox.css"       rel="stylesheet" media="screen" />-->
+
+        <!-- Local stylesheets -->
+        <link href="css/master.css"             rel="stylesheet" media="screen" />
+        <link href="css/components.css"         rel="stylesheet" media="screen" />
+    </head>
+
+    <!--***************************************************************
+    ************************* App backgrounds *************************
+    ***************************************************************-->
+    <body ng-controller="weatherController">
+        <div id="backgroundWrapper">
+            <div id="bgImage1" class="bgImage"></div>
+            <div id="bgImage2" class="bgImage transparent"></div>
+            <div id="bgImage3" class="bgImage transparent"></div>
+            <div id="bgImage4" class="bgImage transparent"></div>
+            <div id="bgImage5" class="bgImage transparent"></div>
+            <div id="bgImage6" class="bgImage transparent"></div>
+            <div id="bgImage7" class="bgImage transparent"></div>
+            <div id="bgImage8" class="bgImage transparent"></div>
+            <div id="bgImage9" class="bgImage transparent"></div>
+        </div>
+
+        <!--***************************************************************
+        ******************** Initial search screen ************************
+        ***************************************************************-->
+        <div id="initialSearch">
+            <h1 id="initialSearchTitle">Weather Genie</h1>
+
+            <form class="searchForm searchFormLarge" ng-submit="initialSearch()">
+                <input type="text" placeholder="How is the weather in..." name="search" autocomplete="off" spellcheck="false" class="searchText searchTextLarge" ng-model="city"/>
+                <input type="submit" class="searchSubmit searchButtonLarge" value=" "/><br/>
+            </form>
+
+            <div id="initialImages">
+                <svg class="svgFirst" height="75" width="75" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+                    <image x="0" y="0" height="75" width="75" xlink:href="img/svg/sun.svg"></image>
+                </svg>
+                <svg class="svgInbetween" height="75" width="75" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+                    <image x="0" y="0" height="75" width="75" xlink:href="img/svg/rain.svg"></image>
+                </svg>
+                <svg class="svgInbetween" height="75" width="75" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+                    <image x="0" y="0" height="75" width="75" xlink:href="img/svg/lightning.svg"></image>
+                </svg>
+                <svg class="svgLast" height="75" width="75" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+                    <image x="0" y="0" height="75" width="75" xlink:href="img/svg/temp.svg"></image>
+                </svg>
+            </div>
+        </div>
+
+        <!--***************************************************************
+        ******************** Main WeatherGenie screen *********************
+        ***************************************************************-->
+        <header id="headerWrapper" class="transparent hidden">
+            <div id="headerContent">
+                <a href="javascript:window.location.reload(true)">
+                    <div id="headerTitle">
+                        <h1 id="headerTitleText">Weather Genie</h1>
+                        <h1 id="shortHeaderTitleText">WG</h1>
+                    </div>
+                </a>
+                <div id="headerSearch">
+                    <form class="searchForm searchFormNormal" ng-submit="search()">
+                        <input type="text" placeholder="Search for city" name="search" spellcheck="false" class="searchText searchTextNormal" ng-model="city"/>
+                        <input type="submit" class="searchSubmit searchButtonNormal" value=" "/><br/>
+                    </form>
+                </div>
+            </div>
+        </header>
+
+        <div id="content" class="container topSpacing transparent hidden">
+            <!-- Temp, humidity and pressure -->
+            <div class="row">
+                <article class="col-xs-12 col-md-4 bottomSpacing">
+                    <h2 id="weatherLocation">{{weatherData.location | placename}}</h2>
+                    <br/>
+
+                    <h2>
+                        <span class="currentConditionTitle">Now:</span>
+                        <svg id="currentConditionSVG" height="100" width="100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+                            <image x="0" y="0" height="100" width="100" xlink:href="img/svg/sun.svg" ng-attr-xlink:href="{{ 'img/svg/' + (weatherData.conditions[0].id | openweathermapIconId) + '.svg' }}"></image>
+                        </svg>
+                    </h2>
+
+                    <div id="weatherConditionsWrapper">
+                        <h2 class="weatherCondition" ng-repeat="prediction in weatherData.predictions" ng-if="$index > 0">
+                            <div class="predictionDayDate">{{ prediction.date | date:'d/M' }}</div>
+                            <svg class="conditionIcon" height="40" width="40" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+                                <image x="0" y="0" height="40" width="40" xlink:href="img/svg/sun.svg" ng-attr-xlink:href="{{ 'img/svg/' + (prediction.iconcode | buienradarIconId) + '.svg' }}"></image>
+                            </svg>
+                            <div class="predictionDayTemp">{{ prediction.temperature }}°C</div>
+                        </h2>
+                    </div>
+
+                </article>
+                <article class="col-xs-12 col-md-4 bottomSpacing">
+                    <h2>Measurements:</h2>
+                    <br/>
+
+                    <div id="temperatureWrapper" class="measurementWrapper">
+                        <svg id="temperatureSVG" class="measurementIcon" height="40" width="40" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+                            <image x="0" y="0" height="40" width="40" xlink:href="img/svg/temp.svg"></image>
+                        </svg>
+                        <h2 class="measurementText">{{ weatherData.avgTemp | number:0 }} &deg;C</h2>
+                    </div>
+
+                    <div id="humidityWrapper" class="measurementWrapper">
+                        <svg id="humiditySVG" class="measurementIcon" height="40" width="40" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+                            <image x="0" y="0" height="40" width="40" xlink:href="img/svg/humidity.svg"></image>
+                        </svg>
+                        <h2 class="measurementText">{{ weatherData.relHumidity }} %</h2>
+                    </div>
+
+                    <div id="pressureWrapper" class="measurementWrapper">
+                        <svg id="pressureSVG" class="measurementIcon" height="40" width="40" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+                            <image x="0" y="0" height="40" width="40" xlink:href="img/svg/pressure.svg"></image>
+                        </svg>
+                        <h2 class="measurementText">{{ weatherData.pressure | number:0 }} hPa</h2>
+                    </div>
+                </article>
+                <article class="col-xs-12 col-md-4 bottomSpacing">
+                    <h2>Rain and lightning:</h2>
+                    <br/>
+
+                    <div id="lightningWrapper" class="measurementWrapper">
+                        <svg id="lightningSVG" class="measurementIcon" height="40" width="40" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+                            <image x="0" y="0" height="40" width="40" xlink:href="img/svg/lightning.svg"></image>
+                        </svg>
+                        <h2 class="measurementText">{{ lightningData.closestStrike.distance | optionalDistance }}</h2>
+                    </div>
+
+                    <div id="rainWrapper" class="measurementWrapper">
+                        <svg id="rainSVG" class="measurementIcon" height="40" width="40" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+                            <image x="0" y="0" height="40" width="40" xlink:href="img/svg/rain.svg"></image>
+                        </svg>
+                        <h2 class="measurementText">{{ rainData.intensity }} mm/u</h2>
+                    </div>
+                </article>
+            </div>
+
+            <!-- Sun and wind -->
+            <div class="row">
+                <article class="col-xs-12 col-md-6 bottomSpacing">
+                    <div class="animationDiv">
+
+                        <div id="sunContainer">
+                            <div id="sunPath"></div>
+                            <div id="sunWrapper">
+                                <div id="sun"></div>
+                            </div>
+                        </div>
+
+                        <div id="sunUpContainer" class="centeredText">
+                            <svg id="sunUpSVG" height="50" width="50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+                                <image x="0" y="0" height="50" width="50" xlink:href="img/svg/sunrise.svg"></image>
+                            </svg>
+                            <h4 class="centeredText">{{ weatherData.sunriseString }}</h4>
+                        </div>
+                        <div id="sunDownContainer" class="centeredText">
+                            <svg id="sunDownSVG" height="50" width="50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+                                <image x="0" y="0" height="50" width="50" xlink:href="img/svg/sunset.svg"></image>
+                            </svg>
+                            <h4 class="centeredText">{{ weatherData.sunsetString }}</h4>
+                        </div>
+                    </div>
+                </article>
+                <article class="col-xs-12 col-md-6 bottomSpacing">
+                    <div class="animationDiv">
+
+                        <div id="windDirectionContainer" class="centeredText">
+                            <svg id="windDirectionSVG" height="50" width="50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+                                <image x="0" y="0" height="50" width="50" xlink:href="img/svg/compass.svg"></image>
+                            </svg>
+                            <h4 class="centeredText">{{ weatherData.avgWindDirectionCardinal }}</h4>
+                        </div>
+
+                        <div id="compassWrapper">
+                            <div id="compass"></div>
+                            <div id="needle"></div>
+                        </div>
+
+                        <div id="windSpeedContainer" class="centeredText">
+                            <svg id="windSpeedSVG" height="50" width="50" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" >
+                                <image x="0" y="0" height="50" width="50" xlink:href="img/svg/windspeed.svg"></image>
+                            </svg>
+                            <h4 class="centeredText">{{ (weatherData.avgWindSpeed * 3.6) | number:0 }} km/h</h4>
+                        </div>
+
+                        <div id="windWrapper">
+                            <div id="windPost"></div>
+                            <div id="windArms"></div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+
+            <!-- Rain and thunder -->
+            <div class="row">
+                <article class="col-xs-12 col-md-6 bottomSpacing">
+                    <div class="graphDiv">
+                        <h4>Current rain: <span class="innerTitle">[x: minutes y: intensity]</span></h4>
+                        <canvas id="currentCanvas"></canvas>
+                    </div>
+                </article>
+                <article class="col-xs-12 col-md-6 bottomSpacing">
+                    <div class="graphDiv">
+                        <h4>Predicted rain: <span class="innerTitle">[x: minutes y: intensity]</span></h4>
+                        <canvas id="predictCanvas"></canvas>
+                    </div>
+                </article>
+            </div>
+
+            <!-- Maps -->
+            <div class="row">
+                <article class="col-xs-12 col-md-6 bottomSpacing">
+                    <div class="mapDiv">
+                        <h4>Lightning: <span class="innerTitle">[click or tap to view]</span></h4>
+                        <div id="lightning">
+                            <a href="https://images.lightningmaps.org/blitzortung/europe/index.php?map=benelux" data-lightbox="image-1" data-title="Lightning">
+                                <img id="lightningImg" class="externalImage" src="https://images.lightningmaps.org/blitzortung/europe/index.php?map=benelux" alt="lightning">
+                            </a>
+                        </div>
+                    </div>
+                </article>
+                <article class="col-xs-12 col-md-6 bottomSpacing">
+                    <div class="mapDiv">
+                        <h4>Precipitation: <span class="innerTitle">[click or tap to view]</span></h4>
+                        <div id="buienradar" class="map">
+                            <a href="https://api.buienradar.nl/image/1.0/radarmapbe/?ext=gif&hist=-1&forc=13&step=0&w=550&h=512" data-lightbox="image-2" data-title="Precipitation">
+                                <img id="buienradarImg" class="externalImage" src="https://api.buienradar.nl/image/1.0/radarmapbe/?ext=gif&hist=-1&forc=13&step=0&w=550&h=512" alt="precipitation"/>
+                            </a>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+
+        <footer id="footer" class="transparent hidden">
+            <a href="https://github.com/beele/weathergenie">Weather Genie uses Node.js and AngularJS! All resources used for educational purposes.</a>
+        </footer>
+
+        <!-- Scripts -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js">                                </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js">               </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.8.1/js/lightbox.min.js">                        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.66.0-2013.10.09/jquery.blockUI.min.js">    </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.5/angular.min.js">                           </script>
+        <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.5/angular-route.min.js">                     </script>-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js">                               </script>
+
+        <!-- TODO: CDN fallback to local files -->
+        <!--<script src="js/lib/jquery.js"></script>
+        <script src="js/lib/bootstrap.min.js"></script>
+        <script src="js/lib/lightbox.min.js"></script>
+        <script src="js/lib/blockui.js"></script>
+        <script src="js/lib/angular.min.js"></script>
+        <script src="js/lib/chart.js"></script>-->
+
+        <script src="js/app.js">        </script>
+        <script src="js/controllers.js"></script>
+        <script src="js/services.js">   </script>
+        <script src="js/filters.js">    </script>
+        <script src="js/utils.js">      </script>
+    </body>
+</html>

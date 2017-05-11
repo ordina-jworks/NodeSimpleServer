@@ -1,0 +1,730 @@
+/*************************
+***  CSS for content   ***
+*************************/
+#content {
+    overflow-x: hidden;
+}
+
+/*************************
+*** CSS for search box ***
+*************************/
+input {
+    outline: 0 !important;
+}
+
+form.searchForm input.searchText {
+    color: #8D8D8D;
+    -webkit-font-smoothing: antialiased;
+    font-family: sans-serif;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 5px 15px;
+    border: none;
+    float: left;
+    line-height: normal;
+    -webkit-appearance: none;
+    display: block;
+    border-radius: 0;
+}
+
+.searchTextNormal {
+    font-size: 120%;
+    width: 228px;
+    height: 28px;
+}
+
+@media (max-width: 370px) {
+    .searchTextLarge {
+        width: 228px;
+        font-size: 140%;
+    }
+
+    .searchFormLarge {
+        margin: 50px auto 0;
+        width: 280px;
+    }
+}
+
+@media (min-width: 370px) {
+    .searchTextLarge {
+        width: 273px;
+        font-size: 165%;
+    }
+
+    .searchFormLarge {
+        margin: 50px auto 0;
+        width: 325px;
+    }
+}
+
+@media (min-width: 550px) {
+    .searchTextLarge {
+        width: 448px;
+        font-size: 200%;
+    }
+
+    .searchFormLarge {
+        margin: 75px auto 0;
+        width: 500px;
+    }
+}
+
+.searchTextLarge {
+    height: 48px;
+}
+
+.searchFormLarge {
+    height: 50px;
+}
+
+form.searchForm input.searchSubmit {
+    display: block;
+    background: url("../img/search-icon.png");
+    background-size: contain;
+    float: left;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    -webkit-appearance: none;
+    border: none;
+    border-radius: 0;
+}
+
+.searchButtonNormal {
+    height: 28px;
+    width: 30px;
+}
+
+.searchButtonLarge {
+    height: 48px;
+    width: 50px;
+}
+
+form.searchForm input.searchSubmit:hover {
+    background-image: url("../img/search-icon-hover.png");
+    background-size: contain;
+}
+
+form.searchForm {
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.searchFormNormal {
+    margin: 13px 0 10px 0;
+    width: 260px;
+    height: 30px;
+}
+
+form.searchForm input.searchText::-webkit-input-placeholder {
+    color: #FFF;
+    transition: all 0.2s ease;
+}
+
+form.searchForm input.searchText::-moz-placeholder {
+    color: #FFF;
+    transition: all 0.2s ease;
+}
+
+form.searchForm input.searchText:-ms-input-placeholder {
+    color: #FFF;
+    transition: all 0.2s ease;
+}
+
+form.searchForm input.searchText:focus::-webkit-input-placeholder {
+    color: transparent;
+}
+
+form.searchForm input.searchText:focus::-moz-placeholder {
+    color: transparent;
+}
+
+form.searchForm input.searchText:focus:-ms-input-placeholder {
+    color: transparent;
+}
+
+/******************************************
+*** CSS for general weather information ***
+******************************************/
+.largeText {
+    font-size: 300%;
+}
+
+.currentConditionTitle {
+    float: left;
+    margin-top: 12px;
+}
+
+.weatherCondition {
+    text-transform: capitalize;
+    float: left;
+    width: 70px;
+}
+
+.predictionDayDate {
+    font-size: 18px;
+    margin-left: 10px;
+    width: 40px;
+    text-align: center;
+}
+
+.conditionIcon {
+    margin-left: 10px;
+}
+
+.predictionDayTemp {
+    font-size: 18px;
+    margin-left: 10px;
+    width: 40px;
+    text-align: center;
+}
+
+.measurementIcon {
+    float: left;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.measurementText {
+    float: left;
+    margin-top: 13px;
+    margin-bottom: 10px;
+    margin-left: 35px;
+}
+
+.measurementWrapper {
+    height: 60px;
+}
+
+#currentConditionSVG {
+    margin-top: -18px;
+    margin-bottom: 3px;
+    margin-left: 17px;
+}
+
+/****************************
+*** CSS for sun animation ***
+****************************/
+@-webkit-keyframes sunAnimation {
+    from {
+        -webkit-transform: rotate(270deg);
+    }
+    to {
+        -webkit-transform: rotate(271deg);
+    }
+}
+
+@keyframes sunAnimation {
+    from {
+        transform: rotate(270deg);
+    }
+    to {
+        transform: rotate(271deg);
+    }
+}
+
+#sunContainer {
+    overflow: hidden;/*400 sun container width + 50 to prevent sun being cut of*/
+    width: 450px;/*200 pixels height + 50 pixels for margin*/
+    height: 250px;
+}
+
+#sunPath {
+    float: left;
+
+    border: 3px dotted #CCC;
+    border-radius: 50%;
+
+    margin-top: 50px;
+    margin-left: 20px;
+    width: 400px;
+    height: 400px;
+    /*clip: rect(0px, 400px, 200px, 0px);*/
+}
+
+#sunWrapper {
+    /*Testing*/
+    /*border: 1px solid green;*/
+
+    float: left;
+    visibility: hidden;
+
+    margin-left: -367px;
+    /*30 for correction of sun 50 for margin*/
+    margin-top: 80px;
+
+    width: 335px;
+    height: 335px;
+}
+
+#sun {
+    width: 50px;
+    height: 50px;
+    background: orange;
+    border-radius: 50%;
+
+    visibility: inherit;
+}
+
+.animateSun {
+    visibility: visible !important;
+
+    -webkit-animation-duration: 3s;
+    -webkit-animation-timing-function: ease-in-out;
+    -webkit-animation-name: sunAnimation;
+    -webkit-animation-fill-mode: forwards;
+
+    animation-duration: 3s;
+    animation-timing-function: ease-in-out;
+    animation-name: sunAnimation;
+    animation-fill-mode: forwards;
+}
+
+#sunUpContainer {
+    position: absolute;
+    top: 10px;
+}
+
+#sunDownContainer {
+    position: absolute;
+    top: 10px;
+    margin-left: 398px;
+}
+
+/***************************************
+*** CSS for wind direction animation ***
+***************************************/
+@-webkit-keyframes windDirAnimation {
+    from {
+        -webkit-transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(0deg);
+    }
+}
+
+@keyframes windDirAnimation {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(0deg);
+    }
+}
+
+.animateWindDir {
+    -webkit-animation-duration: 3s;
+    -webkit-animation-timing-function: ease-in-out;
+    -webkit-animation-name: windDirAnimation;
+    -webkit-animation-fill-mode: forwards;
+
+    animation-duration: 3s;
+    animation-timing-function: ease-in-out;
+    animation-name: windDirAnimation;
+    animation-fill-mode: forwards;
+}
+
+#compassWrapper {
+    position: absolute;
+    margin-top: 100px;
+    margin-left: 67px;
+
+    transform: scale(0.8);
+    -webkit-transform: scale(0.8);
+}
+
+#compass {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+
+    background-image: url("../img/compass.png");
+    background-size: cover;
+}
+
+#needle {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+
+    background-image: url("../img/needle.png");
+    background-size: 100px;
+    background-repeat: no-repeat;
+    background-position: 50px;
+}
+
+@-webkit-keyframes windSpeedAnimation {
+    from {
+        -webkit-transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@keyframes windSpeedAnimation {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+#windWrapper {
+    position: absolute;
+    margin-top: 80px;
+    margin-left: 280px;
+
+    transform: scale(0.8);
+    -webkit-transform: scale(0.8);
+}
+
+#windPost {
+    position: absolute;
+    margin-top: 98px;
+    margin-left: 96px;
+
+    width: 7px;
+    height: 110px;
+
+    background-color: #CCCCCC;
+}
+
+#windArms {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+
+    background-image: url("../img/windArms.png");
+    background-size: 200px;
+    background-repeat: no-repeat;
+}
+
+#windDirectionContainer {
+    position: absolute;
+    margin-top: 10px;
+    margin-left: 122px;
+}
+
+#windDirectionSVG {
+
+}
+
+#windSpeedContainer {
+    position: absolute;
+    margin-top: 10px;
+    margin-left: 326px;
+}
+
+#windSpeedSVG {
+
+}
+
+.windSlow {
+    -webkit-animation-duration: 9s;
+    -webkit-animation-timing-function: linear;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-name: windSpeedAnimation;
+
+    animation-duration: 9s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-name: windSpeedAnimation;
+}
+
+.windMedium {
+    -webkit-animation-duration: 5s;
+    -webkit-animation-timing-function: linear;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-name: windSpeedAnimation;
+
+    animation-duration: 5s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-name: windSpeedAnimation;
+}
+
+.windFast {
+    -webkit-animation-duration: 2s;
+    -webkit-animation-timing-function: linear;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-name: windSpeedAnimation;
+
+    animation-duration: 2s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-name: windSpeedAnimation;
+}
+
+.windStorm {
+    -webkit-animation-duration: 1s;
+    -webkit-animation-timing-function: linear;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-name: windSpeedAnimation;
+
+    animation-duration: 1s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-name: windSpeedAnimation;
+}
+
+@media(max-width: 370px) {
+    #sunContainer {
+        transform: scale(0.7);
+        -webkit-transform: scale(0.7);
+        margin-top: 37px;
+        margin-left: -75px;
+    }
+
+    #sunUpContainer {
+        left: 63px;
+    }
+
+    #sunDownContainer {
+        right: 57px;
+    }
+
+    #windDirectionContainer {
+        left: 64px;
+        margin-left: auto;
+    }
+
+    #compassWrapper {
+        left: 10px;
+        margin-left: auto;
+    }
+
+    #windSpeedContainer {
+        right: 50px;
+        margin-left: auto;
+    }
+
+    #windWrapper {
+        right: 160px;
+        margin-left: auto;
+    }
+}
+
+@media (min-width: 370px) {
+    #sunContainer {
+        transform: scale(0.7);
+        -webkit-transform: scale(0.7);
+        margin-top: 37px;
+        margin-left: -50px;
+    }
+
+    #sunUpContainer {
+        left: 65px;
+    }
+
+    #sunDownContainer {
+        right: 55px;
+    }
+
+    #windDirectionContainer {
+        left: 65px;
+        margin-left: auto;
+    }
+
+    #compassWrapper {
+        left: 10px;
+        margin-left: auto;
+    }
+
+    #windSpeedContainer {
+        right: 48px;
+        margin-left: auto;
+    }
+
+    #windWrapper {
+        right: 160px;
+        margin-left: auto;
+    }
+}
+
+@media (min-width: 768px) {
+    #sunContainer {
+        transform: scale(1);
+        -webkit-transform: scale(1);
+        margin-top: 0;
+        margin-left: 0;
+    }
+
+    #sunUpContainer {
+        left: 136px;
+    }
+
+    #sunDownContainer {
+        right: 136px;
+    }
+
+    #windDirectionContainer {
+        left:auto;
+        right:auto;
+        margin-top: 10px;
+        margin-left: -15px;
+    }
+
+    #compassWrapper {
+        left:auto;
+        right:auto;
+        margin-top: 100px;
+        margin-left:-72px;
+    }
+
+    #windSpeedContainer {
+        left:auto;
+        right:auto;
+        margin-top: 10px;
+        margin-left: 405px;
+    }
+
+    #windWrapper {
+        left:auto;
+        right:auto;
+        margin-top: 80px;
+        margin-left: 360px;
+    }
+}
+
+@media (min-width: 992px) {
+    #sunUpContainer {
+        left: 18px;
+    }
+
+    #sunDownContainer {
+        right: 23px;
+    }
+
+    #windDirectionContainer {
+        left:auto;
+        right:auto;
+        margin-top: 10px;
+        margin-left: 75px;
+    }
+
+    #compassWrapper {
+        left:auto;
+        right:auto;
+        margin-top: 100px;
+        margin-left: 19px;
+    }
+
+    #windSpeedContainer {
+        left:auto;
+        right:auto;
+        margin-top: 10px;
+        margin-left: 350px;
+    }
+
+    #windWrapper {
+        left:auto;
+        right:auto;
+        margin-top: 80px;
+        margin-left: 300px;
+    }
+}
+
+@media (min-width: 1200px) {
+    #sunUpContainer {
+        left: 70px;
+    }
+
+    #sunDownContainer {
+        right: 73px;
+    }
+}
+
+/*********************************
+*** CSS for weather conditions ***
+*********************************/
+#lightning {
+    position: absolute;
+    left: 50%;
+}
+
+#buienradar {
+    position: absolute;
+    left: 50%;
+}
+
+#currentCanvas {
+    position: absolute;
+    left: 50%;
+}
+
+#predictCanvas {
+    position: absolute;
+    left: 50%;
+}
+
+@media (max-width: 370px) {
+
+    #lightning img {
+        /*width: 290px;*/
+
+        margin: 0px 0px 0px -95px;
+    }
+
+    #buienradar img {
+        /*width: 290px;*/
+
+        margin: 0px 0px 0px -95px;
+    }
+
+    #currentCanvas {
+        width: 290px;
+        height: 205px;
+
+        margin: 0px 0px 0px -145px;
+    }
+
+    #predictCanvas {
+        width: 290px;
+        height: 225px;
+
+        margin: 0px 0px 0px -145px;
+    }
+}
+
+@media (min-width: 370px) {
+
+    #lightning img {
+        /*width: 350px;*/
+
+        margin: 0px 0px 0px -95px;
+    }
+
+    #buienradar img {
+        /*width: 350px;*/
+
+        margin: 0px 0px 0px -95px;
+    }
+
+    #currentCanvas {
+        width: 350px;
+        height: 205px;
+
+        margin: 0px 0px 0px -175px;
+    }
+
+    #predictCanvas {
+        width: 350px;
+        height: 225px;
+
+        margin: 0px 0px 0px -175px;
+    }
+}
+
+/*********************************
+***  CSS for external images.  ***
+*********************************/
+.externalImage {
+    height: 190px;
+    margin-top: 10px;
+}
+
+.blockUI {
+    left: auto !important;
+    width: 100% !important;
+}
