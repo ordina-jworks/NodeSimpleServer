@@ -54,9 +54,7 @@ export class Server {
      */
     private mapRestEndpoints(): void {
         console.log('[WORKER id:' + this.id + '] Scanning for endpoints...');
-
-        //TODO: Get this path from config!
-        this.endpointClassLoader('src/web/endpoints/impl/');
+        this.endpointClassLoader(this.config.settings.endpointScanFolder);
     };
 
     /**

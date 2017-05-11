@@ -7,7 +7,7 @@
     nodeSocketService.$inject = ['$window'];
 
     function nodeSocketService($window) {
-        var socket = io.connect('http://' + $window.location.hostname + ':8000/socket');
+        var socket = io.connect('http://' + $window.location.hostname + ':8081/socket');
         var callbacks = [];
 
         this.sendJSONMessage = function (jsonMessage) {

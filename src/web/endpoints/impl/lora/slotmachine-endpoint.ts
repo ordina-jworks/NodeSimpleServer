@@ -40,7 +40,7 @@ export class SlotmachineEndpoint extends BaseEndpoint {
         );
         endpointManager.registerEndpoint(
             new EndpointDefinition(
-                '/pxm/buttonTrigger',
+                '/slotmachine/buttonTrigger',
                 this.buttonTrigger.bind(this)
             )
         );
@@ -97,6 +97,7 @@ export class SlotmachineEndpoint extends BaseEndpoint {
      */
     private handleButtonTrigger = (data: any): void => {
         switch (data.macaddress) {
+            //TODO: Make configurable!
             case '1C8779C00000003E':
             case '1C8779C00000003F':
                 this.messageManager.sendMessage({buttonPressed: true}, MessageTarget.INTERVAL_WORKER, 'broadcastMessage');

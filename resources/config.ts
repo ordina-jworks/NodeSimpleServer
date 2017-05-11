@@ -5,9 +5,10 @@ export class Config {
     //Config variables:
     public settings = {
         httpPort:                       8080,
-        socketPort:                     8000,
+        socketPort:                     8081,
 
         webContentFolder:               "www",
+        endpointScanFolder:             "src/web/endpoints/impl/",
         allowFolderListing:             true,
 
         intervalTimeoutInSeconds:       480,
