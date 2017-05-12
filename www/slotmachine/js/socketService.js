@@ -1,12 +1,13 @@
 (function () {
     'use strict';
 
-    angular.module('devoxx')
-        .service("nodeSocketService", nodeSocketService);
+    angular
+        .module('devoxx')
+        .service("nodeSocketService", socketService);
 
-    nodeSocketService.$inject = ['$window'];
+    socketService.$inject = ['$window'];
 
-    function nodeSocketService($window) {
+    function socketService($window) {
         var socket = io.connect('http://' + $window.location.hostname + ':8081/socket');
         var callbacks = [];
 

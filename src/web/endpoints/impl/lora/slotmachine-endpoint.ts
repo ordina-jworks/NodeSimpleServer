@@ -96,18 +96,10 @@ export class SlotmachineEndpoint extends BaseEndpoint {
      * @param data The payload data in JSON form.
      */
     private handleButtonTrigger = (data: any): void => {
-        switch (data.macaddress) {
-            //TODO: Make configurable!
-            case '1C8779C00000003E':
-            case '1C8779C00000003F':
-                this.messageManager.sendMessage({buttonPressed: true}, MessageTarget.INTERVAL_WORKER, 'broadcastMessage');
-                break;
-            default:
-                if(data.payload == true || data.payload == 'true' || data.payload == 1) {
-                    this.messageManager.sendMessage({buttonPressed: true}, MessageTarget.INTERVAL_WORKER, 'broadcastMessage');
-                } else if(data.payload == false || data.payload == 'false' || data.payload == 0) {
-                    this.messageManager.sendMessage({buttonPressed: false}, MessageTarget.INTERVAL_WORKER, 'broadcastMessage');
-                }
+        if(data.payload == true || data.payload == 'true' || data.payload == 1) {
+            this.messageManager.sendMessage({buttonPressed: true}, MessageTarget.INTERVAL_WORKER, 'broadcastMessage');
+        } else if(data.payload == false || data.payload == 'false' || data.payload == 0) {
+            this.messageManager.sendMessage({buttonPressed: false}, MessageTarget.INTERVAL_WORKER, 'broadcastMessage');
         }
     };
 }

@@ -166,7 +166,6 @@ export class Router {
 
             //Handle restful URL params
             if(pathName.split('/').length == endPoint.path.split('/').length) {
-
                 let pathAndParams: string[] = pathName.split('/');
                 let endpointPath: string[] = endPoint.path.split('/');
 
@@ -178,16 +177,21 @@ export class Router {
                     }
                 }
 
-                for (let i = 0; i < endPoint.parameters.length; i++) {
-                    let param: Parameter<any> = endPoint.parameters[i];
-                    param.setValue(params[endPoint.parameters[i].name]);
+                if(endPoint.parameters.length == Object.keys(params).length) {
+                    for (let i = 0; i < endPoint.parameters.length; i++) {
+                        let param: Parameter<any> = endPoint.parameters[i];
+                        param.setValue(params[endPoint.parameters[i].name]);
 
-                    if (!param.validate()) {
-                        this.displayError(response, 400, 'Validation failed: ' + param.validator.description(), pathName);
-                        return;
+                        if (!param.validate()) {
+                            this.displayError(response, 400, 'Validation failed: ' + param.validator.description(), pathName);
+                            return;
+                        }
                     }
+                    endPoint.execute(request, response);
+                } else {
+                    this.displayError(response, 400, 'Parameters incorrect => Required: ' + JSON.stringify(endPoint.parameters), pathName);
+                    return;
                 }
-                endPoint.execute(request, response);
             } else {
                 this.displayError(response, 400, 'Parameters incorrect => Required: ' + JSON.stringify(endPoint.parameters), pathName);
             }
