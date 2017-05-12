@@ -1,16 +1,16 @@
-import * as http from "http";
+import * as http from 'http';
 
-import {MessageManager}         from "../ipc/message-manager";
-import {MessageTarget}          from "../ipc/message-target";
-import {DataBrokerOperation}    from "../workers/impl/databroker/data-broker-operation";
-import {Config}                 from "../../resources/config";
+import {MessageManager}         from '../ipc/message-manager';
+import {MessageTarget}          from '../ipc/message-target';
+import {DataBrokerOperation}    from '../workers/impl/databroker/data-broker-operation';
+import {Config}                 from '../../resources/config';
 
 /**
- *
+ * TODO: Clean up and correct comments!
  */
 export class OpenWeatherMap {
 
-    private config: Config = null;
+    private config: Config                  = null;
 
     /**
      * Constructor for the GenericEndpoints class.
@@ -21,88 +21,65 @@ export class OpenWeatherMap {
 
     /**
      * Retrieves the remote weather via the openweathermap api.
-     * This will partially be handled by the "retrieveWeatherInfoMessageHandler" function.
+     * This will partially be handled by the 'retrieveWeatherInfoMessageHandler' function.
      *
      * @param placeName The name of the place the weather info should be retrieved for. (Belgian cities only)
      * @param callback The callback function to execute when done.
      */
     public retrieveWeatherInfo(placeName: string, callback: Function): void {
-        console.log("executing retrieveWeatherInfo(" + placeName + "," + callback + ")");
+        console.log('executing retrieveWeatherInfo param: ' + placeName);
 
-        MessageManager.getInstance().sendMessageWithCallback({'cacheName' : 'weather_openweathermap', 'placeName': placeName},
+        MessageManager.getInstance().sendMessageWithCallback({'cacheName' : 'weather_openweathermap', 'key': placeName},
             (msg) => {
-                if(msg) {
-
+                if(msg.payload) {
+                    callback(msg.payload);
+                } else {
+                    this.getRemoteWeather('BE', placeName, callback);
                 }
 
-                this.getRemoteWeather('BE', placeName, callback);
-
-            }, MessageTarget.DATA_BROKER, DataBrokerOperation.RETRIEVE + ""
+            }, MessageTarget.DATA_BROKER, DataBrokerOperation.RETRIEVE + ''
         );
     }
 
-    /**
-     * Shows the complete contents of the weather cache.
-     * Mainly provided for debugging purposes.
-     * This will partially be handled by the "retrieveOpenweathermapWeatherCacheMessageHandler" function.
-     *
-     * @param callback The callback function to execute when done.
-     */
-    public retrieveOpenweathermapWeatherCache(callback): void {
-        console.log("executing: retrieveOpenweathermapWeatherCache(" + callback + ")");
-
-        MessageManager.getInstance().sendMessageWithCallback(
-            {'cacheName' : 'weather_openweathermap'},
-            callback,
-            MessageTarget.DATA_BROKER,
-            DataBrokerOperation.CREATE_CACHE + ""
-        );
-    }
-
-    /*-------------------------------------------------------------------------------------------------
-     * ------------------------------------------------------------------------------------------------
-     *                                        Private functions
-     * ------------------------------------------------------------------------------------------------
-     ------------------------------------------------------------------------------------------------*/
     /**
      * Retrieves the remote weather via the openweathermap api.
      *
      * @param countryCode The two char ISO country code.
      * @param placeName The name of the city.
-     * @param callbackId callback id.
+     * @param callback The callback that should be called with the retrieved info.
      */
-    private getRemoteWeather(countryCode, placeName, callbackId): void {
-    console.log("Retrieving weather info from remote service...");
+    private getRemoteWeather(countryCode: string, placeName: string, callback: Function): void {
+    console.log('Retrieving weather info from remote service...');
 
-    var options = {
-        host: 'api.openweathermap.org',
-        port: '80',
-        path: '/data/2.5/weather?q=' + placeName + "," + countryCode + "&appid=" + this.config.keys.openweatherMapApiKey,
+    const options = {
+        hostname: 'api.openweathermap.org',
+        port: 80,
+        path: '/data/2.5/weather?q=' + placeName + ',' + countryCode + '&appid=' + this.config.keys.openweatherMapApiKey,
         method: 'POST'
     };
 
     http.request(options, function(res) {
-        var data = '';
+        let data: any = '';
         res.setEncoding('utf8');
 
         res.on('data', function(chunk) {
             data += chunk;
         });
         res.on('end', function() {
-            var info = {};
+            let info: any = {};
             try {
                 data = JSON.parse(data);
             } catch(error) {
                 info.error = data.message;
-                callbackManager.returnAndRemoveCallbackForId(callbackId)(info);
+                callback(info);
                 return;
             }
 
             //Check for errors in the data that has been returned.
             if(data.cod >= 400) {
-                logger.ERROR("Error: " + data.cod + " details: " + data.message);
+                console.error('Error: ' + data.cod + ' details: ' + data.message);
                 info.error = data.message;
-                callbackManager.returnAndRemoveCallbackForId(callbackId)(info);
+                callback(info);
                 return;
             }
 
@@ -123,13 +100,13 @@ export class OpenWeatherMap {
 
             info.avgWindSpeed = data.wind.speed;
             info.avgWindDirectionDegree = data.wind.deg;
-            info.avgWindDirectionCardinal = this.convertToCardinalWindDirection(info.avgWindDirectionDegree);
+            info.avgWindDirectionCardinal = OpenWeatherMap.convertToCardinalWindDirection(info.avgWindDirectionDegree);
 
             info.conditions = [];
-            for(var i = 0; i < data.weather.length ; i++) {
-                var weather = data.weather[i];
+            for(let i: number = 0; i < data.weather.length ; i++) {
+                let weather = data.weather[i];
 
-                var condition = {};
+                let condition: any = {};
                 condition.id = weather.id;
                 condition.icon = weather.icon;
                 condition.main = weather.main;
@@ -137,12 +114,16 @@ export class OpenWeatherMap {
 
                 info.conditions.push(condition);
             }
-
             info.error = null;
             info.timestamp = new Date();
 
-            messageFactory.sendSimpleMessage(messageFactory.TARGET_BROKER, brokerconstants.BROKER_ADD_TO_CACHE, {cacheName: "weather_openweathermap", value: info});
-            callbackManager.returnAndRemoveCallbackForId(callbackId)(info);
+            MessageManager.getInstance().sendMessage({
+                'cacheName' : 'weather_openweathermap',
+                'key' : placeName,
+                'value' : info
+            }, MessageTarget.DATA_BROKER, DataBrokerOperation.SAVE + '');
+
+            callback(info);
         });
     }).end();
 }
@@ -156,45 +137,45 @@ export class OpenWeatherMap {
      * @param degrees The angle given in range of: [0,360]
      * @return A String representing the cardinal direction.
      */
-    private  convertToCardinalWindDirection(degrees: number): string {
+    private static convertToCardinalWindDirection(degrees: number): string {
         let cardinalDirection: string = null;
 
         if(degrees >= 0 && degrees < 11) {
-            cardinalDirection = "N";
+            cardinalDirection = 'N';
         } else if(degrees >= 11 && degrees < 34) {
-            cardinalDirection = "NNE";
+            cardinalDirection = 'NNE';
         } else if(degrees >= 34 && degrees < 56) {
-            cardinalDirection = "NE";
+            cardinalDirection = 'NE';
         } else if(degrees >= 56 && degrees < 79) {
-            cardinalDirection = "ENE";
+            cardinalDirection = 'ENE';
         } else if(degrees >= 79 && degrees < 101) {
-            cardinalDirection = "E";
+            cardinalDirection = 'E';
         } else if(degrees >= 101 && degrees < 124) {
-            cardinalDirection = "ESE";
+            cardinalDirection = 'ESE';
         } else if(degrees >= 124 && degrees < 146) {
-            cardinalDirection = "SE";
+            cardinalDirection = 'SE';
         } else if(degrees >= 146 && degrees < 169) {
-            cardinalDirection = "SSE";
+            cardinalDirection = 'SSE';
         } else if(degrees >= 169 && degrees < 191) {
-            cardinalDirection = "S";
+            cardinalDirection = 'S';
         } else if(degrees >= 191 && degrees < 214) {
-            cardinalDirection = "SSW";
+            cardinalDirection = 'SSW';
         } else if(degrees >= 214 && degrees < 236) {
-            cardinalDirection = "SW";
+            cardinalDirection = 'SW';
         } else if(degrees >= 236 && degrees < 259) {
-            cardinalDirection = "WSW";
+            cardinalDirection = 'WSW';
         } else if(degrees >= 259 && degrees < 281) {
-            cardinalDirection = "W";
+            cardinalDirection = 'W';
         } else if(degrees >= 281 && degrees < 304) {
-            cardinalDirection = "WNW";
+            cardinalDirection = 'WNW';
         } else if(degrees >= 304 && degrees < 326) {
-            cardinalDirection = "NW";
+            cardinalDirection = 'NW';
         } else if(degrees >= 326 && degrees < 349) {
-            cardinalDirection = "NNW";
+            cardinalDirection = 'NNW';
         } else if(degrees >= 349 && degrees < 361) {
-            cardinalDirection = "N";
+            cardinalDirection = 'N';
         } else {
-            console.error("Given direction in degrees should be in range of: [0,360]");
+            console.error('Given direction in degrees should be in range of: [0,360]');
         }
 
         return cardinalDirection;

@@ -6,6 +6,8 @@ import {EndpointDefinition}             from "../../endpoint-definition";
 import {Parameter}                      from "../../parameters/parameter";
 import {StringNotEmptyValidatorImpl}    from "../../parameters/impl/string-not-empty-validator-impl";
 import {OpenWeatherMap}                 from "../../../../weather/openweathermap";
+import {Buienradar}                     from "../../../../weather/buienradar";
+import {Blitzortung}                    from "../../../../weather/blitzortung";
 
 /**
  * Class containing all the endpoints for the WeatherGenie application.
@@ -13,15 +15,19 @@ import {OpenWeatherMap}                 from "../../../../weather/openweathermap
  */
 export class WeatherEndpoint extends BaseEndpoint {
 
-    private buienradar: Buienradar          = null;     //require("./buienradar/buienradar");
-    //private blitzortung: Blitzortung        = null;     //require("./blitzortung/blitzortung");
-    private openweathermap: OpenWeatherMap  = null;     //require("./openweathermap/openweathermap");
+    private buienradar: Buienradar          = null;
+    private blitzortung: Blitzortung        = null;
+    private openweathermap: OpenWeatherMap  = null;
 
     /**
      * Constructor for the ArduinoEndpoint class.
      */
     constructor() {
         super();
+
+        this.openweathermap = new OpenWeatherMap();
+        this.buienradar = new Buienradar();
+        this.blitzortung = new Blitzortung();
 
         this.mapEntryPoints();
     }
@@ -37,21 +43,9 @@ export class WeatherEndpoint extends BaseEndpoint {
 
         endpointManager.registerEndpoint(
             new EndpointDefinition(
-                '/weather/cache',
-                this.getWeatherCache.bind(this)
-            )
-        );
-        endpointManager.registerEndpoint(
-            new EndpointDefinition(
                 '/weather/data',
                 this.getWeatherForCity.bind(this),
                 [new Parameter<string>('city', 'string field containing the name of the city', new StringNotEmptyValidatorImpl())]
-            )
-        );
-        endpointManager.registerEndpoint(
-            new EndpointDefinition(
-                '/weather/rain',
-                this.getRainData.bind(this)
             )
         );
         endpointManager.registerEndpoint(
@@ -72,12 +66,6 @@ export class WeatherEndpoint extends BaseEndpoint {
                     new Parameter<number>('x', 'The x-block part of the coordinates'),
                     new Parameter<number>('y', 'the y-block part of the coordinates')
                 ]
-            )
-        );
-        endpointManager.registerEndpoint(
-            new EndpointDefinition(
-                '/weather/lightningCache',
-                this.getLightningCache.bind(this)
             )
         );
         endpointManager.registerEndpoint(
@@ -107,35 +95,18 @@ export class WeatherEndpoint extends BaseEndpoint {
         super.redirect(response, '/weather/index.html');
     };
 
-    public getWeatherCache = (request: IncomingMessage, response: ServerResponse, params: [Parameter<null>]): void => {
-        console.log('getWeatherCache endpoint called!');
-
-        this.openweathermap.retrieveOpenweathermapWeatherCache((data: any) => {
-            this.buienradar.retrieveBuienradarWeatherCache((data2: any) => {
-                let result: any = { opeweatherMap: data, buienradar: data2};
-
-                super.respondOK(response, result);
-            });
-        });
-    };
-
     public getWeatherForCity = (request: IncomingMessage, response: ServerResponse, params: [Parameter<string>]): void => {
         console.log('getWeatherForCity endpoint called!');
 
         this.openweathermap.retrieveWeatherInfo(params[0].getValue(), (data) => {
             this.buienradar.geographicConditionForecast(data.placeName, (data2) => {
-                data.predictions = data2.days;
-
-                super.respondOK(response, data);
+                if(!data || !data2) {
+                    super.respondServerError(response, {ERROR: 'Data could not be retrieved!'})
+                } else {
+                    data.predictions = data2.days;
+                    super.respondOK(response, data);
+                }
             });
-        });
-    };
-
-    public getRainData = (request: IncomingMessage, response: ServerResponse, params: [Parameter<null>]): void => {
-        console.log('getRainData endpoint called!');
-
-        this.buienradar.showRainMaps((result) => {
-            super.respondOK(response, result);
         });
     };
 
@@ -151,14 +122,6 @@ export class WeatherEndpoint extends BaseEndpoint {
         console.log('getRainForBlock endpoint called!');
 
         this.buienradar.geographicPredictionForBlock(params[0].getValue(), params[1].getValue(), (result) => {
-            super.respondOK(response, result);
-        });
-    };
-
-    public getLightningCache = (request: IncomingMessage, response: ServerResponse, params: [Parameter<null>]): void => {
-        console.log('getLightningCache endpoint called!');
-
-        this.blitzortung.showLightingCache((result) => {
             super.respondOK(response, result);
         });
     };

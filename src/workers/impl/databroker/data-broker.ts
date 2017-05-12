@@ -232,7 +232,7 @@ export class DataBroker implements NodeWorker {
                     console.log('[WORKER id:' + this.workerId + '] No valid target handler found! (' + m.targetFunction + ')');
             }
 
-            MessageManager.getInstance().sendReply({'payload' : payload}, <IPCRequest>message);
+            MessageManager.getInstance().sendReply(payload, <IPCRequest>message);
         }
     }
 }

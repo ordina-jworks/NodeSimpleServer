@@ -16,6 +16,7 @@ import {MessageTarget}  from "../../ipc/message-target";
 import {IPCMessage}     from "../../ipc/messages/ipc-message";
 import {MessageManager} from "../../ipc/message-manager";
 import {IPCRequest}     from "../../ipc/messages/ipc-request";
+import {Blitzortung}    from "../../weather/blitzortung";
 
 
 /**
@@ -31,8 +32,10 @@ export class IntervalWorker implements NodeWorker {
 
     private interval: Timer         = null;
     private config: Config          = null;
-    private arduino: Arduino        = null;
+
     private sio: SocketIO.Server    = null;
+    private arduino: Arduino        = null;
+    private blitzortung: Blitzortung= null;
 
     /**
      * Constructor for the IntervalWorker.
@@ -45,6 +48,8 @@ export class IntervalWorker implements NodeWorker {
 
         this.handler = MessageHandler.getInstance();
         this.handler.emitter.on(MessageTarget[MessageTarget.INTERVAL_WORKER] + '', this.onMessage.bind(this));
+
+        this.blitzortung = new Blitzortung();
 
         console.log('[WORKER id:' + workerId + '] IntervalWorker created');
     }
@@ -75,6 +80,7 @@ export class IntervalWorker implements NodeWorker {
         });
 
         this.setupArduino();
+        this.setupBlitzortung();
         this.interval = setInterval(this.loop, this.config.settings.intervalTimeoutInSeconds * 1000);
     }
 
@@ -99,6 +105,10 @@ export class IntervalWorker implements NodeWorker {
         }
     }
 
+    private setupBlitzortung(): void {
+        this.blitzortung.setupBlitzortungWebSocket('ws://ws.blitzortung.org', true);
+    }
+
     /**
      * Used to restart the IntervalWorker instance.
      * Can be used to restart all the logic when configuration changes have been made.
@@ -121,6 +131,7 @@ export class IntervalWorker implements NodeWorker {
         console.log('IntervalWorker loop start...');
 
         //Do recurring things!
+        this.setupBlitzortung();
 
         console.log('IntervalWorker loop end!');
     };

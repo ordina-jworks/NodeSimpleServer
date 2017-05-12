@@ -17,7 +17,7 @@ export class Config {
     };
 
     public keys = {
-        openweatherMapApiKey:           ''
+        openweatherMapApiKey:           'b2b52dcbabc90f4831af50770d3d5081'
     };
 
     public arduino = {
