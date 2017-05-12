@@ -45,6 +45,7 @@ export class GenericEndpoints extends BaseEndpoint {
                 this.index.bind(this)
             )
         );
+
         endpointManager.registerEndpoint(
             new EndpointDefinition(
                 '/endpoints',

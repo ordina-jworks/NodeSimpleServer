@@ -5,67 +5,39 @@ var app = (function() {
     console.log('Webpage code started!');
     window.addEventListener('load', pageLoaded);
 
+    var httpRequest;
+
     function pageLoaded(event) {
         console.log('Webpage content ready!');
 
-        new Clipboard('.copyButton', {
-            text: function(trigger) {
-                return trigger.nextElementSibling.children[0].innerText;
+        httpRequest = new XMLHttpRequest();
+        httpRequest.onreadystatechange = alertContents;
+        httpRequest.open('GET', 'http://' + window.location.hostname + ':8080/apps');
+        httpRequest.send();
+    }
+
+    function alertContents() {
+        if (httpRequest.readyState === XMLHttpRequest.DONE) {
+            if (httpRequest.status === 200) {
+                var data = JSON.parse(httpRequest.responseText);
+                console.log(data.apps);
+
+                var element = document.getElementById('webapps');
+
+                for(var i = 0; i < data.apps.length; i++) {
+                    var item = document.createElement("li");
+                    item.classList.add('list-item');
+                    var link = document.createElement("a");
+                    link.href = 'http://' + window.location.hostname + ':8080/' + data.apps[i].split('/')[1] + '/index.html';
+                    var content = document.createTextNode(data.apps[i].split('/')[1]);
+
+                    link.appendChild(content);
+                    item.appendChild(link);
+                    element.appendChild(item);
+                }
+            } else {
+                console.log('Could not fetch list of webapps!');
             }
-        });
-    }
-
-    function showModelArduinoSerial() {
-        console.log('Clicked showModelArduinoSerial');
-
-        blockUI();
-        displayModalExampleContent(true);
-    }
-
-    function showModalArduinoJohnnyFive() {
-        console.log('clicked showModalArduinoJohnnyFive');
-
-        blockUI();
-        displayModalExampleContent(false);
-    }
-
-    function blockUI() {
-        var element = document.getElementById('wrapper');
-        element.classList.add('blurred');
-
-        element = document.getElementById('fullPageModal');
-        element.classList.remove('hidden');
-    }
-
-    function closeModal(event) {
-        var elementId = event.target.id;
-        if(elementId !== 'fullPageModal' && elementId !== 'btnHideModal') {
-            return;
         }
-
-        var element = document.getElementById('wrapper');
-        element.classList.remove('blurred');
-
-        element = document.getElementById('fullPageModal');
-        element.classList.add('hidden');
-    }
-
-    function displayModalExampleContent(isForSerial) {
-        var serial = document.getElementById('arduinoSerialContainer');
-        var johnny = document.getElementById('arduinoJohnnyFiveContainer');
-
-        if(isForSerial) {
-            serial.classList.remove('hidden');
-            johnny.classList.add('hidden');
-        } else {
-            serial.classList.add('hidden');
-            johnny.classList.remove('hidden');
-        }
-    }
-
-    return {
-        showModelArduinoSerial: showModelArduinoSerial,
-        showModalArduinoJohnnyFive: showModalArduinoJohnnyFive,
-        closeModal: closeModal
     }
 }());
