@@ -96,10 +96,14 @@ export class SlotmachineEndpoint extends BaseEndpoint {
      * @param data The payload data in JSON form.
      */
     private handleButtonTrigger = (data: any): void => {
-        if(data.payload == true || data.payload == 'true' || data.payload == 1) {
-            this.messageManager.sendMessage({buttonPressed: true}, MessageTarget.INTERVAL_WORKER, 'broadcastMessage');
-        } else if(data.payload == false || data.payload == 'false' || data.payload == 0) {
-            this.messageManager.sendMessage({buttonPressed: false}, MessageTarget.INTERVAL_WORKER, 'broadcastMessage');
+        if(data) {
+            if(data.payload == true || data.payload == 'true' || data.payload == 1) {
+                this.messageManager.sendMessage({buttonPressed: true}, MessageTarget.INTERVAL_WORKER, 'broadcastMessage');
+            } else if(data.payload == false || data.payload == 'false' || data.payload == 0) {
+                this.messageManager.sendMessage({buttonPressed: false}, MessageTarget.INTERVAL_WORKER, 'broadcastMessage');
+            }
+        } else {
+            console.error('No valid data received to process for buttonTrigger!');
         }
     };
 }

@@ -6,7 +6,7 @@ import {WorkerFactory}  from "./workers/worker-factory";
 
 class SimpleNodeServer {
 
-    private isDebug: boolean                    = null;
+    private isDebug: boolean                    = false;
 
     private httpWorkers: Array<cluster.Worker>  = null;
     private intervalWorker: cluster.Worker      = null;
@@ -114,4 +114,4 @@ class SimpleNodeServer {
         }
     };
 }
-new SimpleNodeServer(true).start();
+new SimpleNodeServer(false).start();
