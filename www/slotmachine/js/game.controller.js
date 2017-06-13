@@ -4,9 +4,9 @@
     angular.module('devoxx')
         .controller('GameCtrl', GameCtrl);
 
-    GameCtrl.$inject = ['$scope', '$mdDialog', 'nodeSocketService', '$timeout', 'settingsService'];
+    GameCtrl.$inject = ['$scope', '$mdDialog', 'nodeSocketService', '$timeout', 'settingsService','$location'];
 
-    function GameCtrl($scope, $mdDialog, nodeSocketService, $timeout, settingsService) {
+    function GameCtrl($scope, $mdDialog, nodeSocketService, $timeout, settingsService, $location) {
 
         var settings = settingsService.getSettings(),
             NUMBER_OF_ROUNDS = settings.numberOfRounds,
@@ -56,6 +56,8 @@
                 },5000);
             }
         };
+
+        var deveuiList = $location.search().deveui.split(',');
 
         $(document).ready(init);
 
@@ -116,7 +118,7 @@
          * @param data The data object that contains the message that was received from the remote server via the socket.
          */
         function handleButtonPresses(data) {
-            if (data.buttonPressed === true) {
+            if (data.buttonPressed === true && deveuiList.indexOf(data.deveui) > -1) {
                 if (state.played === false) {
                     play();
                 }
