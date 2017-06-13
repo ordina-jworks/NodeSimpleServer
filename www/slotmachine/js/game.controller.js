@@ -4,13 +4,15 @@
     angular.module('devoxx')
         .controller('GameCtrl', GameCtrl);
 
-    GameCtrl.$inject = ['$scope', '$mdDialog', 'nodeSocketService', '$timeout', 'settingsService','$location'];
+    GameCtrl.$inject = ['$scope', '$mdDialog', 'nodeSocketService', '$timeout', 'settingsService', '$location'];
 
     function GameCtrl($scope, $mdDialog, nodeSocketService, $timeout, settingsService, $location) {
 
         var settings = settingsService.getSettings(),
             NUMBER_OF_ROUNDS = settings.numberOfRounds,
-            GAMES_TO_WIN = settings.gamesToWin.sort(function(a,b){return a>b}),
+            GAMES_TO_WIN = settings.gamesToWin.sort(function (a, b) {
+                return a > b
+            }),
             SHOULD_CHEAT = settings.shouldCheat,
             LOOP = settings.loopAfterLastWonGame;
 
@@ -46,18 +48,23 @@
         };
 
         var clearCounter = 0;
-        $scope.clearLocalStorage = function() {
-            if(clearCounter === 2) {
+        $scope.clearLocalStorage = function () {
+            if (clearCounter === 2) {
                 $scope.gameCounter = 1;
-            }else{
+            } else {
                 clearCounter++;
                 $timeout(function () {
                     clearCounter = 0;
-                },5000);
+                }, 5000);
             }
         };
 
-        var deveuiList = $location.search().deveui.split(',');
+        var deveuiList = [];
+        try {
+            deveuiList = $location.search().deveui.split(',');
+        } catch (error) {
+            console.log(error);
+        }
 
         $(document).ready(init);
 
@@ -118,7 +125,7 @@
          * @param data The data object that contains the message that was received from the remote server via the socket.
          */
         function handleButtonPresses(data) {
-            if (data.buttonPressed === true && deveuiList.indexOf(data.deveui) > -1) {
+            if (data.buttonPressed === true && (deveuiList.indexOf(data.deveui) > -1 || deveuiList.length === 0)) {
                 if (state.played === false) {
                     play();
                 }
@@ -137,7 +144,7 @@
                 hideCoin();
 
                 if (SHOULD_CHEAT) {
-                    if(shouldWinThisGame()) {
+                    if (shouldWinThisGame()) {
                         if (isLastRound()) {
                             cheatToWin();
                         }
@@ -167,14 +174,15 @@
             if (hasJackpot()) {
                 state.winner = true;
                 state.closeButNoCigar = false;
-                nodeSocketService.sendJSONMessage({winner: true});
+                nodeSocketService.sendJSONMessage({
+                    winner: true
+                });
                 playSound('victory');
                 setTimeout(function () {
                     startFireworks();
                     showEndGame();
                 }, 1500);
-            }
-            else {
+            } else {
                 state.played = false;
                 $scope.roundCounter--;
                 $scope.$apply();
@@ -183,7 +191,9 @@
                     state.played = true;
                     state.winner = false;
                     state.closeButNoCigar = wasItClose();
-                    nodeSocketService.sendJSONMessage({winner: false});
+                    nodeSocketService.sendJSONMessage({
+                        winner: false
+                    });
                     $timeout(function () {
                         playSound('loser');
                         showEndGame()
@@ -201,7 +211,7 @@
             });
         }
 
-        function get3DifferentImgIndexes(){
+        function get3DifferentImgIndexes() {
             var indexes = [randomImgPosition(), randomImgPosition(), randomImgPosition()];
             if (indexes[0] === indexes[1] && indexes[1] === indexes[2]) {
                 var index = randomImgPosition();
@@ -241,12 +251,12 @@
             document.getElementById('roller').play();
         }
 
-        function playSound(name){
+        function playSound(name) {
             document.getElementById(name).play();
         }
 
         function shouldWinThisGame() {
-            if(GAMES_TO_WIN === null){
+            if (GAMES_TO_WIN === null) {
                 return true;
             } else {
                 return GAMES_TO_WIN.indexOf($scope.gameCounter) !== -1
@@ -259,13 +269,13 @@
 
         function hasJackpot() {
             return (state.slots[0].active === state.slots[1].active &&
-            state.slots[1].active === state.slots[2].active);
+                state.slots[1].active === state.slots[2].active);
         }
 
         function wasItClose() {
             return (state.slots[0].active === state.slots[1].active ||
-            state.slots[1].active === state.slots[2].active ||
-            state.slots[0].active === state.slots[2].active);
+                state.slots[1].active === state.slots[2].active ||
+                state.slots[0].active === state.slots[2].active);
         }
 
         function raiseGameCounter() {
@@ -277,7 +287,7 @@
         }
 
         function isLastWinningGame() {
-            return GAMES_TO_WIN.indexOf($scope.gameCounter) === GAMES_TO_WIN.length -1;
+            return GAMES_TO_WIN.indexOf($scope.gameCounter) === GAMES_TO_WIN.length - 1;
         }
         /**
          * Shows the endgame sub page.
@@ -298,8 +308,7 @@
                 undoCheat();
                 $scope.showAdvanced(this);
                 stopFireworks();
-            }, function () {
-            });
+            }, function () {});
 
             setTimeout(function () {
                 $("#newGame").click();
@@ -345,8 +354,7 @@
             clearInterval(state.intervalLoop);
             try {
                 document.body.removeChild(canvas);
-            } catch (e) {
-            }
+            } catch (e) {}
             particles = [];
             rockets = [];
         }
