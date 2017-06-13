@@ -118,7 +118,7 @@
          * @param data The data object that contains the message that was received from the remote server via the socket.
          */
         function handleButtonPresses(data) {
-            if (data.buttonPressed === true && deveuiList.indexOf(data.deveui) > -1) {
+            if (data.buttonPressed === true && (deveuiList.indexOf(data.deveui) > -1 || deveuiList.length === 0)) {
                 if (state.played === false) {
                     play();
                 }
