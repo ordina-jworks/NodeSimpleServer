@@ -25,7 +25,7 @@ The server application is written in TypeScript.
 - Open a terminal or command window and go to the root folder of the project
 - Execute the command: `npm install`
 - Execute the command: `npm start`
-- Open a browser and go to: [http://localhost:8080/](http://localhost:8080/)
+- Open a browser and go to: [http://localhost:9080/](http://localhost:9080/)
 - You should now see the web page with a big NodeJS logo
 
 **Running with Docker:**
@@ -37,9 +37,9 @@ The server application is written in TypeScript.
 
 **Some useful endpoints:**
 
-- [`http://localhost:8080/endpoints`](http://localhost:8080/endpoints)
+- [`http://localhost:9080/endpoints`](http://localhost:9080/endpoints)
   - This lists all the registered endpoints with parameters and descriptions.
-- [`http://localhost:8080/helloworld?name=test`](http://localhost:8080/helloworld/?name=test)
+- [`http://localhost:9080/helloworld?name=test`](http://localhost:9080/helloworld/?name=test)
   - This is a demo endpoint that prints a welcome message with the given name.
 
 **Application architecture**
@@ -113,3 +113,14 @@ The blog post is based on the code up to [this commit!](https://github.com/ordin
 - Implement decent custom logger
 - Convert slotmachine and booze-o-meter frontends to TypeScript and Angular
 - Add OAuth2 support 
+
+
+**SlotMachine Payload:**
+====================================
+```
+{
+  "DevEUI": "1C8779C000000033",
+  "container":"push",
+  "payload": "true"
+}
+```
