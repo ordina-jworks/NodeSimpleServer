@@ -13,7 +13,7 @@
 }
 
 .endGamecon > p {
-    background: #E68524;
+    background: #5C2D91;
     color: #F5F5F5;
     padding: 10px;
     text-transform: uppercase;
@@ -53,12 +53,12 @@
 
 #newGame {
     padding: 2px 10px 2px 10px;
-    color: #E68524;
+    color: #5C2D91;
     background-color: #F5F5F5;
     margin-bottom: 25px;
 }
 
 #newGameFooter {
-    background-color: #E68524;
+    background-color: #5C2D91;
     padding-top: 1px;
 }

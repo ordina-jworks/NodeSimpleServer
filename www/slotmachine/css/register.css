@@ -10,29 +10,30 @@
 #register {
     margin-left: 38%;
     padding: 0.5% 7% 0.5% 7%;
-    color: #E68524;
+    color: #5C2D91;   
+
     background-color: #F5F5F5;
 }
 
 #registerFooter {
-    background-color: #E68524;
+    background-color: #5C2D91;
     padding-bottom: 20px;
     padding-top: 20px;
 }
 
 /*Overriding the default ng-material checkbox colors*/
 md-checkbox.md-checked .md-ink-ripple {
-    color: rgba(230, 133, 36, 0.87) !important;
-    background-color: rgba(230, 133, 36, 0.87) !important;
+    color: #5C2D91 !important;
+    background-color: #5C2D91 !important;
 }
 
 md-checkbox {
-    color: rgba(230, 133, 36, 0.87) !important;
+    color:  #5C2D91 !important;
 }
 md-checkbox.md-checked .md-icon {
-    background-color: rgba(230, 133, 36, 0.87) !important;
+    background-color: #5C2D91 !important;
 }
 
 md-input-container:not(.md-input-invalid).md-input-focused .md-input {
-    border-color: rgba(230, 133, 36, 0.87) !important;
+    border-color:  #5C2D91 !important;
 }

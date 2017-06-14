@@ -1,4 +1,5 @@
 canvas {
-  margin-top:157px;
+  margin-top: 0;
   -webkit-transform: translateZ(0);
+  background-color: #5C2D91 !important;
 }
