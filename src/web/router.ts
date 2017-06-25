@@ -10,6 +10,7 @@ import {Config}             from '../../resources/config';
 import {EndpointDefinition} from "./endpoints/endpoint-definition";
 import {EndpointManager}    from "./endpoints/endpoint-manager";
 import {Parameter}          from "./endpoints/parameters/parameter";
+import {HttpMethod} from "./http-method";
 
 /**
  * Router class.
@@ -127,6 +128,30 @@ export class Router {
 
     /**
      * This method will try and execute the requested endpoint.
+     * It will check the HTTP method of the request and forward to the correct logic for execution.
+     *
+     * @param endPoint The Endpoint to execute.
+     * @param pathName The path of the requested endpoint.
+     * @param request The HTTP Request.
+     * @param response The HTTP Response.
+     */
+    private tryAndHandleRestEndpoint (endPoint: EndpointDefinition, pathName: string, request: IncomingMessage, response: ServerResponse): void {
+        console.log('Handling REST request: ' + pathName + ' method: ' + request.method);
+
+        switch (HttpMethod.valueOf(request.method)) {
+            case HttpMethod.GET:
+                this.handleGetEndpoint(endPoint, pathName, request, response);
+                break;
+            case HttpMethod.POST:
+                this.handlePostEndpoint(endPoint, pathName, request, response);
+                break;
+            default:
+                console.log('Cannot handle Rest endpoint call with method: ' + request.method);
+        }
+    };
+
+    /**
+     * This method will try and execute the requested endpoint.
      * If the Endpoint requires parameters, the number of parameters will be validated and a 400 error will ge generated.
      * If the number of parameters is correct, the parameter validator for the endpoint will be called to validate the parameters.
      * If the validation of the parameters fails a 400 error will be generated.
@@ -136,10 +161,9 @@ export class Router {
      * @param request The HTTP Request.
      * @param response The HTTP Response.
      */
-    private tryAndHandleRestEndpoint (endPoint: EndpointDefinition, pathName: string, request: IncomingMessage, response: ServerResponse) {
+    private handleGetEndpoint (endPoint: EndpointDefinition, pathName: string, request: IncomingMessage, response: ServerResponse): void {
         let requestData: any = url.parse(request.url, true);
 
-        console.log('Handling REST request: ' + pathName);
         if(requestData.query.length == 0) {
             endPoint.execute(request, response);
         } else {
@@ -196,7 +220,53 @@ export class Router {
                 this.displayError(response, 400, 'Parameters incorrect => Required: ' + JSON.stringify(endPoint.parameters), pathName);
             }
         }
-    };
+    }
+
+    /**
+     *
+     * @param endPoint
+     * @param pathName
+     * @param request
+     * @param response
+     */
+    private handlePostEndpoint (endPoint: EndpointDefinition, pathName: string, request: IncomingMessage, response: ServerResponse): void {
+        //TODO: Implement!
+        //TODO: Post requests should only every contain params in the url (not query params)
+        //TODO: E.G: /path/someService/IdOfResource
+        //TODO: The actual data that is needed is in the request body and should ideally also be validated!
+
+        //Handle restful URL params
+        if(pathName.split('/').length == endPoint.path.split('/').length) {
+            let pathAndParams: string[] = pathName.split('/');
+            let endpointPath: string[] = endPoint.path.split('/');
+
+            let params: {} = {};
+            for(let i: number = 0; i < pathAndParams.length; i++) {
+                if(pathAndParams[i] != endpointPath[i]) {
+                    console.log('Param found in url: '+ endpointPath[i] + ' with value: ' + pathAndParams[i]);
+                    params[endpointPath[i].substring(1, endpointPath[i].length - 1)] = pathAndParams[i];
+                }
+            }
+
+            if(endPoint.parameters.length == Object.keys(params).length) {
+                for (let i = 0; i < endPoint.parameters.length; i++) {
+                    let param: Parameter<any> = endPoint.parameters[i];
+                    param.setValue(params[endPoint.parameters[i].name]);
+
+                    if (!param.validate()) {
+                        this.displayError(response, 400, 'Validation failed: ' + param.validator.description(), pathName);
+                        return;
+                    }
+                }
+                endPoint.execute(request, response);
+            } else {
+                this.displayError(response, 400, 'Parameters incorrect => Required: ' + JSON.stringify(endPoint.parameters), pathName);
+                return;
+            }
+        } else {
+            this.displayError(response, 400, 'Parameters incorrect => Required: ' + JSON.stringify(endPoint.parameters), pathName);
+        }
+    }
 
     /**
      * This method will list the contents of the requested folder.
