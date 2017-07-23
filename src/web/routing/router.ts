@@ -1,16 +1,18 @@
 import fs           = require('fs');
 import mime         = require('mime');
 import path         = require('path');
-import url          = require('url');
 
 import {IncomingMessage}    from "http";
 import {ServerResponse}     from "http";
 
-import {Config}             from '../../resources/config';
-import {EndpointDefinition} from "./endpoints/endpoint-definition";
-import {EndpointManager}    from "./endpoints/endpoint-manager";
-import {Parameter}          from "./endpoints/parameters/parameter";
-import {HttpMethod} from "./http-method";
+import {Config}             from '../../../resources/config';
+import {EndpointDefinition} from "../endpoints/endpoint-definition";
+import {EndpointManager}    from "../endpoints/endpoint-manager";
+import {HttpMethod}         from "../http-method";
+
+import {HttpMethodEndpointHandler}      from "./http-method-endpoint-handler";
+import {HttpGetMethodEndpointHandler}   from "./http-get-method-endpoint-handler";
+import {HttpPostMethodEndpointHandler}  from "./http-post-method-endpoint-handler";
 
 /**
  * Router class.
@@ -29,12 +31,18 @@ export class Router {
     private pathParts: Array<string>            = null;
     private rootFolder: string                  = null;
 
+    private getMethodEndpointHandler: HttpMethodEndpointHandler     = null;
+    private postMethodEndpointHandler: HttpMethodEndpointHandler    = null;
+
     /**
      * Constructor for Router.
      */
     constructor() {
         this.config = Config.getInstance();
         this.endpointManager = EndpointManager.getInstance();
+
+        this.getMethodEndpointHandler = new HttpGetMethodEndpointHandler();
+        this.postMethodEndpointHandler = new HttpPostMethodEndpointHandler();
 
         this.pathParts  = process.argv[1].split(/([/\\])/);
         this.rootFolder = this.pathParts.splice(0, (this.pathParts.length - 3)).join('');
@@ -51,7 +59,7 @@ export class Router {
      * @param response The HTTP Response.
      */
     public route(pathName: string, request: IncomingMessage, response: ServerResponse): void {
-        if(this.isFile(pathName)) {
+        if(Router.isFile(pathName)) {
             this.tryAndServeFile(pathName, response);
 
         } else {
@@ -73,7 +81,7 @@ export class Router {
      * @param pathName The path of the requested resource.
      * @returns {boolean} True if a valid filename, false if not.
      */
-    private isFile (pathName: string): boolean {
+    private static isFile (pathName: string): boolean {
         let path: string = pathName.replace('/','');
         let isFile: boolean = path.indexOf('.') > -1;
         return isFile && path.search('.') == 0;
@@ -96,14 +104,14 @@ export class Router {
         fs.exists(fullPath, (exists) => {
             //If the file does not exist, present a 404 error.
             if(!exists) {
-                this.displayError(response, 404, 'Resource not found!', fullPath);
+                Router.displayError(response, 404, 'Resource not found!', fullPath);
             } else {
                 fs.readFile(fullPath, 'binary', (error, file) => {
                     if(error) {
                         //If there was an error while reading the file, present a 500 error.
                         console.log('Error serving file!', fullPath);
 
-                        this.displayError(response, 500, 'Error while serving content!', pathName);
+                        Router.displayError(response, 500, 'Error while serving content!', pathName);
                     } else {
                         let cntType = mime.lookup(fullPath);
                         console.log('Serving: ' + fullPath + '\t (' + cntType + ')');
@@ -140,133 +148,15 @@ export class Router {
 
         switch (HttpMethod.valueOf(request.method)) {
             case HttpMethod.GET:
-                this.handleGetEndpoint(endPoint, pathName, request, response);
+                this.getMethodEndpointHandler.handleEndpoint(endPoint, pathName, request, response);
                 break;
             case HttpMethod.POST:
-                this.handlePostEndpoint(endPoint, pathName, request, response);
+                this.postMethodEndpointHandler.handleEndpoint(endPoint, pathName, request, response);
                 break;
             default:
                 console.log('Cannot handle Rest endpoint call with method: ' + request.method);
         }
     };
-
-    /**
-     * This method will try and execute the requested endpoint.
-     * If the Endpoint requires parameters, the number of parameters will be validated and a 400 error will ge generated.
-     * If the number of parameters is correct, the parameter validator for the endpoint will be called to validate the parameters.
-     * If the validation of the parameters fails a 400 error will be generated.
-     *
-     * @param endPoint The Endpoint to execute.
-     * @param pathName The path of the requested endpoint.
-     * @param request The HTTP Request.
-     * @param response The HTTP Response.
-     */
-    private handleGetEndpoint (endPoint: EndpointDefinition, pathName: string, request: IncomingMessage, response: ServerResponse): void {
-        let requestData: any = url.parse(request.url, true);
-
-        if(requestData.query.length == 0) {
-            endPoint.execute(request, response);
-        } else {
-            let urlParams: Array<any> = requestData.query;
-
-            //Handle query params
-            if(urlParams && Object.keys(urlParams).length > 0) {
-                if(endPoint.parameters.length === Object.keys(urlParams).length) {
-                    for (let i = 0; i < endPoint.parameters.length; i++) {
-                        let param: Parameter<any> = endPoint.parameters[i];
-                        param.setValue(urlParams[endPoint.parameters[i].name]);
-
-                        if (!param.validate()) {
-                            this.displayError(response, 400, 'Validation failed: ' + param.validator.description(), pathName);
-                            return;
-                        }
-                    }
-                    endPoint.execute(request, response);
-                } else {
-                    this.displayError(response, 400, 'Parameters incorrect => Required: ' + JSON.stringify(endPoint.parameters), pathName);
-                }
-                return;
-            }
-
-            //Handle restful URL params
-            if(pathName.split('/').length == endPoint.path.split('/').length) {
-                let pathAndParams: string[] = pathName.split('/');
-                let endpointPath: string[] = endPoint.path.split('/');
-
-                let params: {} = {};
-                for(let i: number = 0; i < pathAndParams.length; i++) {
-                    if(pathAndParams[i] != endpointPath[i]) {
-                        console.log('Param found in url: '+ endpointPath[i] + ' with value: ' + pathAndParams[i]);
-                        params[endpointPath[i].substring(1, endpointPath[i].length - 1)] = pathAndParams[i];
-                    }
-                }
-
-                if(endPoint.parameters.length == Object.keys(params).length) {
-                    for (let i = 0; i < endPoint.parameters.length; i++) {
-                        let param: Parameter<any> = endPoint.parameters[i];
-                        param.setValue(params[endPoint.parameters[i].name]);
-
-                        if (!param.validate()) {
-                            this.displayError(response, 400, 'Validation failed: ' + param.validator.description(), pathName);
-                            return;
-                        }
-                    }
-                    endPoint.execute(request, response);
-                } else {
-                    this.displayError(response, 400, 'Parameters incorrect => Required: ' + JSON.stringify(endPoint.parameters), pathName);
-                    return;
-                }
-            } else {
-                this.displayError(response, 400, 'Parameters incorrect => Required: ' + JSON.stringify(endPoint.parameters), pathName);
-            }
-        }
-    }
-
-    /**
-     *
-     * @param endPoint
-     * @param pathName
-     * @param request
-     * @param response
-     */
-    private handlePostEndpoint (endPoint: EndpointDefinition, pathName: string, request: IncomingMessage, response: ServerResponse): void {
-        //TODO: Implement!
-        //TODO: Post requests should only every contain params in the url (not query params)
-        //TODO: E.G: /path/someService/IdOfResource
-        //TODO: The actual data that is needed is in the request body and should ideally also be validated!
-
-        //Handle restful URL params
-        if(pathName.split('/').length == endPoint.path.split('/').length) {
-            let pathAndParams: string[] = pathName.split('/');
-            let endpointPath: string[] = endPoint.path.split('/');
-
-            let params: {} = {};
-            for(let i: number = 0; i < pathAndParams.length; i++) {
-                if(pathAndParams[i] != endpointPath[i]) {
-                    console.log('Param found in url: '+ endpointPath[i] + ' with value: ' + pathAndParams[i]);
-                    params[endpointPath[i].substring(1, endpointPath[i].length - 1)] = pathAndParams[i];
-                }
-            }
-
-            if(endPoint.parameters.length == Object.keys(params).length) {
-                for (let i = 0; i < endPoint.parameters.length; i++) {
-                    let param: Parameter<any> = endPoint.parameters[i];
-                    param.setValue(params[endPoint.parameters[i].name]);
-
-                    if (!param.validate()) {
-                        this.displayError(response, 400, 'Validation failed: ' + param.validator.description(), pathName);
-                        return;
-                    }
-                }
-                endPoint.execute(request, response);
-            } else {
-                this.displayError(response, 400, 'Parameters incorrect => Required: ' + JSON.stringify(endPoint.parameters), pathName);
-                return;
-            }
-        } else {
-            this.displayError(response, 400, 'Parameters incorrect => Required: ' + JSON.stringify(endPoint.parameters), pathName);
-        }
-    }
 
     /**
      * This method will list the contents of the requested folder.
@@ -285,7 +175,7 @@ export class Router {
                 if(err != null) {
                     console.error(err.message);
 
-                    this.displayError(response, 500, 'Cannot list folder contents!', pathName);
+                    Router.displayError(response, 500, 'Cannot list folder contents!', pathName);
                     return;
                 }
 
@@ -295,7 +185,7 @@ export class Router {
             });
 
         } else {
-            this.displayError(response, 403, 'Folder access is forbidden!', pathName);
+            Router.displayError(response, 403, 'Folder access is forbidden!', pathName);
         }
     };
 
@@ -307,7 +197,7 @@ export class Router {
      * @param message The message to display with the given type.
      * @param pathName The path for which the error occurred.
      */
-    private displayError(response: ServerResponse, type:number , message: string, pathName: string): void {
+    public static displayError(response: ServerResponse, type:number , message: string, pathName: string): void {
         console.error(message + ' (' + pathName + ')');
 
         response.writeHead(type, {'Content-Type': 'text/plain'});
