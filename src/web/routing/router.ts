@@ -10,7 +10,7 @@ import {EndpointDefinition} from "../endpoints/endpoint-definition";
 import {EndpointManager}    from "../endpoints/endpoint-manager";
 import {HttpMethod}         from "../http-method";
 
-import {HttpMethodEndpointHandler}      from "./http-method-endpoint-handler";
+import {HttpMethodEndpointHandler}      from "./base-http-method-endpoint-handler";
 import {HttpGetMethodEndpointHandler}   from "./http-get-method-endpoint-handler";
 import {HttpPostMethodEndpointHandler}  from "./http-post-method-endpoint-handler";
 

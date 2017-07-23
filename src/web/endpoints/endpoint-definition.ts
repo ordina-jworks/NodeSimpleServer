@@ -1,5 +1,6 @@
-import {Parameter} from "./parameters/parameter";
-import {HttpMethod} from "../http-method";
+import {Parameter}                          from "./parameters/parameter";
+import {HttpMethod}                         from "../http-method";
+import {IncomingMessage, ServerResponse}    from "http";
 
 /**
  * Generic EndpointDefinition class.
@@ -38,7 +39,7 @@ export class EndpointDefinition {
      * @param request The HTTP Request.
      * @param response The HTTP Response.
      */
-    public execute = (request, response): void => {
+    public execute = (request: IncomingMessage, response: ServerResponse): void => {
         this.executor(request, response, this.parameters);
     }
 }
