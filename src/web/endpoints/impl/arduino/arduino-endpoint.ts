@@ -10,6 +10,7 @@ import {BaseEndpoint}               from "../../base-endpoint";
 import {EndpointManager}            from "../../endpoint-manager";
 import {EndpointDefinition}         from "../../endpoint-definition";
 import {ArduinoMethodValidatorImpl} from "../../parameters/impl/arduino-method-validator-impl";
+import {Router}                     from "../../../routing/router";
 
 /**
  * Class containing the Arduino endpoints.
@@ -52,12 +53,11 @@ export class ArduinoEndpoint extends BaseEndpoint {
      *
      * @param request The HTTP Request.
      * @param response The HTTP Response.
-     * @param params An array containing the parameters for the endpoint with the desired generic types as defined.
      */
-    public index = (request: IncomingMessage, response: ServerResponse, params: [Parameter<null>]): void => {
+    public index = (request: IncomingMessage, response: ServerResponse): void => {
         console.log('index endpoint called!');
 
-        super.redirect(response, '/arduino/index.html');
+        Router.redirect(response, '/arduino/index.html');
     };
 
     /**
@@ -75,7 +75,7 @@ export class ArduinoEndpoint extends BaseEndpoint {
         MessageManager.getInstance().sendMessageWithCallback(null, (message: IPCMessage): void => {
 
             console.log('setArduinoMethod callback called!');
-            super.respondOK(response, 'Arduino method has been set!', false, 'text/plain');
+            Router.respondOK(response, 'Arduino method has been set!', false, 'text/plain');
 
         }, MessageTarget.INTERVAL_WORKER, 'restart');
     };
@@ -85,12 +85,12 @@ export class ArduinoEndpoint extends BaseEndpoint {
      *
      * @param request The HTTP Request.
      * @param response The HTTP Response.
-     * @param params An array containing the parameters for the endpoint with the desired generic types as defined.
      */
-    public getArduinoScenarios = (request: IncomingMessage, response: ServerResponse, params: Array<Parameter<any>>): void => {
+    public getArduinoScenarios = (request: IncomingMessage, response: ServerResponse): void => {
         console.log('getArduinoImplementations endpoint called!');
 
         //TODO: Implement!
+        Router.respondServerError(response, 'Functionality not implemented yet!', false, 'text/plain');
     };
 
     /**
@@ -105,5 +105,6 @@ export class ArduinoEndpoint extends BaseEndpoint {
 
         //TODO: Implement!
         //TODO: Only allow this to be called from the localhost!
+        Router.respondServerError(response, 'Functionality not implemented yet!', false, 'text/plain');
     };
 }

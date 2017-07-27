@@ -33,7 +33,7 @@ export class HttpGetMethodEndpointHandler extends HttpMethodEndpointHandler {
                 return;
             } else {
                 if(result.code != 200) {
-                    Router.displayError(response, result.code, result.message, pathName);
+                    Router.respondSpecificServerError(response, result.code, result.message, pathName);
                     return;
                 }
             }
@@ -43,8 +43,13 @@ export class HttpGetMethodEndpointHandler extends HttpMethodEndpointHandler {
                 endPoint.execute(request, response);
                 return;
             } else {
-                Router.displayError(response, result.code, result.message, pathName);
-                return;
+                if(result.code != 200) {
+                    Router.respondSpecificServerError(response, result.code, result.message, pathName);
+                    return;
+                } else {
+                    endPoint.execute(request, response);
+                    return;
+                }
             }
         }
     }

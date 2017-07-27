@@ -104,14 +104,14 @@ export class Router {
         fs.exists(fullPath, (exists) => {
             //If the file does not exist, present a 404 error.
             if(!exists) {
-                Router.displayError(response, 404, 'Resource not found!', fullPath);
+                Router.respondSpecificServerError(response, 404, 'Resource not found!', fullPath);
             } else {
                 fs.readFile(fullPath, 'binary', (error, file) => {
                     if(error) {
                         //If there was an error while reading the file, present a 500 error.
                         console.log('Error serving file!', fullPath);
 
-                        Router.displayError(response, 500, 'Error while serving content!', pathName);
+                        Router.respondSpecificServerError(response, 500, 'Error while serving content!', pathName);
                     } else {
                         let cntType = mime.lookup(fullPath);
                         console.log('Serving: ' + fullPath + '\t (' + cntType + ')');
@@ -175,7 +175,7 @@ export class Router {
                 if(err != null) {
                     console.error(err.message);
 
-                    Router.displayError(response, 500, 'Cannot list folder contents!', pathName);
+                    Router.respondSpecificServerError(response, 500, 'Cannot list folder contents!', pathName);
                     return;
                 }
 
@@ -185,9 +185,55 @@ export class Router {
             });
 
         } else {
-            Router.displayError(response, 403, 'Folder access is forbidden!', pathName);
+            Router.respondSpecificServerError(response, 403, 'Folder access is forbidden!', pathName);
         }
     };
+
+    /**
+     * Basic respond method. Can be used to write a response and send it to the client.
+     * If the payload is null, the body of the response will be empty!
+     *
+     * @param response The response object on which the respond should be written.
+     * @param statusCode The HTML status code for the response to have.
+     * @param payload The payload that will be contained withing the response.
+     * @param formatAsJSON True if the payload should be JSON formatted, false if not.
+     * @param contentType The content type for the payload to have when it is sent back to the client.
+     */
+    public static respond (response: ServerResponse, statusCode: number, payload: {}, formatAsJSON: boolean, contentType: string): void {
+        response.writeHead(statusCode, {'Content-Type': contentType});
+        if(payload) {
+            if(formatAsJSON) {
+                response.write(JSON.stringify(payload, null, 4));
+            } else {
+                response.write(payload + '');
+            }
+        }
+        response.end();
+    }
+
+    /**
+     * Specific respond method. Used to respond with the 200 - OK HTTP response code.
+     *
+     * @param response The response object on which the respond should be written.
+     * @param payload The payload that will be contained withing the response.
+     * @param formatAsJSON True if the payload should be JSON formatted, false if not. (defaults to true)
+     * @param contentType The content type for the payload to have when it is sent back to the client. (defaults to json)
+     */
+    public static respondOK (response: ServerResponse, payload: {}, formatAsJSON: boolean = true, contentType: string = 'application/json'): void {
+        Router.respond(response, 200, payload, formatAsJSON, contentType);
+    }
+
+    /**
+     * Specific respond method. Used to respond with the 500 - Server Error HTTP response code.
+     *
+     * @param response The response object on which the respond should be written.
+     * @param payload The payload that will be contained withing the response.
+     * @param formatAsJSON True if the payload should be JSON formatted, false if not. (defaults to true)
+     * @param contentType The content type for the payload to have when it is sent back to the client. (defaults to json)
+     */
+    public static respondServerError (response: ServerResponse, payload: {}, formatAsJSON: boolean = true, contentType: string = 'application/json'): void {
+        Router.respond(response, 500, payload, formatAsJSON, contentType);
+    }
 
     /**
      * Returns the HTTP Response with an error code and message.
@@ -197,11 +243,32 @@ export class Router {
      * @param message The message to display with the given type.
      * @param pathName The path for which the error occurred.
      */
-    public static displayError(response: ServerResponse, type:number , message: string, pathName: string): void {
-        console.error(message + ' (' + pathName + ')');
-
-        response.writeHead(type, {'Content-Type': 'text/plain'});
-        response.write(message);
-        response.end();
+    public static respondSpecificServerError(response: ServerResponse, type: number , message: string, pathName: string): void {
+        Router.respond(response, type, message, false, 'text/plain');
     };
+
+    /**
+     * Specific respond method. Used to respond with the 404 - Resource Not Found HTTP response code.
+     *
+     * @param response The response object on which the respond should be written.
+     * @param payload The payload that will be contained withing the response.
+     * @param formatAsJSON True if the payload should be JSON formatted, false if not. (defaults to false)
+     * @param contentType The content type for the payload to have when it is sent back to the client. (defaults to plain text)
+     */
+    public static respondNotFound (response: ServerResponse, payload: {}, formatAsJSON: boolean = false, contentType: string = 'text/plain'): void {
+        Router.respond(response, 404, payload, formatAsJSON, contentType);
+    }
+
+    /**
+     * Used to redirect the client to a different location or resource.
+     *
+     * @param response The response object on which the respond should be written.
+     * @param target The target to redirect the client to.
+     */
+    public static redirect(response: ServerResponse, target: string): void {
+        response.writeHead(301, {
+            'Location' : target
+        });
+        response.end();
+    }
 }

@@ -31,6 +31,13 @@ export abstract class HttpMethodEndpointHandler {
             }
 
             if(endPoint.parameters.length == Object.keys(params).length) {
+                if(endPoint.parameters.length == 0) {
+                    return {
+                        code: 200,
+                        message: 'OK'
+                    };
+                }
+
                 for (let i = 0; i < endPoint.parameters.length; i++) {
                     let param: Parameter<any> = endPoint.parameters[i];
                     param.setValue(params[endPoint.parameters[i].name]);
@@ -94,5 +101,38 @@ export abstract class HttpMethodEndpointHandler {
             code: 200,
             message: 'No Query params to process!'
         };
+    }
+
+    /**
+     * This method will try and parse the body of the request. This should contain the actual data/payload!
+     *
+     * @param {"http".IncomingMessage} request The request on which we receive the data.
+     * @param {Function} callback The callback function to execute when the full payload has been processed!
+     */
+    public parseBodyPayload(request: IncomingMessage, callback: Function): void {
+        let result: {code: number, message: string, data: {}} = null;
+        let fullBody: string = '';
+
+        request.on('data', (chunk) => {
+            fullBody += chunk.toString();
+        });
+
+        request.on('end', () => {
+            try {
+                result = {
+                    code: 200,
+                    message: 'OK',
+                    data: JSON.parse(fullBody)
+                }
+            } catch (error) {
+                result = {
+                    code: 500,
+                    message: 'Cannot parse request body! Make sure that it is proper JSON!',
+                    data: null
+                }
+            }
+
+            callback(result);
+        });
     }
 }

@@ -5,6 +5,7 @@ import {MessageTarget}                      from "../../../../ipc/message-target
 import {EndpointManager}                    from "../../endpoint-manager";
 import {EndpointDefinition}                 from "../../endpoint-definition";
 import {Parameter}                          from "../../parameters/parameter";
+import {Router}                             from "../../../routing/router";
 
 /**
  * Class containing the Slotmachine endpoints.
@@ -54,10 +55,10 @@ export class SlotmachineEndpoint extends BaseEndpoint {
      * @param response The HTTP Response.
      * @param params An array containing the parameters for the endpoint with the desired generic types as defined.
      */
-    public slotmachineIndex = (request: IncomingMessage, response: ServerResponse, params: [Parameter<null>]): void => {
+    public slotmachineIndex = (request: IncomingMessage, response: ServerResponse): void => {
         console.log('slotmachine index endpoint called!');
 
-        super.redirect(response, '/slotmachine/index.html');
+        Router.redirect(response, '/slotmachine/index.html');
     };
 
     /**
@@ -68,7 +69,7 @@ export class SlotmachineEndpoint extends BaseEndpoint {
      */
     private fakeClick = (request: IncomingMessage, response: ServerResponse): void => {
         this.messageManager.sendMessage({buttonPressed: true}, MessageTarget.INTERVAL_WORKER, 'broadcastMessage');
-        super.respondOK(response, 'Fake click dispatched', false, 'text/plain');
+        Router.respondOK(response, 'Fake click dispatched', false, 'text/plain');
     };
 
     /**
@@ -76,16 +77,17 @@ export class SlotmachineEndpoint extends BaseEndpoint {
      *
      * @param request The HTTP Request.
      * @param response The HTTP Response.
+     * @param body The payload body of the request. This contains the actual data!
      */
-    public buttonTrigger = (request: IncomingMessage, response: ServerResponse): void => {
+    public buttonTrigger = (request: IncomingMessage, response: ServerResponse, body: any): void => {
         console.log('Request received for buttonTrigger...');
 
         switch (request.method) {
             case 'GET':
-                super.respondOK(response, 'To use this service, post JSON data to it!', false, 'text/plain');
+                Router.respondOK(response, 'To use this service, post JSON data to it!', false, 'text/plain');
                 break;
             case 'POST':
-                super.parsePayload(request, response, this.handleButtonTrigger);
+                this.handleButtonTrigger(response, body);
                 break;
         }
     };
@@ -93,9 +95,12 @@ export class SlotmachineEndpoint extends BaseEndpoint {
     /**
      * Callback handler when the payload has been received and parsed.
      *
+     * @param response
      * @param data The payload data in JSON form.
      */
-    private handleButtonTrigger = (data: any): void => {
+    private handleButtonTrigger = (response: ServerResponse, data: {payload: any}): void => {
+        let error: string = null;
+
         if(data) {
             if(data.payload == true || data.payload == 'true' || data.payload == 1) {
                 this.messageManager.sendMessage({buttonPressed: true}, MessageTarget.INTERVAL_WORKER, 'broadcastMessage');
@@ -103,7 +108,14 @@ export class SlotmachineEndpoint extends BaseEndpoint {
                 this.messageManager.sendMessage({buttonPressed: false}, MessageTarget.INTERVAL_WORKER, 'broadcastMessage');
             }
         } else {
-            console.error('No valid data received to process for buttonTrigger!');
+            error = 'No valid data received to process for buttonTrigger!';
+            console.error(error);
+        }
+
+        if(!error) {
+            Router.respondOK(response, null);
+        } else {
+            Router.respondServerError(response, error, false, 'text/plain');
         }
     };
 }

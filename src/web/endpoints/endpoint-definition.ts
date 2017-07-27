@@ -12,7 +12,6 @@ export class EndpointDefinition {
 
     public path: string                         = null;
     public method: HttpMethod                   = null;
-    public description: string                  = null;
     public parameters: Array<Parameter<any>>    = null;
 
     private executor: Function                  = null;
@@ -41,5 +40,16 @@ export class EndpointDefinition {
      */
     public execute = (request: IncomingMessage, response: ServerResponse): void => {
         this.executor(request, response, this.parameters);
-    }
+    };
+
+    /**
+     * Executes the endpoint by calling the executor function, while also passing along the body.
+     *
+     * @param request The HTTP Request.
+     * @param response The HTTP Response.
+     * @param {{}} body The JSON object that contains the payload of the body.
+     */
+    public executeWithBodyPayload = (request: IncomingMessage, response: ServerResponse, body: {}): void => {
+        this.executor(request, response, body);
+    };
 }

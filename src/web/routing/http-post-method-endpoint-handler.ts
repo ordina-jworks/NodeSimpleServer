@@ -22,19 +22,29 @@ export class HttpPostMethodEndpointHandler extends HttpMethodEndpointHandler {
         let requestData: any = url.parse(request.url, true);
 
         if(requestData.query && Object.keys(requestData.query).length > 0) {
-            Router.displayError(response, 500, 'A post request should not contain any query params!', pathName);
+            Router.respondSpecificServerError(response, 500, 'A post request should not contain any query params!', pathName);
             return;
         }
 
-        let error: {code: number, message: string} = this.parseUrlParams(pathName, endPoint);
-        if(!error) {
+        let result: {code: number, message: string} = this.parseUrlParams(pathName, endPoint);
+        if(!result) {
             endPoint.execute(request, response);
             return;
         } else {
-            Router.displayError(response, error.code, error.message, pathName);
-            return;
+            if(result.code != 200) {
+                Router.respondSpecificServerError(response, result.code, result.message, pathName);
+                return;
+            }
         }
 
-        //TODO: The actual data that is needed is in the request body and should ideally also be validated!
+        this.parseBodyPayload(request,(result: {code: number, message: string, data: any}) => {
+            if(result.code == 200) {
+                endPoint.executeWithBodyPayload(request, response, result.data);
+                return;
+            } else {
+                Router.respondServerError(response, 'Cannot parse request body! Make sure that it is proper JSON!', false, 'text/plain');
+                return;
+            }
+        });
     }
 }

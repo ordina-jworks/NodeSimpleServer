@@ -15,6 +15,7 @@ import {DataBrokerOperation}            from "../../../workers/impl/databroker/d
 import {StringNotEmptyValidatorImpl}    from "../parameters/impl/string-not-empty-validator-impl";
 import {NumberIsPositiveValidatorImpl}  from "../parameters/impl/number_is_positive_validator_impl";
 import {Config}                         from "../../../../resources/config";
+import {Router}                         from "../../routing/router";
 
 /**
  * Class containing the generic and application default endpoints.
@@ -110,12 +111,11 @@ export class GenericEndpoints extends BaseEndpoint {
      *
      * @param request The HTTP Request.
      * @param response The HTTP Response.
-     * @param params An array containing the parameters for the endpoint with the desired generic types as defined.
      */
-    public index = (request: IncomingMessage, response: ServerResponse, params: [Parameter<null>]): void => {
+    public index = (request: IncomingMessage, response: ServerResponse): void => {
         console.log('index endpoint called!');
 
-        super.redirect(response, '/welcome/index.html');
+        Router.redirect(response, '/welcome/index.html');
     };
 
     /**
@@ -125,7 +125,7 @@ export class GenericEndpoints extends BaseEndpoint {
      * @param response The HTTP Response.
      * @param params An array containing the parameters for the endpoint with the desired generic types as defined.
      */
-    public listEndpoints = (request: IncomingMessage, response: ServerResponse, params: [Parameter<null>]): void => {
+    public listEndpoints = (request: IncomingMessage, response: ServerResponse, params: [Parameter<any>]): void => {
         console.log('listEndpoints endpoint called!');
 
         let manager: EndpointManager = EndpointManager.getInstance();
@@ -151,7 +151,7 @@ export class GenericEndpoints extends BaseEndpoint {
             list.push(endpointDesc);
         }
 
-        super.respondOK(response, list);
+        Router.respondOK(response, list);
     };
 
     /**
@@ -159,9 +159,8 @@ export class GenericEndpoints extends BaseEndpoint {
      *
      * @param request The HTTP Request.
      * @param response The HTTP Response.
-     * @param params An array containing the parameters for the endpoint with the desired generic types as defined.
      */
-    public listWebapps = (request: IncomingMessage, response: ServerResponse, params: [Parameter<null>]): void => {
+    public listWebapps = (request: IncomingMessage, response: ServerResponse): void => {
         console.log('listWebapps endpoint called!');
 
         let apps: string[] = [];
@@ -173,7 +172,7 @@ export class GenericEndpoints extends BaseEndpoint {
             }
         });
 
-        super.respondOK(response, {apps: apps});
+        Router.respondOK(response, {apps: apps});
     };
 
     /**
@@ -186,26 +185,21 @@ export class GenericEndpoints extends BaseEndpoint {
     public helloworld = (request: IncomingMessage, response: ServerResponse, params: [Parameter<string>]): void => {
         console.log('helloworld endpoint called!');
 
-        super.respondOK(
-            response,
-            'Hello World!\n\nHello there ' + params[0].getValue() + '!',
-            false
-        );
+        Router.respondOK(response, 'Hello World!\n\nHello there ' + params[0].getValue() + '!', false);
     };
 
     /**
      *
      * @param request
      * @param response
-     * @param params
      */
-    public listCaches = (request: IncomingMessage, response: ServerResponse, params: [Parameter<string>]) :void => {
+    public listCaches = (request: IncomingMessage, response: ServerResponse) :void => {
         console.log('listCaches endpoint called!');
 
         MessageManager.getInstance().sendMessageWithCallback(null, (message: IPCMessage): void => {
 
             console.log('listCaches callback called!');
-            super.respondOK(response, message.payload);
+            Router.respondOK(response, message.payload);
 
         }, MessageTarget.DATA_BROKER, DataBrokerOperation.RETRIEVE_CACHES + "");
     };
@@ -222,7 +216,7 @@ export class GenericEndpoints extends BaseEndpoint {
         MessageManager.getInstance().sendMessageWithCallback({'cacheName' : params[0].getValue()}, (message: IPCMessage): void => {
 
             console.log('listCacheContent callback called! ' + JSON.stringify(message));
-            super.respondOK(response, message.payload);
+            Router.respondOK(response, message.payload);
 
         }, MessageTarget.DATA_BROKER, DataBrokerOperation.RETRIEVE_CACHE + "");
     };
@@ -235,6 +229,6 @@ export class GenericEndpoints extends BaseEndpoint {
      */
     public listCacheContentForWorker = (request: IncomingMessage, response: ServerResponse, params: [Parameter<any>]) => {
         //TODO: Implement correct functionality!
-        super.respondServerError(response, {error: 'Functionality not implemented!', parameters: params});
+        Router.respondServerError(response, {error: 'Functionality not implemented!', parameters: params});
     };
 }
