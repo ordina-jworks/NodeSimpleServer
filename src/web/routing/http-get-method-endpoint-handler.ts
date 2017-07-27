@@ -1,8 +1,8 @@
 import * as url                             from "url";
+import {Url}                                from "url";
 import {IncomingMessage, ServerResponse}    from "http";
 
 import {Router}                             from "./router";
-import {Parameter}                          from "../endpoints/parameters/parameter";
 import {HttpMethodEndpointHandler}          from "./base-http-method-endpoint-handler";
 import {EndpointDefinition}                 from "../endpoints/endpoint-definition";
 
@@ -20,37 +20,31 @@ export class HttpGetMethodEndpointHandler extends HttpMethodEndpointHandler {
      * @param response The HTTP Response.
      */
     public handleEndpoint(endPoint: EndpointDefinition, pathName: string, request: IncomingMessage, response: ServerResponse): void {
-        let requestData: any = url.parse(request.url, true);
+        let requestData: Url = url.parse(request.url, true);
 
         if(requestData.query.length == 0) {
             endPoint.execute(request, response);
         } else {
-            let urlParams: Array<any> = requestData.query;
+            let result: {code: number, message: string};
 
-            //Handle query params
-            if(urlParams && Object.keys(urlParams).length > 0) {
-                if(endPoint.parameters.length === Object.keys(urlParams).length) {
-                    for (let i = 0; i < endPoint.parameters.length; i++) {
-                        let param: Parameter<any> = endPoint.parameters[i];
-                        param.setValue(urlParams[endPoint.parameters[i].name]);
-
-                        if (!param.validate()) {
-                            Router.displayError(response, 400, 'Validation failed: ' + param.validator.description(), pathName);
-                            return;
-                        }
-                    }
-                    endPoint.execute(request, response);
-                } else {
-                    Router.displayError(response, 400, 'Parameters incorrect => Required: ' + JSON.stringify(endPoint.parameters), pathName);
-                }
+            result = this.parseQueryParams(requestData, endPoint);
+            if(!result) {
+                endPoint.execute(request, response);
                 return;
+            } else {
+                if(result.code != 200) {
+                    Router.displayError(response, result.code, result.message, pathName);
+                    return;
+                }
             }
 
-            let error: {code: number, message: string} = this.handleUrlParams(pathName, endPoint);
-            if(error) {
-                Router.displayError(response, error.code, error.message, pathName);
-            } else {
+            result = this.parseUrlParams(pathName, endPoint);
+            if(!result) {
                 endPoint.execute(request, response);
+                return;
+            } else {
+                Router.displayError(response, result.code, result.message, pathName);
+                return;
             }
         }
     }
