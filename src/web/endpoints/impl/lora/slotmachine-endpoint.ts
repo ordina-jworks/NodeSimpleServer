@@ -4,7 +4,6 @@ import {MessageManager}                     from "../../../../ipc/message-manage
 import {MessageTarget}                      from "../../../../ipc/message-target";
 import {EndpointManager}                    from "../../endpoint-manager";
 import {EndpointDefinition}                 from "../../endpoint-definition";
-import {Parameter}                          from "../../parameters/parameter";
 import {Router}                             from "../../../routing/router";
 
 /**
@@ -32,14 +31,12 @@ export class SlotmachineEndpoint extends BaseEndpoint {
                 '/slotmachine',
                 this.slotmachineIndex.bind(this)
             )
-        );
-        endpointManager.registerEndpoint(
+        ).registerEndpoint(
             new EndpointDefinition(
                 '/slotmachine/click',
                 this.fakeClick.bind(this)
             )
-        );
-        endpointManager.registerEndpoint(
+        ).registerEndpoint(
             new EndpointDefinition(
                 '/slotmachine/buttonTrigger',
                 this.buttonTrigger.bind(this)

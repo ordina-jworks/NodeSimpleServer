@@ -14,6 +14,9 @@ export class EndpointDefinition {
     public method: HttpMethod                   = null;
     public parameters: Array<Parameter<any>>    = null;
 
+    public requiresAuthentication: boolean      = false;
+    public roles: string[]                      = [];
+
     private executor: Function                  = null;
 
     /**
@@ -24,12 +27,16 @@ export class EndpointDefinition {
      * @param executor The executor function that will be executed when the endpoint is executed.
      * @param parameters An array containing the parameters with the provided generic types.
      * @param method The HTTP method that this definition should be used for. Defaults to the GET method if not specified.
+     * @param requiresAuthentication Boolean that is should be true if the endpoint requires authentication, false or not provided if not!
+     * @param roles Array of string items that represent the roles that are granted to access the endpoint (authenticated).
      */
-    constructor(path: string, executor: Function, parameters: Array<Parameter<any>> = [], method: HttpMethod = HttpMethod.GET) {
+    constructor(path: string, executor: Function, parameters: Array<Parameter<any>> = [], method: HttpMethod = HttpMethod.GET, requiresAuthentication: boolean = false, roles: string[] = []) {
         this.path = path;
         this.method = method;
         this.executor = executor;
         this.parameters = parameters;
+        this.requiresAuthentication = requiresAuthentication;
+        this.roles = roles;
     }
 
     /**

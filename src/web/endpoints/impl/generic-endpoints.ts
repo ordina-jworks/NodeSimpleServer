@@ -52,48 +52,41 @@ export class GenericEndpoints extends BaseEndpoint {
                 '/endpoints',
                 this.listEndpoints.bind(this)
             )
-        );
-        endpointManager.registerEndpoint(
+        ).registerEndpoint(
             new EndpointDefinition(
                 '/apps',
                 this.listWebapps.bind(this)
             )
-        );
-        endpointManager.registerEndpoint(
+        ).registerEndpoint(
             new EndpointDefinition(
                 '/helloworld',
                 this.helloworld.bind(this),
                 [new Parameter<string>('name', 'string field containing the name', new StringNotEmptyValidatorImpl())]
             )
-        );
-        endpointManager.registerEndpoint(
+        ).registerEndpoint(
             new EndpointDefinition(
                 '/helloworld/{name}',
                 this.helloworld.bind(this),
                 [new Parameter<string>('name', 'string field containing the name', new StringNotEmptyValidatorImpl())]
             )
-        );
-        endpointManager.registerEndpoint(
+        ).registerEndpoint(
             new EndpointDefinition(
                 '/caches',
                 this.listCaches.bind(this)
             )
-        );
-        endpointManager.registerEndpoint(
+        ).registerEndpoint(
             new EndpointDefinition(
                 '/cache',
                 this.listCacheContent.bind(this),
                 [new Parameter<string>('name', 'string field containing the name of the cache')]
             )
-        );
-        endpointManager.registerEndpoint(
+        ).registerEndpoint(
             new EndpointDefinition(
                 '/cache/{name}',
                 this.listCacheContent.bind(this),
                 [new Parameter<string>('name', 'string field containing the name of the cache')]
             )
-        );
-        endpointManager.registerEndpoint(
+        ).registerEndpoint(
             new EndpointDefinition(
                 '/cache/{name}/worker/{id}',
                 this.listCacheContentForWorker.bind(this),

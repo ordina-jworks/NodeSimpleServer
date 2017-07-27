@@ -11,6 +11,7 @@ import {EndpointManager}            from "../../endpoint-manager";
 import {EndpointDefinition}         from "../../endpoint-definition";
 import {ArduinoMethodValidatorImpl} from "../../parameters/impl/arduino-method-validator-impl";
 import {Router}                     from "../../../routing/router";
+import {HttpMethod} from "../../../http-method";
 
 /**
  * Class containing the Arduino endpoints.
@@ -36,13 +37,14 @@ export class ArduinoEndpoint extends BaseEndpoint {
                 '/arduino',
                 this.index.bind(this)
             )
-        );
-
-        endpointManager.registerEndpoint(
+        ).registerEndpoint(
             new EndpointDefinition(
                 '/arduino/setArduinoMethod',
                 this.setArduinoMethod.bind(this),
-                [new Parameter<string>('method', 'string field that contains the method used for arduino implementations', new ArduinoMethodValidatorImpl())]
+                [new Parameter<string>('method', 'string field that contains the method used for arduino implementations', new ArduinoMethodValidatorImpl())],
+                HttpMethod.GET,
+                true,
+                ['admin']
             )
         );
     };

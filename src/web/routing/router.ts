@@ -13,6 +13,7 @@ import {HttpMethod}         from "../http-method";
 import {HttpMethodEndpointHandler}      from "./base-http-method-endpoint-handler";
 import {HttpGetMethodEndpointHandler}   from "./http-get-method-endpoint-handler";
 import {HttpPostMethodEndpointHandler}  from "./http-post-method-endpoint-handler";
+import {AuthenticationManager} from "../authentication/authentication-manager";
 
 /**
  * Router class.
@@ -25,8 +26,9 @@ import {HttpPostMethodEndpointHandler}  from "./http-post-method-endpoint-handle
  */
 export class Router {
 
-    private config: Config                      = null;
-    private endpointManager: EndpointManager    = null;
+    private config: Config                                  = null;
+    private endpointManager: EndpointManager                = null;
+    private authenticationManager: AuthenticationManager    = null;
 
     private pathParts: Array<string>            = null;
     private rootFolder: string                  = null;
@@ -40,6 +42,7 @@ export class Router {
     constructor() {
         this.config = Config.getInstance();
         this.endpointManager = EndpointManager.getInstance();
+        this.authenticationManager = AuthenticationManager.getInstance();
 
         this.getMethodEndpointHandler = new HttpGetMethodEndpointHandler();
         this.postMethodEndpointHandler = new HttpPostMethodEndpointHandler();
@@ -136,7 +139,8 @@ export class Router {
 
     /**
      * This method will try and execute the requested endpoint.
-     * It will check the HTTP method of the request and forward to the correct logic for execution.
+     * It will first check if authentication is needed and if it is correct.
+     * Then it will check the HTTP method of the request and forward to the correct logic for execution.
      *
      * @param endPoint The Endpoint to execute.
      * @param pathName The path of the requested endpoint.
@@ -145,6 +149,12 @@ export class Router {
      */
     private tryAndHandleRestEndpoint (endPoint: EndpointDefinition, pathName: string, request: IncomingMessage, response: ServerResponse): void {
         console.log('Handling REST request: ' + pathName + ' method: ' + request.method);
+
+        let authenticated: boolean = this.authenticationManager.authenticateForEndpoint(request, endPoint);
+        if(!authenticated) {
+            Router.respondUnauthorizedServerError(response, 'Unauthorized');
+            return;
+        }
 
         switch (HttpMethod.valueOf(request.method)) {
             case HttpMethod.GET:
@@ -178,12 +188,8 @@ export class Router {
                     Router.respondSpecificServerError(response, 500, 'Cannot list folder contents!', pathName);
                     return;
                 }
-
-                response.writeHead(200, {'Content-Type': 'application/javascript'});
-                response.write(JSON.stringify(files, null, 4));
-                response.end();
+                Router.respondOK(response, JSON.stringify(files, null, 4), true);
             });
-
         } else {
             Router.respondSpecificServerError(response, 403, 'Folder access is forbidden!', pathName);
         }
@@ -198,9 +204,16 @@ export class Router {
      * @param payload The payload that will be contained withing the response.
      * @param formatAsJSON True if the payload should be JSON formatted, false if not.
      * @param contentType The content type for the payload to have when it is sent back to the client.
+     * @param headers The headers object that contains any headers to be set on the response.
      */
-    public static respond (response: ServerResponse, statusCode: number, payload: {}, formatAsJSON: boolean, contentType: string): void {
-        response.writeHead(statusCode, {'Content-Type': contentType});
+    public static respond (response: ServerResponse, statusCode: number, payload: {}, formatAsJSON: boolean, contentType: string, headers?: {}): void {
+        if (headers) {
+            headers['Content-Type'] = contentType;
+        } else {
+            headers = {'Content-Type': contentType};
+        }
+
+        response.writeHead(statusCode, headers);
         if(payload) {
             if(formatAsJSON) {
                 response.write(JSON.stringify(payload, null, 4));
@@ -246,6 +259,16 @@ export class Router {
     public static respondSpecificServerError(response: ServerResponse, type: number , message: string, pathName: string): void {
         Router.respond(response, type, message, false, 'text/plain');
     };
+
+    /**
+     * Returns the HTTP Response with an Unauthorized message and the required headers to allow browsers to ask for the username/password!
+     *
+     * @param {"http".ServerResponse} response The HTTP Response to write the error to.
+     * @param {string} message The message to display in the response.
+     */
+    public static respondUnauthorizedServerError(response: ServerResponse, message: string): void {
+        Router.respond(response, 401, message, false, 'text/plain', {'WWW-Authenticate': 'Basic realm="User Visible Realm"'})
+    }
 
     /**
      * Specific respond method. Used to respond with the 404 - Resource Not Found HTTP response code.

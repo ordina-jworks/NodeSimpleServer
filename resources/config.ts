@@ -16,15 +16,29 @@ export class Config {
         defaultCacheSize:               250
     };
 
-    public keys = {
-    };
-
     public arduino = {
         enableArduino:                  false,
 
         useSerialOverJohnnyFive:        false,
         serialPortName:                 "usbmodem",
         serialPortBaudRate:             57600
+    };
+
+    public keys = {
+    };
+
+    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //!!!!!!!! Do NOT use the standard users when deploying! For test purposes only !!!!!!!!!!!
+    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    public roles = {
+        admin: 'admin',
+        user: 'user'
+    };
+    public auth = {
+      users: [
+          {user: 'admin', auth: 'YWRtaW46YWRtaW4=', roles: [this.roles.admin, this.roles.user]},
+          {user: 'user',  auth: 'dXNlcjp1c2Vy',     roles: [this.roles.user]}
+      ]
     };
 
     private constructor() {

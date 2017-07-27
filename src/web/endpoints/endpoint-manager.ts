@@ -36,7 +36,7 @@ export class EndpointManager {
      *
      * @param endpoint The endpoint that should be added to the list of registered endpoints.
      */
-    public registerEndpoint = (endpoint: EndpointDefinition): void => {
+    public registerEndpoint = (endpoint: EndpointDefinition): EndpointManager => {
         for (let existingEndpoint of this.endpoints) {
             if(endpoint.path == existingEndpoint.path) {
                 console.error('An endpoint has already been registered with the same path! Paths have to be unique! (' + endpoint.path + ')');
@@ -44,6 +44,7 @@ export class EndpointManager {
             }
         }
         this.endpoints.push(endpoint);
+        return this;
     };
 
     /**
@@ -106,7 +107,7 @@ export class EndpointManager {
      *
      * @param path The path for which if an endpoint is found, it should be removed.
      */
-    public unRegisterEndpoint(path: string) {
+    public unRegisterEndpoint(path: string): EndpointManager {
         for (let existingEndpoint of this.endpoints) {
             if(existingEndpoint.path == path) {
                 this.endpoints.splice(this.endpoints.indexOf(existingEndpoint), 1);
@@ -114,6 +115,7 @@ export class EndpointManager {
                 return;
             }
         }
-        console.log('No match found for path, no Endpoint removed!')
+        console.log('No match found for path, no Endpoint removed!');
+        return this;
     };
 }

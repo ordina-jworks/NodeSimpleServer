@@ -28,57 +28,50 @@ export class BoozeEndpoint extends BaseEndpoint {
 
     public mapEntryPoints = (): void => {
         let endpointManager: EndpointManager = EndpointManager.getInstance();
-        endpointManager.registerEndpoint(
+        endpointManager.
+        registerEndpoint(
             new EndpointDefinition(
                 '/booze',
                 this.boozeIndex.bind(this)
             )
-        );
-        endpointManager.registerEndpoint(
+        ).registerEndpoint(
             new EndpointDefinition(
                 '/booze/levelFull',
                 this.levelFull.bind(this)
             )
-        );
-        endpointManager.registerEndpoint(
+        ).registerEndpoint(
             new EndpointDefinition(
                 '/booze/levelHigh',
                 this.levelHigh.bind(this)
             )
-        );
-        endpointManager.registerEndpoint(
+        ).registerEndpoint(
             new EndpointDefinition(
                 '/booze/levelMedium',
                 this.levelMedium.bind(this)
             )
-        );
-        endpointManager.registerEndpoint(
+        ).registerEndpoint(
             new EndpointDefinition(
                 '/booze/levelLow',
                 this.levelLow.bind(this)
             )
-        );
-        endpointManager.registerEndpoint(
+        ).registerEndpoint(
             new EndpointDefinition(
                 '/booze/levelEmpty',
                 this.levelEmpty.bind(this)
             )
-        );
-        endpointManager.registerEndpoint(
+        ).registerEndpoint(
             new EndpointDefinition(
                 '/booze/levelExact',
                 this.levelExact.bind(this),
                 [new Parameter<number>('level', 'number field containing the exact level of the booze meter.')]
             )
-        );
-        endpointManager.registerEndpoint(
+        ).registerEndpoint(
             new EndpointDefinition(
                 '/booze/levelExact/{level}',
                 this.levelExact.bind(this),
                 [new Parameter<number>('level', 'number field containing the exact level of the booze meter.')]
             )
-        );
-        endpointManager.registerEndpoint(
+        ).registerEndpoint(
             new EndpointDefinition(
                 '/booze/levelTrigger',
                 this.levelTrigger.bind(this)
