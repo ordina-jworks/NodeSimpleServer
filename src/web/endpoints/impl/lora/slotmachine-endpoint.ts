@@ -3,8 +3,8 @@ import {IncomingMessage, ServerResponse}    from "http";
 import {MessageManager}                     from "../../../../ipc/message-manager";
 import {MessageTarget}                      from "../../../../ipc/message-target";
 import {EndpointManager}                    from "../../endpoint-manager";
-import {EndpointDefinition}                 from "../../endpoint-definition";
 import {Router}                             from "../../../routing/router";
+import {EndpointBuilder}                    from "../../endpoint-builder";
 
 /**
  * Class containing the Slotmachine endpoints.
@@ -26,22 +26,27 @@ export class SlotmachineEndpoint extends BaseEndpoint {
 
     public mapEntryPoints = (): void => {
         let endpointManager: EndpointManager = EndpointManager.getInstance();
-        endpointManager.registerEndpoint(
-            new EndpointDefinition(
-                '/slotmachine',
-                this.slotmachineIndex.bind(this)
+        let builder: EndpointBuilder = new EndpointBuilder();
+
+        endpointManager
+            .registerEndpoint(
+                builder
+                    .path('/slotmachine')
+                    .executor(this.slotmachineIndex.bind(this))
+                    .build()
             )
-        ).registerEndpoint(
-            new EndpointDefinition(
-                '/slotmachine/click',
-                this.fakeClick.bind(this)
+            .registerEndpoint(
+                builder
+                    .path('/slotmachine/click')
+                    .executor(this.fakeClick.bind(this))
+                    .build()
             )
-        ).registerEndpoint(
-            new EndpointDefinition(
-                '/slotmachine/buttonTrigger',
-                this.buttonTrigger.bind(this)
+            .registerEndpoint(
+                builder
+                    .path('/slotmachine/buttonTrigger')
+                    .executor(this.buttonTrigger.bind(this))
+                    .build()
             )
-        );
     };
 
     /**

@@ -16,6 +16,7 @@ import {StringNotEmptyValidatorImpl}    from "../parameters/impl/string-not-empt
 import {NumberIsPositiveValidatorImpl}  from "../parameters/impl/number_is_positive_validator_impl";
 import {Config}                         from "../../../../resources/config";
 import {Router}                         from "../../routing/router";
+import {EndpointBuilder}                from "../endpoint-builder";
 
 /**
  * Class containing the generic and application default endpoints.
@@ -40,62 +41,81 @@ export class GenericEndpoints extends BaseEndpoint {
 
     public mapEntryPoints = (): void => {
         let endpointManager: EndpointManager = EndpointManager.getInstance();
-        endpointManager.registerEndpoint(
-            new EndpointDefinition(
-                '/',
-                this.index.bind(this)
-            )
-        );
+        let builder: EndpointBuilder = new EndpointBuilder();
 
-        endpointManager.registerEndpoint(
-            new EndpointDefinition(
-                '/endpoints',
-                this.listEndpoints.bind(this)
+        endpointManager
+            .registerEndpoint(
+                builder
+                    .path('/')
+                    .executor(this.index.bind(this))
+                    .build()
             )
-        ).registerEndpoint(
-            new EndpointDefinition(
-                '/apps',
-                this.listWebapps.bind(this)
+            .registerEndpoint(
+                builder
+                    .path('/endpoints')
+                    .executor(this.listEndpoints.bind(this))
+                    .build()
             )
-        ).registerEndpoint(
-            new EndpointDefinition(
-                '/helloworld',
-                this.helloworld.bind(this),
-                [new Parameter<string>('name', 'string field containing the name', new StringNotEmptyValidatorImpl())]
+            .registerEndpoint(
+                builder
+                    .path('/apps')
+                    .executor(this.listWebapps.bind(this))
+                    .build()
             )
-        ).registerEndpoint(
-            new EndpointDefinition(
-                '/helloworld/{name}',
-                this.helloworld.bind(this),
-                [new Parameter<string>('name', 'string field containing the name', new StringNotEmptyValidatorImpl())]
+            .registerEndpoint(
+                builder
+                    .path('/helloworld')
+                    .executor(this.helloworld.bind(this))
+                    .parameters(
+                        [new Parameter<string>('name', 'string field containing the name', new StringNotEmptyValidatorImpl())]
+                    )
+                    .build()
             )
-        ).registerEndpoint(
-            new EndpointDefinition(
-                '/caches',
-                this.listCaches.bind(this)
+            .registerEndpoint(
+                builder
+                    .path('/helloworld/{name}')
+                    .executor(this.helloworld.bind(this))
+                    .parameters(
+                        [new Parameter<string>('name', 'string field containing the name', new StringNotEmptyValidatorImpl())]
+                    )
+                    .build()
             )
-        ).registerEndpoint(
-            new EndpointDefinition(
-                '/cache',
-                this.listCacheContent.bind(this),
-                [new Parameter<string>('name', 'string field containing the name of the cache')]
+            .registerEndpoint(
+                builder
+                    .path('/caches')
+                    .executor(this.listCaches.bind(this))
+                    .build()
             )
-        ).registerEndpoint(
-            new EndpointDefinition(
-                '/cache/{name}',
-                this.listCacheContent.bind(this),
-                [new Parameter<string>('name', 'string field containing the name of the cache')]
+            .registerEndpoint(
+                builder
+                    .path('/cache')
+                    .executor(this.listCacheContent.bind(this))
+                    .parameters(
+                        [new Parameter<string>('name', 'string field containing the name of the cache')]
+                    )
+                    .build()
             )
-        ).registerEndpoint(
-            new EndpointDefinition(
-                '/cache/{name}/worker/{id}',
-                this.listCacheContentForWorker.bind(this),
-                [
-                    new Parameter<string>('name', 'string field containing the name of the cache', new StringNotEmptyValidatorImpl()),
-                    new Parameter<number>('id', 'number field containing the worker id for which to display all items in the cache', new NumberIsPositiveValidatorImpl())
-                ]
+            .registerEndpoint(
+                builder
+                    .path('/cache/{name}')
+                    .executor(this.listCacheContent.bind(this))
+                    .parameters(
+                        [new Parameter<string>('name', 'string field containing the name of the cache')]
+                    )
+                    .build()
             )
-        );
+            .registerEndpoint(
+                builder
+                    .path('/cache/{name}/worker/{id}')
+                    .executor(this.listCacheContentForWorker.bind(this))
+                    .parameters(
+                        [
+                            new Parameter<string>('name', 'string field containing the name of the cache', new StringNotEmptyValidatorImpl()),
+                            new Parameter<number>('id', 'number field containing the worker id for which to display all items in the cache', new NumberIsPositiveValidatorImpl())
+                        ]
+                    )
+                    .build()
+            );
     };
 
     /**

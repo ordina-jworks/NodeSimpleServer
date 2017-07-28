@@ -8,10 +8,9 @@ import {IPCMessage}                 from "../../../../ipc/messages/ipc-message";
 import {MessageTarget}              from "../../../../ipc/message-target";
 import {BaseEndpoint}               from "../../base-endpoint";
 import {EndpointManager}            from "../../endpoint-manager";
-import {EndpointDefinition}         from "../../endpoint-definition";
 import {ArduinoMethodValidatorImpl} from "../../parameters/impl/arduino-method-validator-impl";
 import {Router}                     from "../../../routing/router";
-import {HttpMethod} from "../../../http-method";
+import {EndpointBuilder}            from "../../endpoint-builder";
 
 /**
  * Class containing the Arduino endpoints.
@@ -32,21 +31,26 @@ export class ArduinoEndpoint extends BaseEndpoint {
 
     public mapEntryPoints = (): void => {
         let endpointManager: EndpointManager = EndpointManager.getInstance();
-        endpointManager.registerEndpoint(
-            new EndpointDefinition(
-                '/arduino',
-                this.index.bind(this)
+        let builder: EndpointBuilder = new EndpointBuilder();
+
+        endpointManager
+            .registerEndpoint(
+                builder
+                    .path('/arduino')
+                    .executor(this.index.bind(this))
+                    .build()
             )
-        ).registerEndpoint(
-            new EndpointDefinition(
-                '/arduino/setArduinoMethod',
-                this.setArduinoMethod.bind(this),
-                [new Parameter<string>('method', 'string field that contains the method used for arduino implementations', new ArduinoMethodValidatorImpl())],
-                HttpMethod.GET,
-                true,
-                ['admin']
-            )
-        );
+            .registerEndpoint(
+                builder
+                    .path('/arduino/setArduinoMethod')
+                    .requiresAuthentication(true)
+                    .roles(['admin'])
+                    .executor(this.setArduinoMethod.bind(this))
+                    .parameters(
+                        [new Parameter<string>('method', 'string field that contains the method used for arduino implementations', new ArduinoMethodValidatorImpl())]
+                    )
+                    .build()
+            );
     };
 
     /**
