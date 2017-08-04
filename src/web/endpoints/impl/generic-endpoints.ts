@@ -141,6 +141,15 @@ export class GenericEndpoints extends BaseEndpoint {
             let endpointDesc: {} = {};
             endpointDesc['path'] = endpoint.path;
             endpointDesc['params'] = params;
+
+            if(endpoint.requiresAuthentication) {
+                let auth: {} = {
+                    desc: "This endpoint required authentication and the following roles(s):",
+                    roles: endpoint.roles
+                };
+                endpointDesc['authentication'] = auth;
+            }
+
             list.push(endpointDesc);
         }
 

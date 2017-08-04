@@ -13,7 +13,7 @@ import {HttpMethod}         from "../http-method";
 import {HttpMethodEndpointHandler}      from "./base-http-method-endpoint-handler";
 import {HttpGetMethodEndpointHandler}   from "./http-get-method-endpoint-handler";
 import {HttpPostMethodEndpointHandler}  from "./http-post-method-endpoint-handler";
-import {AuthenticationManager} from "../authentication/authentication-manager";
+import {AuthenticationManager}          from "../authentication/authentication-manager";
 
 /**
  * Router class.
@@ -107,7 +107,7 @@ export class Router {
         fs.exists(fullPath, (exists) => {
             //If the file does not exist, present a 404 error.
             if(!exists) {
-                Router.respondSpecificServerError(response, 404, 'Resource not found!', fullPath);
+                Router.respondNotFound(response, 'Resource not found!');
             } else {
                 fs.readFile(fullPath, 'binary', (error, file) => {
                     if(error) {
@@ -185,7 +185,7 @@ export class Router {
                 if(err != null) {
                     console.error(err.message);
 
-                    Router.respondSpecificServerError(response, 500, 'Cannot list folder contents!', pathName);
+                    Router.respondServerError(response, 'Cannot list folder contents!');
                     return;
                 }
                 Router.respondOK(response, JSON.stringify(files, null, 4), true);
