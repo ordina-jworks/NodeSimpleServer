@@ -5,7 +5,7 @@ export class Config {
     //Config variables:
     public settings = {
         httpPort:                       8080,
-        socketPort:                     8081,
+        socketPort:                     8000,
 
         webContentFolder:               "www",
         endpointScanFolder:             "src/web/endpoints/impl/",
