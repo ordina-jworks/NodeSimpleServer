@@ -1,12 +1,12 @@
-import {IncomingMessage, ServerResponse}    from 'http';
+import {IncomingMessage, ServerResponse} from 'http';
 
 import {BaseEndpoint}       from '../../base-endpoint';
 import {MessageManager}     from "../../../../ipc/message-manager";
 import {MessageTarget}      from "../../../../ipc/message-target";
 import {EndpointManager}    from "../../endpoint-manager";
-import {EndpointDefinition} from "../../endpoint-definition";
 import {Parameter}          from "../../parameters/parameter";
 import {Router}             from "../../../routing/router";
+import {EndpointBuilder}    from "../../endpoint-builder";
 
 /**
  * Class containing the Booze endpoints.
@@ -28,55 +28,69 @@ export class BoozeEndpoint extends BaseEndpoint {
 
     public mapEntryPoints = (): void => {
         let endpointManager: EndpointManager = EndpointManager.getInstance();
-        endpointManager.
-        registerEndpoint(
-            new EndpointDefinition(
-                '/booze',
-                this.boozeIndex.bind(this)
+        let builder: EndpointBuilder = new EndpointBuilder();
+
+        endpointManager
+            .registerEndpoint(
+                builder
+                    .path('/booze')
+                    .executor(this.boozeIndex.bind(this))
+                    .build()
             )
-        ).registerEndpoint(
-            new EndpointDefinition(
-                '/booze/levelFull',
-                this.levelFull.bind(this)
+            .registerEndpoint(
+                builder
+                    .path('/booze/levelFull')
+                    .executor(this.levelFull.bind(this))
+                    .build()
             )
-        ).registerEndpoint(
-            new EndpointDefinition(
-                '/booze/levelHigh',
-                this.levelHigh.bind(this)
+            .registerEndpoint(
+                builder
+                    .path('/booze/levelHigh')
+                    .executor(this.levelHigh.bind(this))
+                    .build()
             )
-        ).registerEndpoint(
-            new EndpointDefinition(
-                '/booze/levelMedium',
-                this.levelMedium.bind(this)
+            .registerEndpoint(
+                builder
+                    .path('/booze/levelMedium')
+                    .executor(this.levelMedium.bind(this))
+                    .build()
             )
-        ).registerEndpoint(
-            new EndpointDefinition(
-                '/booze/levelLow',
-                this.levelLow.bind(this)
+            .registerEndpoint(
+                builder
+                    .path('/booze/levelLow')
+                    .executor(this.levelLow.bind(this))
+                    .build()
             )
-        ).registerEndpoint(
-            new EndpointDefinition(
-                '/booze/levelEmpty',
-                this.levelEmpty.bind(this)
+            .registerEndpoint(
+                builder
+                    .path('/booze/levelEmpty')
+                    .executor(this.levelEmpty.bind(this))
+                    .build()
             )
-        ).registerEndpoint(
-            new EndpointDefinition(
-                '/booze/levelExact',
-                this.levelExact.bind(this),
-                [new Parameter<number>('level', 'number field containing the exact level of the booze meter.')]
+            .registerEndpoint(
+                builder
+                    .path('/booze/levelExact')
+                    .executor(this.levelExact.bind(this))
+                    .parameters(
+                        [new Parameter<number>('level', 'number field containing the exact level of the booze meter.')]
+                    )
+                    .build()
             )
-        ).registerEndpoint(
-            new EndpointDefinition(
-                '/booze/levelExact/{level}',
-                this.levelExact.bind(this),
-                [new Parameter<number>('level', 'number field containing the exact level of the booze meter.')]
+            .registerEndpoint(
+                builder
+                    .path('/booze/levelExact/{level}')
+                    .executor(this.levelExact.bind(this))
+                    .parameters(
+                        [new Parameter<number>('level', 'number field containing the exact level of the booze meter.')]
+                    )
+                    .build()
             )
-        ).registerEndpoint(
-            new EndpointDefinition(
-                '/booze/levelTrigger',
-                this.levelTrigger.bind(this)
-            )
-        );
+            .registerEndpoint(
+                builder
+                    .path('/booze/levelTrigger')
+                    .executor(this.levelTrigger.bind(this))
+                    .build()
+            );
     };
 
     /**

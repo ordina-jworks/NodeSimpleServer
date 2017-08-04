@@ -18,54 +18,54 @@ class EndPointManagerTest {
     private def7: EndpointDefinition;
     private def8: EndpointDefinition;
 
-    constructor() {
+    public constructor() {
         this.endpointManager = EndpointManager.getInstance();
     }
 
-    before() {
-        this.def1 = new EndpointDefinition('/', null, []);
+    public before() {
+        this.def1 = this.createNewEndpoint('/');
         this.endpointManager.registerEndpoint(this.def1);
 
-        this.def2 = new EndpointDefinition('/test', null, []);
+        this.def2 = this.createNewEndpoint('/test');
         this.endpointManager.registerEndpoint(this.def2);
 
-        this.def3 = new EndpointDefinition('/content', null, [new Parameter<string>('param1', 'Test parameter 1')]);
+        this.def3 = this.createNewEndpoint('/content', [new Parameter<string>('param1', 'Test parameter 1')]);
         this.endpointManager.registerEndpoint(this.def3);
 
-        this.def4 = new EndpointDefinition('/content2', null, [
+        this.def4 = this.createNewEndpoint('/content2', [
             new Parameter<string>('param1', 'Test parameter 1'),
             new Parameter<number>('param2', 'Test parameter 2')
         ]);
         this.endpointManager.registerEndpoint(this.def4);
 
-        this.def5 = new EndpointDefinition('/content/{param1}', null, [new Parameter<string>('param1', 'Test parameter 1')]);
+        this.def5 = this.createNewEndpoint('/content/{param1}', [new Parameter<string>('param1', 'Test parameter 1')]);
         this.endpointManager.registerEndpoint(this.def5);
 
-        this.def6 = new EndpointDefinition('/content/{param1}/subcontent', null, [new Parameter<string>('param1', 'Test parameter 1')]);
+        this.def6 = this.createNewEndpoint('/content/{param1}/subcontent', [new Parameter<string>('param1', 'Test parameter 1')]);
         this.endpointManager.registerEndpoint(this.def6);
 
-        this.def7 = new EndpointDefinition('/content/{param1}/subcontent/{param2}', null, [
+        this.def7 = this.createNewEndpoint('/content/{param1}/subcontent/{param2}', [
             new Parameter<string>('param1', 'Test parameter 1'),
             new Parameter<number>('param2', 'Test parameter 2')
         ]);
         this.endpointManager.registerEndpoint(this.def7);
 
-        this.def8 = new EndpointDefinition('/content/registerEndpoint', null, null);
+        this.def8 = this.createNewEndpoint('/content/registerEndpoint');
     }
 
     @test()
-    testRegisterEndpoint() {
+    public testRegisterEndpoint() {
         debugger;
         expect(this.endpointManager.registerEndpoint(this.def8));
     }
 
     @test()
-    testGetEndpoints() {
+    public testGetEndpoints() {
         expect(this.endpointManager.getEndpoints().length).to.eql(8);
     }
 
     @test()
-    testGetEndpoint() {
+    public testGetEndpoint() {
         expect(this.endpointManager.getEndpoint('/').path).to.eql(this.def1.path);
         expect(this.endpointManager.getEndpoint('/test').path).to.eql(this.def2.path);
         expect(this.endpointManager.getEndpoint('/content').path).to.eql(this.def3.path);
@@ -77,7 +77,14 @@ class EndPointManagerTest {
     }
 
     @test()
-    testUnregisterEndpoint() {
+    public testUnregisterEndpoint() {
         this.endpointManager.unRegisterEndpoint(this.def8.path);
+    }
+
+    private createNewEndpoint(path: string, parameters: Parameter<any>[] = []): EndpointDefinition {
+        let endpoint = new EndpointDefinition();
+        endpoint.path = path;
+        endpoint.parameters = parameters;
+        return endpoint;
     }
 }

@@ -152,7 +152,7 @@ export class Router {
 
         let authenticated: boolean = this.authenticationManager.authenticateForEndpoint(request, endPoint);
         if(!authenticated) {
-            Router.respondUnauthorizedServerError(response, 'Unauthorized');
+            Router.respondUnauthorizedServerError(response, '401 - Unauthorized');
             return;
         }
 
