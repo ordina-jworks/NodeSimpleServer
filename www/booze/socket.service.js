@@ -8,7 +8,17 @@
     socketService.$inject = ['$window'];
 
     function socketService($window) {
-        var socket = io.connect('http://' + $window.location.hostname + ':8000/socket');
+
+        var port = $window.location.port;
+        port = port == '' ? '' : ':' + 8000;
+        var location;
+        if(port === '') {
+            location = $window.location.hostname.replace('-http-', '-ws-');
+        } else {
+            location = $window.location.hostname;
+        }
+
+        var socket = io.connect('http://' + location + port + '/socket');
         var callbacks = [];
 
         this.sendJSONMessage = function (jsonMessage) {

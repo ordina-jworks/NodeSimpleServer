@@ -6,13 +6,17 @@ var app = (function() {
     window.addEventListener('load', pageLoaded);
 
     var httpRequest;
+    var port;
 
     function pageLoaded(event) {
         console.log('Webpage content ready!');
 
+        port = window.location.port;
+        port = port == '' ? '' : ':' + port;
+
         httpRequest = new XMLHttpRequest();
         httpRequest.onreadystatechange = alertContents;
-        httpRequest.open('GET', 'http://' + window.location.hostname + ':8080/apps');
+        httpRequest.open('GET', 'http://' + window.location.hostname + port + '/apps');
         httpRequest.send();
     }
 
@@ -28,7 +32,7 @@ var app = (function() {
                     var item = document.createElement("li");
                     item.classList.add('list-item');
                     var link = document.createElement("a");
-                    link.href = 'http://' + window.location.hostname + ':8080/' + data.apps[i].split('/')[1] + '/index.html';
+                    link.href = 'http://' + window.location.hostname + port + '/' + data.apps[i].split('/')[1] + '/index.html';
                     var content = document.createTextNode(data.apps[i].split('/')[1]);
 
                     link.appendChild(content);
