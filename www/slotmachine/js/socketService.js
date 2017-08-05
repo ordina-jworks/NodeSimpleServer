@@ -13,7 +13,7 @@
         port = port == '' ? '' : ':' + 8000;
         var location;
         if(port === '') {
-            location = $window.location.hostname.replace('-http-', '-nss-');
+            location = $window.location.hostname.replace('-http-', '-ws-');
         } else {
             location = $window.location.hostname;
         }
