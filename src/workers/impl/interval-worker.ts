@@ -1,6 +1,6 @@
-import Timer        = NodeJS.Timer;
-import socketIO		= require('socket.io');
+import socketIO        = require('socket.io');
 
+import Timer            = NodeJS.Timer;
 import {clearInterval}  from "timers";
 import * as http        from "http";
 
@@ -32,7 +32,10 @@ export class IntervalWorker implements NodeWorker {
     private interval: Timer         = null;
     private config: Config          = null;
     private arduino: Arduino        = null;
-    private sio: SocketIO.Server    = null;
+
+    //Socket.io does not yet have an up to date type def for TypeScript! This bypasses the TS compiler!
+    private sio                     = null;
+    //private sio: SocketIO.Server  = null;
 
     /**
      * Constructor for the IntervalWorker.
@@ -63,6 +66,10 @@ export class IntervalWorker implements NodeWorker {
         this.sio.serveClient(true);
 
         this.sio
+            .origins((origin, callback) => {
+                console.log('WS request from: ' + origin +  ' : allowed!');
+                callback(null, true)
+            })
             .of('/socket')
             .on('connection', (socket: SocketIO.Socket) => {
             console.log(socket.id + ' connected');
