@@ -38,7 +38,7 @@ export class AuthenticationManager {
      */
     public authenticateForEndpoint(request: IncomingMessage, endPoint: EndpointDefinition): boolean {
         if(endPoint.requiresAuthentication) {
-            let auth: string = request.headers['Authorization'];
+            let auth: string | string[] = request.headers['Authorization'];
             auth = auth == null ? request.headers['authorization'] : auth;
 
             if(auth) {

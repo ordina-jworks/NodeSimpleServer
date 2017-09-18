@@ -43,7 +43,7 @@ export class Server {
 
         let port: number = this.config.settings.httpPort;
         //Create a http server that listens on the given port. the second param is for making the localhost loopback work.
-        http.createServer(this.onRequest).listen(process.env.PORT || port, '0.0.0.0');
+        http.createServer(this.onRequest).listen(process.env.PORT || port);
         console.log('[WORKER id:' + workerId + '] Server started => Listening at port: ' + (process.env.PORT || port));
     }
 
@@ -79,7 +79,7 @@ export class Server {
             let filename: string = filenameParts.join('');
             filename = filename.slice(0, filename.length - 3);
             //Create an instance of the 'class', remove the 'src/web' from the path and prepend with a dot symbol.
-            eval('new require(".' + fullFilePath.slice(7, fullFilePath.length - 3) + '").' + filename + '();');
+            eval('new (require(".' + fullFilePath.slice(7, fullFilePath.length - 3) + '")).' + filename + '();');
         });
     };
 

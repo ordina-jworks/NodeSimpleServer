@@ -1,25 +1,17 @@
 {
   "compileOnSave": true,
+
   "compilerOptions": {
     "removeComments": false,
     "preserveConstEnums": true,
     "declaration": true,
     "module": "commonjs",
-    "target": "es5",
+    "target": "es6",
     "experimentalDecorators": true,
     "noImplicitAny": false,
-    "sourceMap": true,
-    "types": [
-      "node",
-      "mime",
-      "johnny-five",
-      "serialport",
-      "chai",
-      "sinon",
-      "sinon-chai",
-      "mocha"
-    ]
+    "sourceMap": true
   },
+
   "exclude": [
     "node_modules"
   ]

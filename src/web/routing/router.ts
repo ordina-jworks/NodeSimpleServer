@@ -1,5 +1,6 @@
 import fs           = require('fs');
-import mime         = require('mime');
+//TODO: Typings for mime V2!
+import mime         = require('mime/lite');
 import path         = require('path');
 
 import {IncomingMessage}    from "http";
@@ -30,8 +31,8 @@ export class Router {
     private endpointManager: EndpointManager                = null;
     private authenticationManager: AuthenticationManager    = null;
 
-    private pathParts: Array<string>            = null;
-    private rootFolder: string                  = null;
+    private pathParts: Array<string>    = null;
+    private rootFolder: string          = null;
 
     private getMethodEndpointHandler: HttpMethodEndpointHandler     = null;
     private postMethodEndpointHandler: HttpMethodEndpointHandler    = null;
@@ -116,7 +117,7 @@ export class Router {
 
                         Router.respondSpecificServerError(response, 500, 'Error while serving content!', pathName);
                     } else {
-                        let cntType = mime.lookup(fullPath);
+                        let cntType = mime.getType(fullPath);
                         console.log('Serving: ' + fullPath + '\t (' + cntType + ')');
 
                         //Present the file.

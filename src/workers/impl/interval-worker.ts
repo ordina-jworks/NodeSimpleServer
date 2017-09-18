@@ -61,7 +61,7 @@ export class IntervalWorker implements NodeWorker {
 
         this.sio = socketIO(
             http.createServer()
-                .listen(process.env.SOCKETPORT || this.config.settings.socketPort, '0.0.0.0')
+                .listen(process.env.SOCKETPORT || this.config.settings.socketPort)
         );
         this.sio.serveClient(true);
 
