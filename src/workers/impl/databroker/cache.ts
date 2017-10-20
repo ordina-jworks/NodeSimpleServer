@@ -1,4 +1,4 @@
-import {Config} from "../../../../resources/config";
+import {Config} from "../../../../resources/config/config";
 
 /**
  * Cache class.

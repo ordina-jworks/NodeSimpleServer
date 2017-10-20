@@ -1,6 +1,6 @@
 import {IncomingMessage}    from "http";
 import {EndpointDefinition} from "../endpoints/endpoint-definition";
-import {Config}             from "../../../resources/config";
+import {Config}             from "../../../resources/config/config";
 
 export class AuthenticationManager {
 

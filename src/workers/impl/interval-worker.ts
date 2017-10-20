@@ -5,7 +5,7 @@ import {clearInterval}  from "timers";
 import * as http        from "http";
 
 import {NodeWorker}     from '../node-worker';
-import {Config}         from "../../../resources/config";
+import {Config}         from "../../../resources/config/config";
 import {ArduinoJohnny}  from "../../arduino/johnny-five/arduino-johnny";
 import {BlinkScenario}  from "../../arduino/johnny-five/impl/blink-scenario";
 import {Arduino}        from "../../arduino/arduino";

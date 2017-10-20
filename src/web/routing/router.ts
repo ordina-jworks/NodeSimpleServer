@@ -6,7 +6,7 @@ import path         = require('path');
 import {IncomingMessage}    from "http";
 import {ServerResponse}     from "http";
 
-import {Config}             from '../../../resources/config';
+import {Config}             from '../../../resources/config/config';
 import {EndpointDefinition} from "../endpoints/endpoint-definition";
 import {EndpointManager}    from "../endpoints/endpoint-manager";
 import {HttpMethod}         from "../http-method";

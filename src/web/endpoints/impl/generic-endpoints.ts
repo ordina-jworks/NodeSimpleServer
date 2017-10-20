@@ -14,7 +14,7 @@ import {MessageTarget}                  from "../../../ipc/message-target";
 import {DataBrokerOperation}            from "../../../workers/impl/databroker/data-broker-operation";
 import {StringNotEmptyValidatorImpl}    from "../parameters/impl/string-not-empty-validator-impl";
 import {NumberIsPositiveValidatorImpl}  from "../parameters/impl/number_is_positive_validator_impl";
-import {Config}                         from "../../../../resources/config";
+import {Config}                         from "../../../../resources/config/config";
 import {Router}                         from "../../routing/router";
 import {EndpointBuilder}                from "../endpoint-builder";
 
@@ -189,7 +189,7 @@ export class GenericEndpoints extends BaseEndpoint {
         let items: string[] = fs.readdirSync(this.webContentFolder);
         items.forEach((item: string) => {
             let stats: Stats = fs.statSync(this.webContentFolder + '/' + item);
-            if(stats.isDirectory() && item.search('bower_components') == -1) {
+            if(stats.isDirectory() && item.search('bower_components') == -1 && item.search('welcome') == -1) {
                 apps.push(this.webContentFolder + '/' + item);
             }
         });

@@ -3,7 +3,7 @@ import url      = require('url');
 import fs       = require('fs');
 
 import {Router}                 from './routing/router';
-import {Config}                 from '../../resources/config';
+import {Config}                 from '../../resources/config/config';
 
 import {IncomingMessage}        from "http";
 import {ServerResponse}         from "http";

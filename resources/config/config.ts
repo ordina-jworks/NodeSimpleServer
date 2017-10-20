@@ -7,7 +7,7 @@ export class Config {
         httpPort:                       8080,
         socketPort:                     8000,
 
-        webContentFolder:               "www",
+        webContentFolder:               "resources/www",
         endpointScanFolder:             "src/web/endpoints/impl/",
         allowFolderListing:             true,
 
