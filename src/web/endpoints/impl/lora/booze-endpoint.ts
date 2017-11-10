@@ -186,7 +186,7 @@ export class BoozeEndpoint extends BaseEndpoint {
                     this.messageManager.sendMessage({level: level}, MessageTarget.INTERVAL_WORKER, 'broadcastMessage');
                     break;
                 case '0004A30B001AD7EF'://booz-o-meter v2
-                    if (data.container === 'fillRate'){
+                    if (data.container === 'fillrate'){
                         this.messageManager.sendMessage({level: data.value}, MessageTarget.INTERVAL_WORKER, 'broadcastMessage');
                     }
                     break;
