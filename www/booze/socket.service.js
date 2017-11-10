@@ -18,7 +18,7 @@
             location = $window.location.hostname;
         }
 
-        var socket = io.connect('http://' + location + port + '/socket');
+        var socket = io.connect('http://' + 'nodesimpleserver-socket-nss.origin.ordina-jworks.io' + port + '/socket');
         var callbacks = [];
 
         this.sendJSONMessage = function (jsonMessage) {
