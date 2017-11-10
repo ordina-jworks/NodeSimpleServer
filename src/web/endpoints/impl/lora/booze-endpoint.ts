@@ -155,7 +155,7 @@ export class BoozeEndpoint extends BaseEndpoint {
         Router.respondOK(response, 'Level set to ' + params[0].getValue() + '%', false, 'text/plain');
     };
 
-    private handleLevelTrigger = (response: ServerResponse, data: {macaddress: string, payload: number}): void => {
+    private handleLevelTrigger = (response: ServerResponse, data: {macaddress: string, payload: number, value: number, container: string}): void => {
         let error: string = null;
 
         if(data) {
@@ -184,6 +184,11 @@ export class BoozeEndpoint extends BaseEndpoint {
                         level = 'HIGH';
                     }
                     this.messageManager.sendMessage({level: level}, MessageTarget.INTERVAL_WORKER, 'broadcastMessage');
+                    break;
+                case '0004A30B001AD7EF'://booz-o-meter v2
+                    if (data.container === 'fillRate'){
+                        this.messageManager.sendMessage({level: data.value}, MessageTarget.INTERVAL_WORKER, 'broadcastMessage');
+                    }
                     break;
                 default:
                     error = 'Unknown hardware id for sensor! Cannot map to level value!';

@@ -38,7 +38,7 @@ export class ArduinoSerial extends Arduino {
         this.listPorts();
 
         if(this.portName != null) {
-            this.port = new SerialPort(this.portName, {baudRate: this.baudRate,  parser: SerialPort.parsers.readline('\n')});
+            this.port = new SerialPort(this.portName, {baudRate: this.baudRate,  parser: SerialPort.parsers.Readline('\n')});
             this.port.on('open', this.onCommOpen);
             this.port.on('error', this.onCommError);
             this.port.on('data', this.onDataReceived);
