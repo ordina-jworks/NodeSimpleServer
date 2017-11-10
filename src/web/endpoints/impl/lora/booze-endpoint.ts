@@ -155,11 +155,11 @@ export class BoozeEndpoint extends BaseEndpoint {
         Router.respondOK(response, 'Level set to ' + params[0].getValue() + '%', false, 'text/plain');
     };
 
-    private handleLevelTrigger = (response: ServerResponse, data: {macaddress: string, payload: number, value: number, container: string}): void => {
+    private handleLevelTrigger = (response: ServerResponse, data: {DevEUI: string, payload: number, value: number, container: string}): void => {
         let error: string = null;
 
         if(data) {
-            switch (data.macaddress) {
+            switch (data.DevEUI) {
                 case '020000FFFF00B0B6':
                     this.messageManager.sendMessage({level: 'FULL'}, MessageTarget.INTERVAL_WORKER, 'broadcastMessage');
                     break;
