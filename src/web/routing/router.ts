@@ -125,7 +125,7 @@ export class Router {
                         response.setHeader('Size', file.length + '');
 
                         //Add caching for images!
-                        if(cntType.indexOf('image') > -1) {
+                        if(cntType && cntType.indexOf('image') > -1) {
                             response.setHeader('Cache-Control', 'max-age=2678400, must-revalidate');
                         }
 
