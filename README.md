@@ -32,7 +32,7 @@ The server application is written in TypeScript.
 - Make sure you have Docker installed
 - Go to the root folder of the project
 - Execute the following command: `npm run create-docker`
-- Then run the newly created docker image by executing the following command: `npm run docker-run`
+- Then run the newly created docker image by executing the following command: `npm run run-docker`
 - For now docker will always pull the latest files from the master branch. Change this to meet your needs!
 
 **Some useful endpoints:**
