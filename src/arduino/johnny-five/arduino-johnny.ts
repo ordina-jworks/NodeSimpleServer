@@ -1,5 +1,3 @@
-import johnny = require('johnny-five');
-
 import {Arduino}    from "../arduino";
 import {Board}      from "johnny-five";
 import {Scenario}   from "../scenario";
@@ -23,7 +21,7 @@ export class ArduinoJohnny extends Arduino {
     }
 
     /**
-     * This method initialises the Johnn-Five Board.
+     * This method initialises the Johnny-Five Board.
      */
     public init(): void {
         if(this.board == null) {
