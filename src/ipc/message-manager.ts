@@ -19,7 +19,7 @@ export class MessageManager {
 
     private static instance: MessageManager         = null;
     private callbacks: Array<[string, Function]>    = null;
-    private workerId: string                        = null;
+    private workerId: number                        = null;
 
     /**
      * Private constructor for the singleton.

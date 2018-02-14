@@ -14,7 +14,7 @@ import {MessageManager}         from "../../../ipc/message-manager";
  */
 export class DataBroker implements NodeWorker {
 
-    workerId: string                            = null;
+    workerId: number                            = null;
     handler: MessageHandler                     = null;
 
     private caches: Array<[string, Cache<any>]> = [];
@@ -24,7 +24,7 @@ export class DataBroker implements NodeWorker {
      *
      * @param workerId The id of the worker it is bound to.
      */
-    constructor(workerId: string) {
+    constructor(workerId: number) {
         this.workerId = workerId;
 
         this.handler = MessageHandler.getInstance();

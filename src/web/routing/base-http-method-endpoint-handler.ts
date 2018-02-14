@@ -73,14 +73,16 @@ export abstract class HttpMethodEndpointHandler {
      * @param {EndpointDefinition} endPoint The endPoint that was matched for this request.
      * @returns {{code: number; message: string}} The result is parsing failed or no params are found or null if not.
      */
-    public parseQueryParams(requestData: Url, endPoint: EndpointDefinition): { code: number, message: string} {
-        let urlParams: Array<any> = requestData.query;
+    public parseQueryParams(requestData: URL, endPoint: EndpointDefinition): { code: number, message: string} {
+        let queryParams: Array<any> = Array.from(requestData.searchParams);
+        //TODO: Debug
+        console.log(queryParams);
 
-        if(urlParams && Object.keys(urlParams).length > 0) {
-            if(endPoint.parameters.length === Object.keys(urlParams).length) {
+        if(queryParams && queryParams.length > 0) {
+            if(endPoint.parameters.length === queryParams.length) {
                 for (let i = 0; i < endPoint.parameters.length; i++) {
                     let param: Parameter<any> = endPoint.parameters[i];
-                    param.setValue(urlParams[endPoint.parameters[i].name]);
+                    param.setValue(queryParams[endPoint.parameters[i].name]);
 
                     if (!param.validate()) {
                         return {

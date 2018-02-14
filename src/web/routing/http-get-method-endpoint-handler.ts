@@ -1,5 +1,5 @@
 import * as url                             from "url";
-import {Url}                                from "url";
+import {Url, UrlWithParsedQuery} from "url";
 import {IncomingMessage, ServerResponse}    from "http";
 
 import {Router}                             from "./router";
@@ -20,14 +20,18 @@ export class HttpGetMethodEndpointHandler extends HttpMethodEndpointHandler {
      * @param response The HTTP Response.
      */
     public handleEndpoint(endPoint: EndpointDefinition, pathName: string, request: IncomingMessage, response: ServerResponse): void {
-        let requestData: Url = url.parse(request.url, true);
+        let parsedUrl: URL = new URL(request.url);
 
-        if(requestData.query.length == 0) {
+        let queryParams: Array<any> = Array.from(parsedUrl.searchParams);
+        //TODO: Debug
+        console.log(queryParams);
+
+        if(queryParams == null || queryParams.length == 0) {
             endPoint.execute(request, response);
         } else {
             let result: {code: number, message: string};
 
-            result = this.parseQueryParams(requestData, endPoint);
+            result = this.parseQueryParams(parsedUrl, endPoint);
             if(!result) {
                 endPoint.execute(request, response);
                 return;

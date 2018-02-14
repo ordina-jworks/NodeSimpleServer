@@ -11,7 +11,7 @@ import {MessageTarget}  from "../../ipc/message-target";
  */
 export class HttpWorker implements NodeWorker {
 
-    workerId: string            = null;
+    workerId: number            = null;
     handler: MessageHandler     = null;
 
     private server: Server      = null;
@@ -21,7 +21,7 @@ export class HttpWorker implements NodeWorker {
      *
      * @param workerId The id of the worker it is bound to.
      */
-    constructor(workerId: string) {
+    constructor(workerId: number) {
         this.workerId = workerId;
 
         this.handler = MessageHandler.getInstance();

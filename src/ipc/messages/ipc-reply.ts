@@ -17,7 +17,7 @@ export class IPCReply extends IPCMessage {
      * @param payload The payload to go with the message. This can be data of any type and is meant for the callee.
      * @param originalMessage The original IPCMessage for which this message is the reply.
      */
-    constructor (workerId: string, payload: any, originalMessage: IPCRequest) {
+    constructor (workerId: number, payload: any, originalMessage: IPCRequest) {
         super(IPCMessage.TYPE_REPLY);
 
         this.workerId = workerId;

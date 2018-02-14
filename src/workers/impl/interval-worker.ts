@@ -26,7 +26,7 @@ import {IPCRequest}     from "../../ipc/messages/ipc-request";
  */
 export class IntervalWorker implements NodeWorker {
 
-    workerId: string                = null;
+    workerId: number                = null;
     handler: MessageHandler         = null;
 
     private interval: Timer         = null;
@@ -42,7 +42,7 @@ export class IntervalWorker implements NodeWorker {
      *
      * @param workerId The id of the worker it is bound to.
      */
-    constructor(workerId: string) {
+    constructor(workerId: number) {
         this.workerId = workerId;
         this.config = Config.getInstance();
 

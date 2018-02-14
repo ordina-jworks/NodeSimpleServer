@@ -6,7 +6,7 @@ import {MessageHandler} from "../ipc/message-handler";
  */
 export interface NodeWorker {
 
-    workerId: string;
+    workerId: number;
     handler: MessageHandler;
 
     /**

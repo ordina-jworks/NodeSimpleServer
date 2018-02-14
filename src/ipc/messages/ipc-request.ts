@@ -21,7 +21,7 @@ export class IPCRequest extends IPCMessage {
      * @param target The target worker that the message should be sent too.
      * @param targetFunction The name of the function that should be executed on the target.
      */
-    constructor(workerId: string, callbackId: string, payload: any, target: MessageTarget, targetFunction: string | number) {
+    constructor(workerId: number, callbackId: string, payload: any, target: MessageTarget, targetFunction: string | number) {
         super(IPCMessage.TYPE_REQUEST);
 
         this.workerId           = workerId;

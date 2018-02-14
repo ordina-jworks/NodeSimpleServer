@@ -7,7 +7,7 @@ import {MessageHandler} from "../../ipc/message-handler";
 @suite("Interval worker")
 class IntervalWorkerTest {
 
-    private static id: string = "12";
+    private static id: number = 12;
     private worker: IntervalWorker;
 
     before() {

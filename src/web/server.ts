@@ -25,7 +25,7 @@ export class Server {
     private config: Config                      = null;
     private messageManager: MessageManager      = null;
 
-    private id: string                          = null;
+    private id: number                          = null;
     private router: Router                      = null;
 
     /**
@@ -33,7 +33,7 @@ export class Server {
      *
      * @param workerId The id of the worker it is bound to.
      */
-    constructor(workerId: string) {
+    constructor(workerId: number) {
         this.id = workerId;
         this.config = Config.getInstance();
         this.messageManager = MessageManager.getInstance();
