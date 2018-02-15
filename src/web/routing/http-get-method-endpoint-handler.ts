@@ -20,39 +20,25 @@ export class HttpGetMethodEndpointHandler extends HttpMethodEndpointHandler {
      */
     public handleEndpoint(endPoint: EndpointDefinition, pathName: string, request: IncomingMessage, response: ServerResponse): void {
         let parsedUrl: URL = new URL(request.url, 'http://' + request.headers.host);
-        let queryParams: Array<any> = Array.from(parsedUrl.searchParams);
 
-        //TODO: Check for RESTFUL PARAMS!
-
-        if(queryParams == null || queryParams.length == 0) {
+        let result: HttpReturn = this.parseQueryParams(parsedUrl, endPoint);
+        if(result.code === 200) {
             endPoint.execute(request, response);
+            return;
         } else {
-            let result: HttpReturn;
-
-            result = this.parseQueryParams(parsedUrl, endPoint);
-            if(!result) {
-                endPoint.execute(request, response);
+            if(result.code !== 0) {
+                Router.respondSpecificServerError(response, result.code, result.message, pathName);
                 return;
-            } else {
-                if(result.code != 200) {
-                    Router.respondSpecificServerError(response, result.code, result.message, pathName);
-                    return;
-                }
             }
+        }
 
-            result = this.parseUrlParams(pathName, endPoint);
-            if(!result) {
-                endPoint.execute(request, response);
-                return;
-            } else {
-                if(result.code != 200) {
-                    Router.respondSpecificServerError(response, result.code, result.message, pathName);
-                    return;
-                } else {
-                    endPoint.execute(request, response);
-                    return;
-                }
-            }
+        result = this.parseUrlParams(pathName, endPoint);
+        if(result.code == 0 || result.code === 200) {
+            endPoint.execute(request, response);
+            return;
+        } else {
+            Router.respondSpecificServerError(response, result.code, result.message, pathName);
+            return;
         }
     }
 }

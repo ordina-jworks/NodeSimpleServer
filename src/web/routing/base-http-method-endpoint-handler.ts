@@ -1,8 +1,8 @@
-import {Url}                                from "url";
-import {IncomingMessage, ServerResponse}    from "http";
+import {Url} from "url";
+import {IncomingMessage, ServerResponse} from "http";
 
-import {EndpointDefinition}                 from "../endpoints/endpoint-definition";
-import {Parameter}                          from "../endpoints/parameters/parameter";
+import {EndpointDefinition} from "../endpoints/endpoint-definition";
+import {Parameter} from "../endpoints/parameters/parameter";
 
 export abstract class HttpMethodEndpointHandler {
 
@@ -33,8 +33,8 @@ export abstract class HttpMethodEndpointHandler {
             if(endPoint.parameters.length == Object.keys(params).length) {
                 if(endPoint.parameters.length == 0) {
                     return {
-                        code: 200,
-                        message: 'OK'
+                        code: 0,
+                        message: 'No URL params to process!'
                     };
                 }
 
@@ -49,7 +49,10 @@ export abstract class HttpMethodEndpointHandler {
                         };
                     }
                 }
-                return null;
+                return {
+                    code: 200,
+                    message: 'Param count correct and all params validated!'
+                };
             } else {
                 return {
                     code: 400,
@@ -94,7 +97,10 @@ export abstract class HttpMethodEndpointHandler {
                         }
                     }
                 }
-                return null;
+                return {
+                    code: 200,
+                    message: 'Param count correct and all params validated!'
+                };
             } else {
                 return {
                     code: 400,
@@ -103,7 +109,7 @@ export abstract class HttpMethodEndpointHandler {
             }
         }
         return {
-            code: 200,
+            code: 0,
             message: 'No Query params to process!'
         };
     }

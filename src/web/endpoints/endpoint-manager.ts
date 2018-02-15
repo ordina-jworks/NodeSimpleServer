@@ -76,7 +76,7 @@ export class EndpointManager {
             //TODO: E.g. /content/value1 where value1 is a param
             //TODO: and /content/someOtherPath where someOtherPath is actually part of the endpoint path
             //TODO: In some cases the wrong endpoint may be returned!
-            //Complex restful matcher
+            //Complex RESTFUL matcher
             let matches: string[] = endPoint.path.match('{(.*?)}');
             if(matches && matches.length > 0){
                 let pathPieces: string[] = path.split('/');
