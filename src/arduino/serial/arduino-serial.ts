@@ -38,7 +38,7 @@ export class ArduinoSerial extends Arduino {
         this.listPorts();
 
         if(this.portName != null) {
-            this.port = new SerialPort(this.portName, {baudRate: this.baudRate,  parser: SerialPort.parsers.Readline('\n')});
+            this.port = new SerialPort(this.portName, {baudRate: this.baudRate});
             this.port.on('open', this.onCommOpen);
             this.port.on('error', this.onCommError);
             this.port.on('data', this.onDataReceived);
@@ -61,19 +61,24 @@ export class ArduinoSerial extends Arduino {
      * Method used to list all the available serial ports on the system.
      */
     private listPorts = (): void => {
-        SerialPort.list((err, ports) => {
+        let prom: Promise<any> = SerialPort.list();
+
+        prom.then((res) => {
             console.log('----------------------------------------------');
             console.log('----------------------------------------------');
             console.log('Listing comm ports:');
             console.log('----------------------------------------------');
 
-            ports.forEach((port) => {
+            res.forEach((port) => {
                 console.log(port.comName);
                 console.log(port.pnpId);
                 console.log(port.manufacturer);
                 console.log('----------------------------------------------');
             });
             console.log('----------------------------------------------');
+        });
+        prom.catch((err) => {
+            console.log('Cannot fetch list of comm ports!');
         });
     };
 

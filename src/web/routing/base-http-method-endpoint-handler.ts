@@ -15,9 +15,9 @@ export abstract class HttpMethodEndpointHandler {
      *
      * @param {string} pathName The pathName of on which the request is made.
      * @param {EndpointDefinition} endPoint The endPoint which has been matched on the pathName.
-     * @returns {{code: number; message: string}} The result is parsing failed or null if not.
+     * @returns {HttpReturn} The result is parsing failed or null if not.
      */
-    public parseUrlParams(pathName: string, endPoint: EndpointDefinition): { code: number, message: string } {
+    public parseUrlParams(pathName: string, endPoint: EndpointDefinition): HttpReturn {
         if(pathName.split('/').length == endPoint.path.split('/').length) {
             let pathAndParams: string[] = pathName.split('/');
             let endpointPath: string[] = endPoint.path.split('/');
@@ -71,18 +71,21 @@ export abstract class HttpMethodEndpointHandler {
      *
      * @param {"url".Url} requestData The data of the request, which contains the url query parameters.
      * @param {EndpointDefinition} endPoint The endPoint that was matched for this request.
-     * @returns {{code: number; message: string}} The result is parsing failed or no params are found or null if not.
+     * @returns {HttpReturn} The result is parsing failed or no params are found or null if not.
      */
-    public parseQueryParams(requestData: URL, endPoint: EndpointDefinition): { code: number, message: string} {
+    public parseQueryParams(requestData: URL, endPoint: EndpointDefinition): HttpReturn {
         let queryParams: Array<any> = Array.from(requestData.searchParams);
-        //TODO: Debug
-        console.log(queryParams);
 
         if(queryParams && queryParams.length > 0) {
             if(endPoint.parameters.length === queryParams.length) {
                 for (let i = 0; i < endPoint.parameters.length; i++) {
                     let param: Parameter<any> = endPoint.parameters[i];
-                    param.setValue(queryParams[endPoint.parameters[i].name]);
+
+                    for (let keyValuePair of queryParams) {
+                        if(keyValuePair[0] === endPoint.parameters[i].name) {
+                            param.setValue(keyValuePair[1]);
+                        }
+                    }
 
                     if (!param.validate()) {
                         return {
@@ -112,7 +115,7 @@ export abstract class HttpMethodEndpointHandler {
      * @param {Function} callback The callback function to execute when the full payload has been processed!
      */
     public parseBodyPayload(request: IncomingMessage, callback: Function): void {
-        let result: {code: number, message: string, data: {}} = null;
+        let result: HttpReturn = null;
         let fullBody: string = '';
 
         request.on('data', (chunk) => {
@@ -137,4 +140,10 @@ export abstract class HttpMethodEndpointHandler {
             callback(result);
         });
     }
+}
+
+export type HttpReturn = {
+    code: number,
+    message: string,
+    data?: any
 }

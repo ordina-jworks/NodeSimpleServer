@@ -1,10 +1,9 @@
-import * as url                             from "url";
-import {Url, UrlWithParsedQuery} from "url";
-import {IncomingMessage, ServerResponse}    from "http";
+import {URL} from 'url';
+import {IncomingMessage, ServerResponse} from 'http';
 
-import {Router}                             from "./router";
-import {HttpMethodEndpointHandler}          from "./base-http-method-endpoint-handler";
-import {EndpointDefinition}                 from "../endpoints/endpoint-definition";
+import {Router} from './router';
+import {HttpMethodEndpointHandler, HttpReturn} from './base-http-method-endpoint-handler';
+import {EndpointDefinition} from '../endpoints/endpoint-definition';
 
 export class HttpGetMethodEndpointHandler extends HttpMethodEndpointHandler {
 
@@ -20,16 +19,15 @@ export class HttpGetMethodEndpointHandler extends HttpMethodEndpointHandler {
      * @param response The HTTP Response.
      */
     public handleEndpoint(endPoint: EndpointDefinition, pathName: string, request: IncomingMessage, response: ServerResponse): void {
-        let parsedUrl: URL = new URL(request.url);
-
+        let parsedUrl: URL = new URL(request.url, 'http://' + request.headers.host);
         let queryParams: Array<any> = Array.from(parsedUrl.searchParams);
-        //TODO: Debug
-        console.log(queryParams);
+
+        //TODO: Check for RESTFUL PARAMS!
 
         if(queryParams == null || queryParams.length == 0) {
             endPoint.execute(request, response);
         } else {
-            let result: {code: number, message: string};
+            let result: HttpReturn;
 
             result = this.parseQueryParams(parsedUrl, endPoint);
             if(!result) {
