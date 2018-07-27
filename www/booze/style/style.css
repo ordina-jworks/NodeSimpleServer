@@ -15,24 +15,24 @@ body {
         height: 100%;
         position: relative; }
         body #background > div svg #rect4384-5 {
-          fill: #FFAA00;
+          fill: red;
           display: inline;
           fill-opacity: 1;
           transition-duration: 6s;
           transition-timing-function: linear; }
-        body #background > div svg #layer8 {
+        body #background > div svg #layerBeerGlass {
           animation-name: hide;
           animation-duration: 10s;
           animation-iteration-count: infinite; }
-        body #background > div svg #path4455 {
+        body #background > div svg #pathBeer {
           animation-name: fill;
           animation-duration: 10s;
           animation-iteration-count: infinite; }
-        body #background > div svg #path4449 {
+        body #background > div svg #pathFoamBeer {
           animation-name: raise;
           animation-duration: 10s;
           animation-iteration-count: infinite; }
-        body #background > div svg #rect4466 {
+        body #background > div svg #rectStreamFluid {
           animation-name: flow;
           animation-duration: 10s;
           animation-iteration-count: infinite; }
@@ -100,7 +100,7 @@ body {
     opacity: 0; }
   100% {
     opacity: 0; } }
-        body #background > div svg #tspan5194, body #background > div svg #tspan5198, body #background > div svg #tspan5202, body #background > div svg #path5135, body #background > div svg #rect5140, body #background > div svg #path5154 {
+        body #background > div svg #tspan5194, body #background > div svg #tspan5198, body #background > div svg #tspan5202, body #background > div svg #pathLineBeerHigh, body #background > div svg #pathLineBeerMedium, body #background > div svg #pathLineBeerLow {
           fill: #FFFFFF !important;
           fill-opacity: 0.5 !important; }
 

@@ -20,35 +20,35 @@ body{
         position: relative;
 
         #rect4384-5 {
-          fill: #FFAA00;
+          fill: red;
           display:inline;
           fill-opacity:1;
           transition-duration: 6s;
           transition-timing-function: linear;
         }
 
-        #layer8 {
+        #layerBeerGlass {
           //bierglass
           animation-name: hide;
           animation-duration: $fill_animation_duration;
           animation-iteration-count: infinite;
         }
 
-        #path4455 {
+        #pathBeer {
           //bier
           animation-name: fill;
           animation-duration: $fill_animation_duration;
           animation-iteration-count: infinite;
         }
 
-        #path4449 {
+        #pathFoamBeer {
           //shuim
           animation-name: raise;
           animation-duration: $fill_animation_duration;
           animation-iteration-count: infinite;
         }
 
-        #rect4466 {
+        #rectStreamFluid {
           //stroom
           animation-name: flow;
           animation-duration: $fill_animation_duration;
@@ -112,7 +112,7 @@ body{
           100% {opacity: 0}
         }
 
-        #tspan5194, #tspan5198, #tspan5202, #path5135, #rect5140, #path5154 {
+        #tspan5194, #tspan5198, #tspan5202, #pathLineBeerHigh, #pathLineBeerMedium, #pathLineBeerLow {
           fill:#FFFFFF !important;
           fill-opacity: 0.5 !important;
         }
