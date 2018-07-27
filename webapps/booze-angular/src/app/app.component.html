@@ -9,7 +9,7 @@
         height="100%"
         version="1.1"
         id="svg3422">
-    <!-- TODO: MAKE METADATA WORK -->
+    <!-- TODO: MAKE METADATA WORK ASK YANNICK -->
     <!-- <metadata
             id="metadata3428">
         <rdf:RDF>
@@ -22,8 +22,7 @@
             </cc:Work>
         </rdf:RDF>
     </metadata> -->
-    <defs
-            id="defs3426">
+    <defs id="defs3426">
         <linearGradient
                 id="linearGradient4392">
             <stop
@@ -231,6 +230,8 @@
                 style="fill:url(#linearGradient4410);fill-opacity:1" />
     </g>
     <g
+            [@glassMovement]="glassState"
+            (@glassMovement.done)="onDoneGlassState(event)"
             style="display:inline"
             id="layerBeerGlass">
         <path

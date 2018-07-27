@@ -13,13 +13,6 @@ svg {
     transition-timing-function: linear;
   }
 
-  #layerBeerGlass {
-    //bierglass
-    animation-name: hide;
-    animation-duration: $fill_animation_duration;
-    animation-iteration-count: infinite;
-  }
-
   #pathBeer {
     //bier
     animation-name: fill;
@@ -39,16 +32,6 @@ svg {
     animation-name: flow;
     animation-duration: $fill_animation_duration;
     animation-iteration-count: infinite;
-  }
-
-  $vertical_translate:100px;
-  $horizontal_translate:20px;
-  @keyframes hide {
-    0% {opacity: 0;transform: translate($vertical_translate,-$horizontal_translate)}
-    15% {opacity: 1;transform: translate(0px,0px)}
-    70% {opacity: 1;transform: translate(0px,0px);}
-    85% {opacity: 0;transform: translate(-$vertical_translate,-$horizontal_translate)}
-    100% {opacity: 0;transform: translate($vertical_translate,-$horizontal_translate)}
   }
 
   $beer_height:150px;
