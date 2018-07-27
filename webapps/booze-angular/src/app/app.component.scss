@@ -13,13 +13,6 @@ svg {
     transition-timing-function: linear;
   }
 
-  #pathBeer {
-    //bier
-    animation-name: fill;
-    animation-duration: $fill_animation_duration;
-    animation-iteration-count: infinite;
-  }
-
   #pathFoamBeer {
     //shuim
     animation-name: raise;
