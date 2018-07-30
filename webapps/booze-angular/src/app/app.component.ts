@@ -1,37 +1,23 @@
 import { Component, OnInit } from '@angular/core';
-import { fillGlassWithBeer, glassMovement } from './animations/glass.animation';
+import { beerAnimation } from './animations/beer.animation';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   animations: [
-    glassMovement,
-    fillGlassWithBeer,
+    beerAnimation,
   ]
 })
 export class AppComponent implements OnInit {
   title = 'app';
-  glassState = 'in';
-  beerState = 'empty';
+  beerAnimation = 'in';
 
   ngOnInit() {
-    this.toggleGlassState();
+    this.toggleBeerAnimation();
   }
 
-  toggleGlassState() {
-    this.glassState = this.glassState === 'in' ? 'out' : 'in';
-  }
-
-  toggleBeerState() {
-    this.beerState = this.beerState === 'empty' ? 'full' : 'empty';
-  }
-
-  onDoneGlassState($event) {
-    this.toggleGlassState();
-  }
-
-  onDoneBeerState($event) {
-    this.toggleBeerState();
+  toggleBeerAnimation() {
+    this.beerAnimation = this.beerAnimation === 'in' ? 'out' : 'in';
   }
 }

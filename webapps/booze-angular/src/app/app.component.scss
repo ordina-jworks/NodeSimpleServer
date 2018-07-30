@@ -13,18 +13,24 @@ svg {
     transition-timing-function: linear;
   }
 
+  #pathBeer {
+    //shuim
+    // animation-name: fill;
+    // animation-duration: $fill_animation_duration;
+    // animation-iteration-count: infinite;
+  }
   #pathFoamBeer {
     //shuim
-    animation-name: raise;
-    animation-duration: $fill_animation_duration;
-    animation-iteration-count: infinite;
+    // animation-name: raise;
+    // animation-duration: $fill_animation_duration;
+    // animation-iteration-count: infinite;
   }
 
   #rectStreamFluid {
     //stroom
-    animation-name: flow;
-    animation-duration: $fill_animation_duration;
-    animation-iteration-count: infinite;
+    // animation-name: flow;
+    // animation-duration: $fill_animation_duration;
+    // animation-iteration-count: infinite;
   }
 
   $beer_height:150px;
