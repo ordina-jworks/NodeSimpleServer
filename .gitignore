@@ -45,3 +45,4 @@ www/bower_components
 test-config/test.js
 test-config/test.js.map
 *.iml
+*.DS_Store
