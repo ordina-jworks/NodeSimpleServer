@@ -16,7 +16,7 @@ export const glassAnimation = keyframes([
     transform: `translate(-${horizontal_translate},-${vertical_translate})`,
     offset: 0.85
   }),
-  // YANNICK: do we need this line?
+  // Neccesary for timing animation
   style({
     opacity: 0,
     transform: `translate(${horizontal_translate},-${vertical_translate})`,
