@@ -102,7 +102,6 @@ export class Router {
      */
     private tryAndServeFile (pathName: string, response: ServerResponse): void {
         let fullPath = path.normalize(this.rootFolder + '/' + this.config.settings.webContentFolder + pathName);
-        console.log("Full path", fullPath);
         //Read and present the file.
         fs.exists(fullPath, (exists) => {
             //If the file does not exist, present a 404 error.
