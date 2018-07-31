@@ -1,21 +1,21 @@
 import socketIO        = require('socket.io');
 
 import Timer            = NodeJS.Timer;
-import {clearInterval}  from "timers";
-import * as http        from "http";
+import * as http from "http";
+import { clearInterval } from "timers";
+import { Config } from "../../../resources/config/config";
+import { Arduino } from "../../arduino/arduino";
+import { ArduinoJohnny } from "../../arduino/johnny-five/arduino-johnny";
+import { BlinkScenario } from "../../arduino/johnny-five/impl/blink-scenario";
+import { ArduinoSerial } from "../../arduino/serial/arduino-serial";
+import { PingScenario } from "../../arduino/serial/impl/ping-scenario";
+import { MessageHandler } from "../../ipc/message-handler";
+import { MessageManager } from "../../ipc/message-manager";
+import { MessageTarget } from "../../ipc/message-target";
+import { IPCMessage } from "../../ipc/messages/ipc-message";
+import { IPCRequest } from "../../ipc/messages/ipc-request";
+import { NodeWorker } from '../node-worker';
 
-import {NodeWorker}     from '../node-worker';
-import {Config}         from "../../../resources/config/config";
-import {ArduinoJohnny}  from "../../arduino/johnny-five/arduino-johnny";
-import {BlinkScenario}  from "../../arduino/johnny-five/impl/blink-scenario";
-import {Arduino}        from "../../arduino/arduino";
-import {ArduinoSerial}  from "../../arduino/serial/arduino-serial";
-import {PingScenario}   from "../../arduino/serial/impl/ping-scenario";
-import {MessageHandler} from "../../ipc/message-handler";
-import {MessageTarget}  from "../../ipc/message-target";
-import {IPCMessage}     from "../../ipc/messages/ipc-message";
-import {MessageManager} from "../../ipc/message-manager";
-import {IPCRequest}     from "../../ipc/messages/ipc-request";
 
 
 /**
