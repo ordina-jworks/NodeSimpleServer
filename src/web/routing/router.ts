@@ -3,18 +3,17 @@ import fs           = require('fs');
 import mime         = require('mime/lite');
 import path         = require('path');
 
-import {IncomingMessage}    from "http";
-import {ServerResponse}     from "http";
+import { IncomingMessage, ServerResponse } from "http";
+import { Config } from '../../../resources/config/config';
+import { AuthenticationManager } from "../authentication/authentication-manager";
+import { EndpointDefinition } from "../endpoints/endpoint-definition";
+import { EndpointManager } from "../endpoints/endpoint-manager";
+import { HttpMethod } from "../http-method";
+import { HttpMethodEndpointHandler } from "./base-http-method-endpoint-handler";
+import { HttpGetMethodEndpointHandler } from "./http-get-method-endpoint-handler";
+import { HttpPostMethodEndpointHandler } from "./http-post-method-endpoint-handler";
 
-import {Config}             from '../../../resources/config/config';
-import {EndpointDefinition} from "../endpoints/endpoint-definition";
-import {EndpointManager}    from "../endpoints/endpoint-manager";
-import {HttpMethod}         from "../http-method";
 
-import {HttpMethodEndpointHandler}      from "./base-http-method-endpoint-handler";
-import {HttpGetMethodEndpointHandler}   from "./http-get-method-endpoint-handler";
-import {HttpPostMethodEndpointHandler}  from "./http-post-method-endpoint-handler";
-import {AuthenticationManager}          from "../authentication/authentication-manager";
 
 /**
  * Router class.
@@ -103,7 +102,7 @@ export class Router {
      */
     private tryAndServeFile (pathName: string, response: ServerResponse): void {
         let fullPath = path.normalize(this.rootFolder + '/' + this.config.settings.webContentFolder + pathName);
-
+        console.log("Full path", fullPath);
         //Read and present the file.
         fs.exists(fullPath, (exists) => {
             //If the file does not exist, present a 404 error.
