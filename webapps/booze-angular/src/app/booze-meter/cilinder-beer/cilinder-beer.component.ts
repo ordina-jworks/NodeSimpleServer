@@ -42,12 +42,8 @@ export class CilinderBeerComponent implements OnInit {
     });
 
     this.subject.subscribe((level: number) => {
-      this.animateBeer(level);
+      this.beerlevel = level;
     });
-  }
-
-  animateBeer(level: number) {
-    this.beerlevel = level;
   }
 
   calculateAndDrawNewBeerShape(level: number) {
