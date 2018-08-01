@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: '[app-cilinder-beer]',
@@ -9,18 +10,40 @@ import { Socket } from 'ngx-socket-io';
 export class CilinderBeerComponent implements OnInit {
   private beerlevel = 100;
   private fullHeight = 558;
-  private observableSocket;
+  private subject = new Subject();
+
   constructor(private socket: Socket) { }
 
   ngOnInit() {
     this.socket.connect();
-    this.socket.on('app-event', (_) => {
-      console.log(_);
+    this.socket.on('app-event', (message) => {
+      const data = JSON.parse(message);
+      switch (data.level) {
+        case 'FULL':
+          this.subject.next(100);
+          break;
+        case 'HIGH':
+          this.subject.next(75);
+          break;
+        case 'MEDIUM':
+          this.subject.next(50);
+          break;
+        case 'LOW':
+          this.subject.next(25);
+          break;
+        case 'EMPTY':
+          this.subject.next(0);
+          break;
+        default:
+          if (data.level && data.level >= 0 && data.level <= 100) {
+            this.subject.next(data.level);
+          }
+      }
     });
-   /*  this.observableSocket = this.stompService.subscribe('/welcome');
-    //this.observableSocket.map((message) => {
-    //  console.log(message);
-    //}); */
+
+    this.subject.subscribe((level: number) => {
+      this.animateBeer(level);
+    });
   }
 
   animateBeer(level: number) {
