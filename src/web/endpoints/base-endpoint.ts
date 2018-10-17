@@ -1,4 +1,4 @@
-import {Parameter} from "./parameters/parameter";
+import { Parameter } from "./parameters/parameter";
 
 /**
  * Base class for and endpoint implementations.
@@ -19,11 +19,11 @@ export abstract class BaseEndpoint {
      * @param {Array<Parameter<any>>} parameters The array of the available parameters.
      * @returns {Parameter<any>} The matching parameter if found, null if not.
      */
-    public getParameterByName (parameterName: string, parameters: Array<Parameter<any>>): Parameter<any> {
+    public getParameterByName(parameterName: string, parameters: Array<Parameter<any>>): Parameter<any> {
         for (let i: number = 0; i < parameters.length; i++) {
             let parameter: Parameter<any> = parameters[i];
 
-            if(parameter.name == parameterName) {
+            if (parameter.name == parameterName) {
                 return parameter;
             }
         }

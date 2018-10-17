@@ -1,4 +1,4 @@
-import {Scenario} from "./scenario";
+import { Scenario } from "./scenario";
 
 /**
  * Arduino base class.
@@ -24,7 +24,7 @@ export abstract class Arduino {
      * @param message The message to forward to the Arduino scenario.
      */
     public onMessage = (message: any): void => {
-        if(this.scenario != null) {
+        if (this.scenario != null) {
             this.scenario.onMessage(message);
         }
     };

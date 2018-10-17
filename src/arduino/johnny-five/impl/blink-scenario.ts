@@ -1,5 +1,5 @@
-import {Scenario}   from "../../scenario";
-import {Board, Led} from "johnny-five";
+import { Scenario } from "../../scenario";
+import { Board, Led } from "johnny-five";
 
 /**
  * BlinkScenario class that implements the Scenario interface.

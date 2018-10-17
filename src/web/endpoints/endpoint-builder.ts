@@ -1,6 +1,6 @@
-import {EndpointDefinition} from "./endpoint-definition";
-import {HttpMethod}         from "../http-method";
-import {Parameter}          from "./parameters/parameter";
+import { EndpointDefinition } from "./endpoint-definition";
+import { HttpMethod } from "../http-method";
+import { Parameter } from "./parameters/parameter";
 
 export class EndpointBuilder {
 
@@ -48,10 +48,10 @@ export class EndpointBuilder {
     }
 
     public build(): EndpointDefinition {
-        if(this._path && this._executor) {
-            if(this._authenticationRequired && (!this._roles && this.roles.length == 0)) {
+        if (this._path && this._executor) {
+            if (this._authenticationRequired && (!this._roles && this.roles.length == 0)) {
                 console.error('If requiresAuthentication is set to true, the roles have to be set too!');
-                return  null;
+                return null;
             } else {
                 let endpoint: EndpointDefinition = new EndpointDefinition();
                 endpoint.path = this._path;

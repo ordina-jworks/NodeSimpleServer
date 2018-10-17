@@ -1,9 +1,8 @@
-import cluster          = require('cluster');
-
-import {DataBroker}     from './impl/databroker/data-broker';
-import {IntervalWorker} from './impl/interval-worker';
-import {HttpWorker}     from './impl/http-worker';
-import {MessageHandler} from '../ipc/message-handler';
+import cluster = require('cluster');
+import { DataBroker } from './impl/databroker/data-broker';
+import { IntervalWorker } from './impl/interval-worker';
+import { HttpWorker } from './impl/http-worker';
+import { MessageHandler } from '../ipc/message-handler';
 
 /**
  * WorkerFactory class.

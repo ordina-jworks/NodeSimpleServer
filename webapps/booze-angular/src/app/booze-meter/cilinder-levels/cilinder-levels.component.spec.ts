@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { CilinderLevelsComponent } from './cilinder-levels.component';
 
 describe('CilinderLevelsComponent', () => {
@@ -8,9 +7,9 @@ describe('CilinderLevelsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CilinderLevelsComponent ]
+      declarations: [CilinderLevelsComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

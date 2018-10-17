@@ -1,6 +1,6 @@
 'use strict';
 
-var app = (function() {
+var app = (function () {
 
     console.log('Webpage code started!');
     window.addEventListener('load', pageLoaded);
@@ -9,7 +9,7 @@ var app = (function() {
         console.log('Webpage content ready!');
 
         new Clipboard('.copyButton', {
-            text: function(trigger) {
+            text: function (trigger) {
                 return trigger.nextElementSibling.children[0].innerText;
             }
         });
@@ -39,7 +39,7 @@ var app = (function() {
 
     function closeModal(event) {
         var elementId = event.target.id;
-        if(elementId !== 'fullPageModal' && elementId !== 'btnHideModal') {
+        if (elementId !== 'fullPageModal' && elementId !== 'btnHideModal') {
             return;
         }
 
@@ -54,7 +54,7 @@ var app = (function() {
         var serial = document.getElementById('arduinoSerialContainer');
         var johnny = document.getElementById('arduinoJohnnyFiveContainer');
 
-        if(isForSerial) {
+        if (isForSerial) {
             serial.classList.remove('hidden');
             johnny.classList.add('hidden');
         } else {

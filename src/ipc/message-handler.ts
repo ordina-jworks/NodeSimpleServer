@@ -1,11 +1,10 @@
-import cluster          = require('cluster');
-
-import {IPCMessage}     from "./messages/ipc-message";
-import {MessageTarget}  from "./message-target";
-import {EventEmitter}   from "events";
-import {IPCRequest}     from "./messages/ipc-request";
-import {MessageManager} from "./message-manager";
-import {IPCReply}       from "./messages/ipc-reply";
+import cluster = require('cluster');
+import { IPCMessage } from "./messages/ipc-message";
+import { MessageTarget } from "./message-target";
+import { EventEmitter } from "events";
+import { IPCRequest } from "./messages/ipc-request";
+import { MessageManager } from "./message-manager";
+import { IPCReply } from "./messages/ipc-reply";
 
 /**
  * MessageHandler singleton class.
@@ -14,18 +13,16 @@ import {IPCReply}       from "./messages/ipc-reply";
  */
 export class MessageHandler {
 
-    private static instance: MessageHandler         = null;
-    private dataBroker : cluster.Worker             = null;
-    private intervalWorker : cluster.Worker         = null;
-    private httpWorkers : Array<cluster.Worker>     = null;
-    public emitter: EventEmitter                    = null;
+    private static instance: MessageHandler = null;
+    private dataBroker: cluster.Worker = null;
+    private intervalWorker: cluster.Worker = null;
+    private httpWorkers: Array<cluster.Worker> = null;
+    public emitter: EventEmitter = null;
 
     /**
      * Private constructor for the singleton.
      */
-    private constructor() {
-
-    }
+    private constructor() { }
 
     /**
      * Use this method to get the instance of this singleton class.
@@ -33,7 +30,7 @@ export class MessageHandler {
      * @returns {MessageHandler} The instance of this singleton class.
      */
     public static getInstance(): MessageHandler {
-        if(!MessageHandler.instance) {
+        if (!MessageHandler.instance) {
             MessageHandler.instance = new MessageHandler();
         }
         return MessageHandler.instance;
@@ -47,18 +44,18 @@ export class MessageHandler {
      * @param httpWorkers The HTTPWorker worker instance.
      */
     public initForMaster(dataBroker: cluster.Worker, intervalWorker: cluster.Worker, httpWorkers: Array<cluster.Worker>): void {
-        this.dataBroker     = dataBroker;
+        this.dataBroker = dataBroker;
         this.intervalWorker = intervalWorker;
-        this.httpWorkers    = httpWorkers;
+        this.httpWorkers = httpWorkers;
 
-        this.emitter        = new EventEmitter();
+        this.emitter = new EventEmitter();
     }
 
     /**
      * Initialises the MessageHandler for being a handler for a slave (worker) NodeJS process.
      */
     public initForSlave(): void {
-        this.emitter        = new EventEmitter();
+        this.emitter = new EventEmitter();
     }
 
     /*-----------------------------------------------------------------------------
@@ -108,10 +105,10 @@ export class MessageHandler {
      * @param msg The IPCMessage that is to be forwarded to the correct target.
      */
     private targetHandler(msg: IPCMessage): void {
-        if(msg.type == IPCMessage.TYPE_REQUEST) {
-            let m: IPCRequest = <IPCRequest> msg;
+        if (msg.type == IPCMessage.TYPE_REQUEST) {
+            let m: IPCRequest = <IPCRequest>msg;
 
-            switch (m.target){
+            switch (m.target) {
                 case MessageTarget.DATA_BROKER:
                     this.dataBroker.send(msg);
                     break;
@@ -127,7 +124,7 @@ export class MessageHandler {
                     console.error('[MASTER] Cannot find message target: ' + m.target);
             }
 
-        } else if(msg.type == IPCMessage.TYPE_REPLY) {
+        } else if (msg.type == IPCMessage.TYPE_REPLY) {
             let m: IPCReply = <IPCReply>msg;
             cluster.workers[m.originalMessage.workerId].send(msg);
         }
@@ -146,13 +143,13 @@ export class MessageHandler {
      * @param msg The IPCMessage as passed on by the master process.
      */
     public onMessageFromMasterReceived = (msg: IPCMessage): void => {
-        if(msg.type == IPCMessage.TYPE_REQUEST) {
+        if (msg.type == IPCMessage.TYPE_REQUEST) {
             let m: IPCRequest = <IPCRequest>msg;
 
-            console.log('[WORKER id:' + cluster.worker.id  + '] Received request from master: routing to: ' + MessageTarget[m.target] + '.' + m.targetFunction);
+            console.log('[WORKER id:' + cluster.worker.id + '] Received request from master: routing to: ' + MessageTarget[m.target] + '.' + m.targetFunction);
             this.emitter.emit(MessageTarget[m.target] + '', m);
 
-        } else if(msg.type == IPCMessage.TYPE_REPLY) {
+        } else if (msg.type == IPCMessage.TYPE_REPLY) {
             let m: IPCReply = <IPCReply>msg;
             console.log('[WORKER id:' + cluster.worker.id + '] Received reply from [WORKER id:' + m.workerId + ']');
 

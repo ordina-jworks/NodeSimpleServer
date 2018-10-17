@@ -64,6 +64,6 @@ export class CilinderBeerComponent implements OnInit {
       'l ' + topLeftX + ',-' + (topLeftY + level) + ' ' +
       'c -' + bezierPoint1X + ',-' + bezierPoint1Y + ' ' +
       '-' + bezierPoint2X + ',-' + bezierPoint2Y + ' ' +
-      '-' + topRightX + ',' + topRightY + ' z'
+      '-' + topRightX + ',' + topRightY + ' z';
   }
 }

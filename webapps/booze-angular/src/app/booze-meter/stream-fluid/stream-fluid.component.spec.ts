@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { StreamFluidComponent } from './stream-fluid.component';
 
 describe('StreamFluidComponent', () => {
@@ -8,9 +7,9 @@ describe('StreamFluidComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ StreamFluidComponent ]
+      declarations: [StreamFluidComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

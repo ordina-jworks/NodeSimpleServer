@@ -1,12 +1,12 @@
-import {IncomingMessage}    from "http";
-import {EndpointDefinition} from "../endpoints/endpoint-definition";
-import {Config}             from "../../../resources/config/config";
+import { IncomingMessage } from "http";
+import { EndpointDefinition } from "../endpoints/endpoint-definition";
+import { Config } from "../../../resources/config/config";
 
 export class AuthenticationManager {
 
-    private static instance: AuthenticationManager  = null;
+    private static instance: AuthenticationManager = null;
 
-    private config: Config                          = null;
+    private config: Config = null;
 
     /**
      * Private constructor for the singleton.
@@ -20,7 +20,7 @@ export class AuthenticationManager {
      *
      * @returns {AuthenticationManager} The instance of this singleton class.
      */
-    static getInstance = (): AuthenticationManager => {
+    static getInstance(): AuthenticationManager {
         if (!AuthenticationManager.instance) {
             AuthenticationManager.instance = new AuthenticationManager();
         }
@@ -37,19 +37,19 @@ export class AuthenticationManager {
      * @returns {boolean} True if authenticated, false if not.
      */
     public authenticateForEndpoint(request: IncomingMessage, endPoint: EndpointDefinition): boolean {
-        if(endPoint.requiresAuthentication) {
+        if (endPoint.requiresAuthentication) {
             let auth: string | string[] = request.headers['Authorization'];
             auth = auth == null ? request.headers['authorization'] : auth;
 
-            if(auth) {
+            if (auth) {
                 let users: any[] = this.config.auth.users;
 
-                for(let i = 0; i < users.length ; i++) {
-                    let user: {user: string, auth: string, roles: string[]} = users[i];
+                for (let i = 0; i < users.length; i++) {
+                    let user: { user: string, auth: string, roles: string[] } = users[i];
 
-                    if('Basic ' + user.auth == auth) {
-                        for(let m = 0; m < endPoint.roles.length; m++) {
-                            if(user.roles.indexOf(endPoint.roles[m]) > -1) {
+                    if ('Basic ' + user.auth == auth) {
+                        for (let m = 0; m < endPoint.roles.length; m++) {
+                            if (user.roles.indexOf(endPoint.roles[m]) > -1) {
                                 return true;
                             }
                         }

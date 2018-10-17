@@ -1,5 +1,5 @@
-import {IPCMessage} from "../ipc/messages/ipc-message";
-import {MessageHandler} from "../ipc/message-handler";
+import { IPCMessage } from "../ipc/messages/ipc-message";
+import { MessageHandler } from "../ipc/message-handler";
 
 /**
  * Interface for all the NodeWorker implementations.

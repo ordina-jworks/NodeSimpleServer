@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { CilinderTopComponent } from './cilinder-top.component';
 
 describe('CilinderTopComponent', () => {
@@ -8,9 +7,9 @@ describe('CilinderTopComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CilinderTopComponent ]
+      declarations: [CilinderTopComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

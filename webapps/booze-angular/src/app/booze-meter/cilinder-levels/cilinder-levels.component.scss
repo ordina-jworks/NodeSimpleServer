@@ -1,4 +1,31 @@
-.cilinder-prints {
-	fill:#FFFFFF !important;
-	fill-opacity: 0.5 !important;
+#pathLineBeerHigh,
+#pathLineBeerMedium,
+#pathLineBeerLow {
+    opacity: 1;
+    stroke: none;
+	stroke-opacity: 1;
+	fill: #FFFFFF;
+    fill-opacity: 0.5;
+}
+
+#textBeerHigh,
+#textBeerMedium,
+#textBeerLow {
+    fill: #FFFFFF;
+    fill-opacity: 0.5;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: normal;
+    font-stretch: normal;
+    font-size: 40px;
+    line-height: 125%;
+    font-family: Laksaman;
+    -inkscape-font-specification: Laksaman;
+    letter-spacing: 0px;
+    word-spacing: 0px;
+    stroke: none;
+    stroke-width: 1px;
+    stroke-linecap: butt;
+    stroke-linejoin: miter;
+    stroke-opacity: 1;
 }

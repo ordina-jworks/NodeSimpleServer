@@ -1,6 +1,6 @@
-import {Parameter}                          from "./parameters/parameter";
-import {HttpMethod}                         from "../http-method";
-import {IncomingMessage, ServerResponse}    from "http";
+import { Parameter } from "./parameters/parameter";
+import { HttpMethod } from "../http-method";
+import { IncomingMessage, ServerResponse } from "http";
 
 /**
  * Generic EndpointDefinition class.
@@ -10,14 +10,14 @@ import {IncomingMessage, ServerResponse}    from "http";
  */
 export class EndpointDefinition {
 
-    public path: string                         = null;
-    public method: HttpMethod                   = null;
-    public parameters: Array<Parameter<any>>    = [];
+    public path: string = null;
+    public method: HttpMethod = null;
+    public parameters: Array<Parameter<any>> = [];
 
-    public requiresAuthentication: boolean      = false;
-    public roles: string[]                      = [];
+    public requiresAuthentication: boolean = false;
+    public roles: string[] = [];
 
-    public executor: Function                   = null;
+    public executor: Function = null;
 
     /**
      * Please use the builder class to make new instances!
@@ -32,7 +32,7 @@ export class EndpointDefinition {
      * @param request The HTTP Request.
      * @param response The HTTP Response.
      */
-    public execute = (request: IncomingMessage, response: ServerResponse): void => {
+    public execute(request: IncomingMessage, response: ServerResponse): void {
         this.executor(request, response, this.parameters);
     };
 
@@ -43,7 +43,7 @@ export class EndpointDefinition {
      * @param response The HTTP Response.
      * @param {{}} body The JSON object that contains the payload of the body.
      */
-    public executeWithBodyPayload = (request: IncomingMessage, response: ServerResponse, body: {}): void => {
+    public executeWithBodyPayload(request: IncomingMessage, response: ServerResponse, body: {}): void {
         this.executor(request, response, body);
     };
 }

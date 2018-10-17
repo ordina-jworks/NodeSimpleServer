@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { GlassFrontComponent } from './glass-front.component';
 
 describe('GlassFrontComponent', () => {
@@ -8,9 +7,9 @@ describe('GlassFrontComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ GlassFrontComponent ]
+      declarations: [GlassFrontComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

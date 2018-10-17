@@ -1,4 +1,4 @@
-import {EndpointDefinition} from "./endpoint-definition";
+import { EndpointDefinition } from "./endpoint-definition";
 
 /**
  * EndpointManager singleton class.
@@ -7,8 +7,8 @@ import {EndpointDefinition} from "./endpoint-definition";
  */
 export class EndpointManager {
 
-    private static instance: EndpointManager       = null;
-    public endpoints: Array<EndpointDefinition>    = null;
+    private static instance: EndpointManager = null;
+    public endpoints: Array<EndpointDefinition> = null;
 
     /**
      * Private constructor for the singleton.
@@ -22,7 +22,7 @@ export class EndpointManager {
      *
      * @returns {EndpointManager} The instance of this singleton class.
      */
-    static getInstance = (): EndpointManager => {
+    static getInstance(): EndpointManager {
         if (!EndpointManager.instance) {
             EndpointManager.instance = new EndpointManager();
         }
@@ -36,9 +36,9 @@ export class EndpointManager {
      *
      * @param endpoint The endpoint that should be added to the list of registered endpoints.
      */
-    public registerEndpoint = (endpoint: EndpointDefinition): EndpointManager => {
+    public registerEndpoint(endpoint: EndpointDefinition): EndpointManager {
         for (let existingEndpoint of this.endpoints) {
-            if(endpoint.path == existingEndpoint.path) {
+            if (endpoint.path == existingEndpoint.path) {
                 console.error('An endpoint has already been registered with the same path! Paths have to be unique! (' + endpoint.path + ')');
                 return;
             }
@@ -52,7 +52,7 @@ export class EndpointManager {
      *
      * @returns {Array<EndpointDefinition<any>>} An array containing all the registered endpoints.
      */
-    public getEndpoints = (): Array<EndpointDefinition> => {
+    public getEndpoints(): Array<EndpointDefinition> {
         return this.endpoints;
     };
 
@@ -63,12 +63,12 @@ export class EndpointManager {
      * @param path The path for which an endpoint should be registered.
      * @returns {any} Either an endpoint or null.
      */
-    public getEndpoint = (path: string): EndpointDefinition => {
-        for(let i = 0; i < this.endpoints.length; i++) {
+    public getEndpoint(path: string): EndpointDefinition {
+        for (let i = 0; i < this.endpoints.length; i++) {
             let endPoint: EndpointDefinition = this.endpoints[i];
 
             //Simple matcher
-            if(endPoint.path == path || (endPoint.path + '/' == path && endPoint.parameters.length > 0)) {
+            if (endPoint.path == path || (endPoint.path + '/' == path && endPoint.parameters.length > 0)) {
                 return this.endpoints[i];
             }
 
@@ -78,22 +78,22 @@ export class EndpointManager {
             //TODO: In some cases the wrong endpoint may be returned!
             //Complex RESTFUL matcher
             let matches: string[] = endPoint.path.match('{(.*?)}');
-            if(matches && matches.length > 0){
+            if (matches && matches.length > 0) {
                 let pathPieces: string[] = path.split('/');
-                let endPointPieces: string [] = endPoint.path.split('/');
+                let endPointPieces: string[] = endPoint.path.split('/');
 
-                let match:boolean = false;
-                if(endPointPieces.length == pathPieces.length) {
+                let match: boolean = false;
+                if (endPointPieces.length == pathPieces.length) {
                     match = true;
-                    for(let j: number = 0; j < endPointPieces.length; j++) {
-                        if(pathPieces[j] != endPointPieces[j] && endPointPieces[j].indexOf('{') == -1) {
+                    for (let j: number = 0; j < endPointPieces.length; j++) {
+                        if (pathPieces[j] != endPointPieces[j] && endPointPieces[j].indexOf('{') == -1) {
                             match = false;
                             break;
                         }
                     }
                 }
 
-                if(match) {
+                if (match) {
                     return this.endpoints[i];
                 }
             }
@@ -109,7 +109,7 @@ export class EndpointManager {
      */
     public unRegisterEndpoint(path: string): EndpointManager {
         for (let existingEndpoint of this.endpoints) {
-            if(existingEndpoint.path == path) {
+            if (existingEndpoint.path == path) {
                 this.endpoints.splice(this.endpoints.indexOf(existingEndpoint), 1);
                 console.log('Endpoint (' + path + ') has been removed!');
                 return;

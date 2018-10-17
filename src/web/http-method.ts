@@ -18,7 +18,7 @@ export namespace HttpMethod {
      * @returns {HttpMethod} The enum instance that matches with the given text string or null if no match was found.
      */
     export function valueOf(method: string): HttpMethod {
-        if(!method) {
+        if (!method) {
             return null;
         }
 

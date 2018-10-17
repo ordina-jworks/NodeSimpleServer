@@ -10,22 +10,23 @@ const start_height = '135px';
 export const foamAnimation = keyframes([
     style({
         opacity: 0,
-        '-webkit-clip-path': `polygon(${top_left_indraw} 100%, ${top_right_indraw} 100%, ${top_right_indraw} 105%, ${bottom_left_indraw} 105%)`,
-        'clip-path': `polygon(${top_left_indraw} 100%, ${top_right_indraw} 100%, ${top_right_indraw} 105%, ${bottom_left_indraw} 105%)`,
+        '-webkit-clip-path': `polygon(${top_left_indraw} 100%, ${top_right_indraw} 100%, ${bottom_right_indraw} 105%, ${bottom_left_indraw} 105%)`,
+        'clip-path': `polygon(${top_left_indraw} 100%, ${top_right_indraw} 100%, ${bottom_right_indraw} 105%, ${bottom_left_indraw} 105%)`,
         transform: `translate(0px,${start_height})`,
         offset: 0,
     }),
     style({
         opacity: 0,
-        '-webkit-clip-path': `polygon(${top_left_indraw} 100%, ${top_right_indraw} 100%, ${top_right_indraw} 105%, ${bottom_left_indraw} 105%)`,
-        'clip-path': `polygon(${top_left_indraw} 100%, ${top_right_indraw} 100%, ${top_right_indraw} 105%, ${bottom_left_indraw} 105%)`,
+        '-webkit-clip-path': `polygon(${top_left_indraw} 100%, ${top_right_indraw} 100%, ${bottom_right_indraw} 105%, ${bottom_left_indraw} 105%)`,
+        'clip-path': `polygon(${top_left_indraw} 100%, ${top_right_indraw} 100%, ${bottom_right_indraw} 105%, ${bottom_left_indraw} 105%)`,
         transform: `translate(0px,${start_height})`,
         offset: 0.15
     }),
     style({
         opacity: 0,
         transform: `translate(0px,${start_height})`,
-        offset: 0.23}),
+        offset: 0.23
+    }),
     style({
         opacity: 1,
         transform: `translate(0px,${start_height})`,

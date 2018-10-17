@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { CilinderFootComponent } from './cilinder-foot.component';
 
 describe('CilinderFootComponent', () => {
@@ -8,9 +7,9 @@ describe('CilinderFootComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CilinderFootComponent ]
+      declarations: [CilinderFootComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

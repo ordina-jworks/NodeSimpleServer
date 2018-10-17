@@ -1,5 +1,5 @@
-import {IPCMessage}     from "./ipc-message";
-import {MessageTarget}  from "../message-target";
+import { IPCMessage } from "./ipc-message";
+import { MessageTarget } from "../message-target";
 
 /**
  * IPCRequest class.
@@ -8,9 +8,9 @@ import {MessageTarget}  from "../message-target";
  */
 export class IPCRequest extends IPCMessage {
 
-    public callbackId: string               = null;
-    public target: MessageTarget            = null;
-    public targetFunction: string | number  = null;
+    public callbackId: string = null;
+    public target: MessageTarget = null;
+    public targetFunction: string | number = null;
 
     /**
      * constructor for IPCRequest.
@@ -24,10 +24,10 @@ export class IPCRequest extends IPCMessage {
     constructor(workerId: number, callbackId: string, payload: any, target: MessageTarget, targetFunction: string | number) {
         super(IPCMessage.TYPE_REQUEST);
 
-        this.workerId           = workerId;
-        this.callbackId         = callbackId;
-        this.payload            = payload;
-        this.target             = target;
-        this.targetFunction     = targetFunction;
+        this.workerId = workerId;
+        this.callbackId = callbackId;
+        this.payload = payload;
+        this.target = target;
+        this.targetFunction = targetFunction;
     }
 }

@@ -1,107 +1,160 @@
 body {
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden; }
-  body #background {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+body #background {
     background-size: cover;
     background: url("../img/wood.jpg") center;
     width: 100%;
-    height: 100%; }
-    body #background > div {
-      height: 100%;
-      width: 100%; }
-      body #background > div svg {
-        width: 100%;
-        height: 100%;
-        position: relative; }
-        body #background > div svg #rect4384-5 {
-          fill: red;
-          display: inline;
-          fill-opacity: 1;
-          transition-duration: 6s;
-          transition-timing-function: linear; }
-        body #background > div svg #layerBeerGlass {
-          animation-name: hide;
-          animation-duration: 10s;
-          animation-iteration-count: infinite; }
-        body #background > div svg #pathBeer {
-          animation-name: fill;
-          animation-duration: 10s;
-          animation-iteration-count: infinite; }
-        body #background > div svg #pathFoamBeer {
-          animation-name: raise;
-          animation-duration: 10s;
-          animation-iteration-count: infinite; }
-        body #background > div svg #rectStreamFluid {
-          animation-name: flow;
-          animation-duration: 10s;
-          animation-iteration-count: infinite; }
+    height: 100%;
+}
+
+body #background>div {
+    height: 100%;
+    width: 100%;
+}
+
+body #background>div svg {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+body #background>div svg #rect4384-5 {
+    fill: red;
+    display: inline;
+    fill-opacity: 1;
+    transition-duration: 6s;
+    transition-timing-function: linear;
+}
+
+body #background>div svg #layerBeerGlass {
+    animation-name: hide;
+    animation-duration: 10s;
+    animation-iteration-count: infinite;
+}
+
+body #background>div svg #pathBeer {
+    animation-name: fill;
+    animation-duration: 10s;
+    animation-iteration-count: infinite;
+}
+
+body #background>div svg #pathFoamBeer {
+    animation-name: raise;
+    animation-duration: 10s;
+    animation-iteration-count: infinite;
+}
+
+body #background>div svg #rectStreamFluid {
+    animation-name: flow;
+    animation-duration: 10s;
+    animation-iteration-count: infinite;
+}
+
 @keyframes hide {
-  0% {
-    opacity: 0;
-    transform: translate(100px, -20px); }
-  15% {
-    opacity: 1;
-    transform: translate(0px, 0px); }
-  70% {
-    opacity: 1;
-    transform: translate(0px, 0px); }
-  85% {
-    opacity: 0;
-    transform: translate(-100px, -20px); }
-  100% {
-    opacity: 0;
-    transform: translate(100px, -20px); } }
+    0% {
+        opacity: 0;
+        transform: translate(100px, -20px);
+    }
+    15% {
+        opacity: 1;
+        transform: translate(0px, 0px);
+    }
+    70% {
+        opacity: 1;
+        transform: translate(0px, 0px);
+    }
+    85% {
+        opacity: 0;
+        transform: translate(-100px, -20px);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(100px, -20px);
+    }
+}
+
 @keyframes fill {
-  0% {
-    -webkit-clip-path: inset(150px 0px 0px 0px);
-    clip-path: inset(150px 0px 0px 0px); }
-  15% {
-    -webkit-clip-path: inset(150px 0px 0px 0px);
-    clip-path: inset(150px 0px 0px 0px); }
-  70% {
-    -webkit-clip-path: inset(0px 0px 0px 0px);
-    clip-path: inset(0px 0px 0px 0px); }
-  85% {
-    -webkit-clip-path: inset(0px 0px 0px 0px);
-    clip-path: inset(0px 0px 0px 0px); } }
+    0% {
+        -webkit-clip-path: inset(150px 0px 0px 0px);
+        clip-path: inset(150px 0px 0px 0px);
+    }
+    15% {
+        -webkit-clip-path: inset(150px 0px 0px 0px);
+        clip-path: inset(150px 0px 0px 0px);
+    }
+    70% {
+        -webkit-clip-path: inset(0px 0px 0px 0px);
+        clip-path: inset(0px 0px 0px 0px);
+    }
+    85% {
+        -webkit-clip-path: inset(0px 0px 0px 0px);
+        clip-path: inset(0px 0px 0px 0px);
+    }
+}
+
 @keyframes raise {
-  0% {
-    -webkit-clip-path: polygon(5px 100%, 73px 100%, 73px 105%, 7px 105%);
-    clip-path: polygon(5px 100%, 73px 100%, 73px 105%, 7px 105%);
-    transform: translate(0px, 150px);
-    opacity: 0; }
-  15% {
-    -webkit-clip-path: polygon(5px 100%, 73px 100%, 73px 105%, 7px 105%);
-    clip-path: polygon(5px 100%, 73px 100%, 73px 105%, 7px 105%);
-    transform: translate(0px, 150px); }
-  20% {
-    opacity: 0; }
-  30% {
-    opacity: 1; }
-  70% {
-    -webkit-clip-path: polygon(0 0, 100% 0, 100% 105%, 0% 105%);
-    clip-path: polygon(0 0, 100% 0, 100% 105%, 0% 105%);
-    transform: translate(0px, 0px); }
-  85% {
-    -webkit-clip-path: polygon(0 0, 100% 0, 100% 105%, 0% 105%);
-    clip-path: polygon(0 0, 100% 0, 100% 105%, 0% 105%);
-    transform: translate(0px, 0px); } }
+    0% {
+        -webkit-clip-path: polygon(5px 100%, 73px 100%, 73px 105%, 7px 105%);
+        clip-path: polygon(5px 100%, 73px 100%, 73px 105%, 7px 105%);
+        transform: translate(0px, 150px);
+        opacity: 0;
+    }
+    15% {
+        -webkit-clip-path: polygon(5px 100%, 73px 100%, 73px 105%, 7px 105%);
+        clip-path: polygon(5px 100%, 73px 100%, 73px 105%, 7px 105%);
+        transform: translate(0px, 150px);
+    }
+    20% {
+        opacity: 0;
+    }
+    30% {
+        opacity: 1;
+    }
+    70% {
+        -webkit-clip-path: polygon(0 0, 100% 0, 100% 105%, 0% 105%);
+        clip-path: polygon(0 0, 100% 0, 100% 105%, 0% 105%);
+        transform: translate(0px, 0px);
+    }
+    85% {
+        -webkit-clip-path: polygon(0 0, 100% 0, 100% 105%, 0% 105%);
+        clip-path: polygon(0 0, 100% 0, 100% 105%, 0% 105%);
+        transform: translate(0px, 0px);
+    }
+}
+
 @keyframes flow {
-  0% {
-    opacity: 0; }
-  15% {
-    opacity: 0; }
-  20% {
-    opacity: 1; }
-  60% {
-    opacity: 1; }
-  70% {
-    opacity: 0; }
-  100% {
-    opacity: 0; } }
-        body #background > div svg #tspan5194, body #background > div svg #tspan5198, body #background > div svg #tspan5202, body #background > div svg #pathLineBeerHigh, body #background > div svg #pathLineBeerMedium, body #background > div svg #pathLineBeerLow {
-          fill: #FFFFFF !important;
-          fill-opacity: 0.5 !important; }
+    0% {
+        opacity: 0;
+    }
+    15% {
+        opacity: 0;
+    }
+    20% {
+        opacity: 1;
+    }
+    60% {
+        opacity: 1;
+    }
+    70% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+body #background>div svg #tspan5194,
+body #background>div svg #tspan5198,
+body #background>div svg #tspan5202,
+body #background>div svg #pathLineBeerHigh,
+body #background>div svg #pathLineBeerMedium,
+body #background>div svg #pathLineBeerLow {
+    fill: #FFFFFF !important;
+    fill-opacity: 0.5 !important;
+}
 
 /*# sourceMappingURL=style.css.map */

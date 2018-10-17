@@ -1,9 +1,7 @@
-import {URL} from 'url';
-import {IncomingMessage, ServerResponse} from 'http';
-
-import {Router} from './router';
-import {HttpMethodEndpointHandler, HttpReturn} from './base-http-method-endpoint-handler';
-import {EndpointDefinition} from '../endpoints/endpoint-definition';
+import { IncomingMessage, ServerResponse } from 'http';
+import { Router } from './router';
+import { HttpMethodEndpointHandler, HttpReturn } from './base-http-method-endpoint-handler';
+import { EndpointDefinition } from '../endpoints/endpoint-definition';
 
 export class HttpGetMethodEndpointHandler extends HttpMethodEndpointHandler {
 
@@ -22,18 +20,18 @@ export class HttpGetMethodEndpointHandler extends HttpMethodEndpointHandler {
         let parsedUrl: URL = new URL(request.url, 'http://' + request.headers.host);
 
         let result: HttpReturn = this.parseQueryParams(parsedUrl, endPoint);
-        if(result.code === 200) {
+        if (result.code === 200) {
             endPoint.execute(request, response);
             return;
         } else {
-            if(result.code !== 0) {
+            if (result.code !== 0) {
                 Router.respondSpecificServerError(response, result.code, result.message, pathName);
                 return;
             }
         }
 
         result = this.parseUrlParams(pathName, endPoint);
-        if(result.code == 0 || result.code === 200) {
+        if (result.code == 0 || result.code === 200) {
             endPoint.execute(request, response);
             return;
         } else {

@@ -1,4 +1,4 @@
-import {Config} from "../../../../resources/config/config";
+import { Config } from "../../../../resources/config/config";
 
 /**
  * Cache class.
@@ -9,14 +9,14 @@ export class Cache<T> {
 
     private config: Config = Config.getInstance();
 
-    private _maxSize: number            = null;
-    private values: Array<[string, T]>  = null;
+    private _maxSize: number = null;
+    private values: Array<[string, T]> = null;
 
     /**
      * Constructor for the Cache.
      */
     constructor(size?: number) {
-        if(size) {
+        if (size) {
             this._maxSize = size;
         } else {
             this._maxSize = this.config.settings.defaultCacheSize;
@@ -33,7 +33,7 @@ export class Cache<T> {
      */
     public retrieve(key: string): T {
         for (let valuePair of this.values) {
-            if(valuePair[0] == key) {
+            if (valuePair[0] == key) {
                 return valuePair[1];
             }
         }
@@ -55,8 +55,8 @@ export class Cache<T> {
      * @param key The key to store the value with.
      * @param value The actual value to be stored.
      */
-    public save (key: string, value: T): void {
-        if(this.values.length >= this._maxSize) {
+    public save(key: string, value: T): void {
+        if (this.values.length >= this._maxSize) {
             console.log('Max cache length reached, shifting data out of cache!');
             this.values.shift();
         }
@@ -73,7 +73,7 @@ export class Cache<T> {
     public update(key: string, value: T): void {
         let index: number = this.getIndexForKey(key);
 
-        if(index >= 0) {
+        if (index >= 0) {
             this.values[index] = [key, value];
         } else {
             console.error('Could not update, key/value not found!');
@@ -122,8 +122,8 @@ export class Cache<T> {
      */
     private getIndexForKey(key: string): number {
         let index: number = -1;
-        for(let i: number = 0; i < this.values.length; i++) {
-            if(this.values[i][0] == key) {
+        for (let i: number = 0; i < this.values.length; i++) {
+            if (this.values[i][0] == key) {
                 index = i;
                 break;
             }

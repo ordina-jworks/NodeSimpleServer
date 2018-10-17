@@ -1,6 +1,6 @@
-import {Arduino}    from "../arduino";
-import {Board}      from "johnny-five";
-import {Scenario}   from "../scenario";
+import { Arduino } from "../arduino";
+import { Board } from "johnny-five";
+import { Scenario } from "../scenario";
 
 /**
  * ArduinoJohnny class.
@@ -24,7 +24,7 @@ export class ArduinoJohnny extends Arduino {
      * This method initialises the Johnny-Five Board.
      */
     public init(): void {
-        if(this.board == null) {
+        if (this.board == null) {
             this.board = new Board();
             this.board.on('ready', this.onBoardReady);
         } else {
@@ -45,7 +45,7 @@ export class ArduinoJohnny extends Arduino {
     private onBoardReady = () => {
         console.log('Board initialised!');
 
-        if(this.scenario != null) {
+        if (this.scenario != null) {
             this.scenario.run(this.board);
         } else {
             console.error('No arduino scenario given to run!');

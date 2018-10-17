@@ -1,8 +1,8 @@
-import {NodeWorker}     from '../node-worker';
-import {Server}         from "../../web/server";
-import {IPCMessage}     from "../../ipc/messages/ipc-message";
-import {MessageHandler} from "../../ipc/message-handler";
-import {MessageTarget}  from "../../ipc/message-target";
+import { NodeWorker } from '../node-worker';
+import { Server } from "../../web/server";
+import { IPCMessage } from "../../ipc/messages/ipc-message";
+import { MessageHandler } from "../../ipc/message-handler";
+import { MessageTarget } from "../../ipc/message-target";
 
 /**
  * HTTPWorker class.
@@ -11,10 +11,10 @@ import {MessageTarget}  from "../../ipc/message-target";
  */
 export class HttpWorker implements NodeWorker {
 
-    workerId: number            = null;
-    handler: MessageHandler     = null;
+    workerId: number = null;
+    handler: MessageHandler = null;
 
-    private server: Server      = null;
+    private server: Server = null;
 
     /**
      * Constructor for the HTTPWorker.
@@ -35,7 +35,7 @@ export class HttpWorker implements NodeWorker {
      * Starts the HTTPWorker instance.
      * Creates a new server on the shared port and allows it to handle requests.
      */
-    public start (): void {
+    public start(): void {
         console.log('[WORKER id:' + this.workerId + '] HttpWorker starting...');
         this.server = new Server(this.workerId);
     }
@@ -45,7 +45,7 @@ export class HttpWorker implements NodeWorker {
      *
      * @param message The IPCMessage that is received. Can be of subtypes IPCRequest or IPCReply.
      */
-    public onMessage (message: IPCMessage): void {
+    public onMessage(message: IPCMessage): void {
         console.log('[WORKER id:' + this.workerId + '] Message received');
 
         //TODO: Is this needed? Handle messages!

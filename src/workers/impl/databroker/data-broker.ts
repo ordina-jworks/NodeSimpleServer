@@ -1,11 +1,11 @@
-import {NodeWorker}             from '../../node-worker';
-import {IPCMessage}             from "../../../ipc/messages/ipc-message";
-import {MessageTarget}          from "../../../ipc/message-target";
-import {MessageHandler}         from "../../../ipc/message-handler";
-import {IPCRequest}             from "../../../ipc/messages/ipc-request";
-import {DataBrokerOperation}    from "./data-broker-operation";
-import {Cache}                  from "./cache";
-import {MessageManager}         from "../../../ipc/message-manager";
+import { NodeWorker } from '../../node-worker';
+import { IPCMessage } from "../../../ipc/messages/ipc-message";
+import { MessageTarget } from "../../../ipc/message-target";
+import { MessageHandler } from "../../../ipc/message-handler";
+import { IPCRequest } from "../../../ipc/messages/ipc-request";
+import { DataBrokerOperation } from "./data-broker-operation";
+import { Cache } from "./cache";
+import { MessageManager } from "../../../ipc/message-manager";
 
 /**
  * DataBroker class.
@@ -14,8 +14,8 @@ import {MessageManager}         from "../../../ipc/message-manager";
  */
 export class DataBroker implements NodeWorker {
 
-    workerId: number                            = null;
-    handler: MessageHandler                     = null;
+    workerId: number = null;
+    handler: MessageHandler = null;
 
     private caches: Array<[string, Cache<any>]> = [];
 
@@ -52,7 +52,7 @@ export class DataBroker implements NodeWorker {
     private retrieve(cacheName: string, key: string): any {
         let cache: Cache<any> = this.getCacheByName(cacheName);
 
-        if(cache) {
+        if (cache) {
             return cache.retrieve(key);
         } else {
             return null;
@@ -70,7 +70,7 @@ export class DataBroker implements NodeWorker {
     private save(cacheName: string, key: string, value: any): void {
         let cache: Cache<any> = this.getCacheByName(cacheName);
 
-        if(!cache) {
+        if (!cache) {
             cache = this.createCache(cacheName);
         }
         cache.save(key, value);
@@ -86,7 +86,7 @@ export class DataBroker implements NodeWorker {
     private update(cacheName: string, key: string, value: any): void {
         let cache: Cache<any> = this.getCacheByName(cacheName);
 
-        if(cache) {
+        if (cache) {
             cache.update(key, value);
         } else {
             console.log('Cache not found, could not update value, please use save!');
@@ -102,7 +102,7 @@ export class DataBroker implements NodeWorker {
     private deleter(cacheName: string, key: string): void {
         let cache: Cache<any> = this.getCacheByName(cacheName);
 
-        if(cache) {
+        if (cache) {
             cache.deleter(key);
         } else {
             console.log('Cache not found, could not delete value!');
@@ -119,9 +119,9 @@ export class DataBroker implements NodeWorker {
         let caches: Array<{}> = [];
         for (let cache of this.caches) {
             let def: {} = {
-                'name' : cache[0],
-                'maxSize' : cache[1].maxSize,
-                'actualSize' : cache[1].actualSize
+                'name': cache[0],
+                'maxSize': cache[1].maxSize,
+                'actualSize': cache[1].actualSize
             };
             caches.push(def);
         }
@@ -136,7 +136,7 @@ export class DataBroker implements NodeWorker {
      */
     private retrieveCacheContent(cacheName: string): Array<[string, any]> {
         let cache: Cache<any> = this.getCacheByName(cacheName);
-        if(cache) {
+        if (cache) {
             return cache.getAllValues()
         }
         return null;
@@ -161,14 +161,14 @@ export class DataBroker implements NodeWorker {
      */
     private deleteCache(cacheName: string): void {
         let index: number = -1;
-        for(let i: number = 0; i < this.caches.length; i++) {
-            if(this.caches[i][0] == cacheName) {
+        for (let i: number = 0; i < this.caches.length; i++) {
+            if (this.caches[i][0] == cacheName) {
                 index = i;
                 break;
             }
         }
 
-        if(index >= 0) {
+        if (index >= 0) {
 
         } else {
             console.error('Could not delete, key/value not found!');
@@ -181,9 +181,9 @@ export class DataBroker implements NodeWorker {
      * @param cacheName The name of the cache to get.
      * @returns {any} The Cache instance for which the name matches.
      */
-    private getCacheByName(cacheName: string): Cache<any>  {
+    private getCacheByName(cacheName: string): Cache<any> {
         for (let cache of this.caches) {
-            if(cache[0] == cacheName) {
+            if (cache[0] == cacheName) {
                 return cache[1];
             }
         }
@@ -198,7 +198,7 @@ export class DataBroker implements NodeWorker {
     public onMessage(message: IPCMessage): void {
         console.log('[WORKER id:' + this.workerId + '] Databroker message received');
 
-        if(message.type == IPCMessage.TYPE_REQUEST) {
+        if (message.type == IPCMessage.TYPE_REQUEST) {
             let m: IPCRequest = <IPCRequest>message;
             let payload: any = null;
 
@@ -232,7 +232,7 @@ export class DataBroker implements NodeWorker {
                     console.log('[WORKER id:' + this.workerId + '] No valid target handler found! (' + m.targetFunction + ')');
             }
 
-            MessageManager.getInstance().sendReply({'payload' : payload}, <IPCRequest>message);
+            MessageManager.getInstance().sendReply({ 'payload': payload }, <IPCRequest>message);
         }
     }
 }

@@ -1,17 +1,14 @@
 body {
     font-family: 'DejaVu Sans', Arial, Helvetica, sans-serif;
     color: #ffffff;
-
     background: url('../img/bg.png') repeat;
 }
 
 #wrapper {
     width: 600px;
     height: 500px;
-
-    margin-left: auto ;
-    margin-right: auto ;
-
+    margin-left: auto;
+    margin-right: auto;
     background-image: url('../img/bg-image.png');
     background-repeat: no-repeat;
     background-size: 600px;
@@ -20,7 +17,6 @@ body {
 #content {
     width: 100%;
     padding-top: 400px;
-
     text-align: center;
     font-size: larger;
 }
@@ -34,7 +30,6 @@ body {
     margin-bottom: 5px;
     list-style-type: none;
     border-radius: 50px;
-
     height: 50px;
     vertical-align: middle;
     line-height: 50px;
@@ -44,9 +39,7 @@ body {
     display: block;
     width: 100%;
     height: 50px;
-
     color: #000;
-
     background-color: white;
     border-radius: 50px;
     text-decoration: none;
@@ -55,9 +48,7 @@ body {
 .list-item a:hover {
     display: block;
     width: 100%;
-
     color: #2d2d2d;
-
     background-color: #9E9E9E;
     border-radius: 50px;
 }

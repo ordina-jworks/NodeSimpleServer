@@ -1,16 +1,15 @@
-import {IncomingMessage}    from "http";
-import {ServerResponse}     from "http";
-
-import {Parameter}                  from "../../parameters/parameter";
-import {Config}                     from "../../../../../resources/config/config";
-import {MessageManager}             from "../../../../ipc/message-manager";
-import {IPCMessage}                 from "../../../../ipc/messages/ipc-message";
-import {MessageTarget}              from "../../../../ipc/message-target";
-import {BaseEndpoint}               from "../../base-endpoint";
-import {EndpointManager}            from "../../endpoint-manager";
-import {ArduinoMethodValidatorImpl} from "../../parameters/impl/arduino-method-validator-impl";
-import {Router}                     from "../../../routing/router";
-import {EndpointBuilder}            from "../../endpoint-builder";
+import { IncomingMessage } from "http";
+import { ServerResponse } from "http";
+import { Parameter } from "../../parameters/parameter";
+import { Config } from "../../../../../resources/config/config";
+import { MessageManager } from "../../../../ipc/message-manager";
+import { IPCMessage } from "../../../../ipc/messages/ipc-message";
+import { MessageTarget } from "../../../../ipc/message-target";
+import { BaseEndpoint } from "../../base-endpoint";
+import { EndpointManager } from "../../endpoint-manager";
+import { ArduinoMethodValidatorImpl } from "../../parameters/impl/arduino-method-validator-impl";
+import { Router } from "../../../routing/router";
+import { EndpointBuilder } from "../../endpoint-builder";
 
 /**
  * Class containing the Arduino endpoints.
@@ -60,7 +59,7 @@ export class ArduinoEndpoint extends BaseEndpoint {
      * @param request The HTTP Request.
      * @param response The HTTP Response.
      */
-    public index = (request: IncomingMessage, response: ServerResponse): void => {
+    public index(request: IncomingMessage, response: ServerResponse): void {
         console.log('index endpoint called!');
 
         Router.redirect(response, '/arduino/index.html');
@@ -73,7 +72,7 @@ export class ArduinoEndpoint extends BaseEndpoint {
      * @param response The HTTP Response.
      * @param params An array containing the parameters for the endpoint with the desired generic types as defined.
      */
-    public setArduinoMethod = (request: IncomingMessage, response: ServerResponse, params: Array<Parameter<boolean>>): void => {
+    public setArduinoMethod(request: IncomingMessage, response: ServerResponse, params: Array<Parameter<boolean>>): void {
         console.log('setArduinoMethod endpoint called!');
 
         this.config.arduino.useSerialOverJohnnyFive = params[0].getValue();
@@ -92,7 +91,7 @@ export class ArduinoEndpoint extends BaseEndpoint {
      * @param request The HTTP Request.
      * @param response The HTTP Response.
      */
-    public getArduinoScenarios = (request: IncomingMessage, response: ServerResponse): void => {
+    public getArduinoScenarios(request: IncomingMessage, response: ServerResponse): void {
         console.log('getArduinoImplementations endpoint called!');
 
         //TODO: Implement!
@@ -106,7 +105,7 @@ export class ArduinoEndpoint extends BaseEndpoint {
      * @param response The HTTP Response.
      * @param params An array containing the parameters for the endpoint with the desired generic types as defined.
      */
-    public setArduinoScenario = (request: IncomingMessage, response: ServerResponse, params: Array<Parameter<string>>): void => {
+    public setArduinoScenario(request: IncomingMessage, response: ServerResponse, params: Array<Parameter<string>>): void {
         console.log('setArduinoImplementation endpoint called!');
 
         //TODO: Implement!

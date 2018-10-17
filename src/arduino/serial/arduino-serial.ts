@@ -1,7 +1,7 @@
 import SerialPort = require("serialport");
 
-import {Arduino}    from "../arduino";
-import {Scenario}   from "../scenario";
+import { Arduino } from "../arduino";
+import { Scenario } from "../scenario";
 
 /**
  * ArduinoSerial class.
@@ -10,10 +10,10 @@ import {Scenario}   from "../scenario";
  */
 export class ArduinoSerial extends Arduino {
 
-    private port:SerialPort     = null;
+    private port: SerialPort = null;
 
-    private portName:string     = null;
-    private baudRate:number     = null;
+    private portName: string = null;
+    private baudRate: number = null;
 
     /**
      * Constructor for ArduinoSerial.
@@ -22,7 +22,7 @@ export class ArduinoSerial extends Arduino {
      * @param baudRate The baud rate for the serial port to utilise.
      * @param scenario The Scenario instance that should be executed.
      */
-    constructor(portName:string, baudRate: number, scenario: Scenario) {
+    constructor(portName: string, baudRate: number, scenario: Scenario) {
         super();
         this.portName = portName;
         this.baudRate = baudRate;
@@ -37,8 +37,8 @@ export class ArduinoSerial extends Arduino {
     public init(): void {
         this.listPorts();
 
-        if(this.portName != null) {
-            this.port = new SerialPort(this.portName, {baudRate: this.baudRate});
+        if (this.portName != null) {
+            this.port = new SerialPort(this.portName, { baudRate: this.baudRate });
             this.port.on('open', this.onCommOpen);
             this.port.on('error', this.onCommError);
             this.port.on('data', this.onDataReceived);
@@ -51,7 +51,7 @@ export class ArduinoSerial extends Arduino {
      * Closes and cleans up the serial connection.
      */
     public cleanup(): void {
-        if(this.port != null) {
+        if (this.port != null) {
             this.port.close();
             this.port = null;
         }
@@ -86,7 +86,7 @@ export class ArduinoSerial extends Arduino {
      * Handler that is called when the serial port connection is established.
      */
     private onCommOpen = (): void => {
-        if(this.scenario != null) {
+        if (this.scenario != null) {
             this.scenario.run(this.port);
         } else {
             console.error('No arduino scenario given to run!');
@@ -109,7 +109,7 @@ export class ArduinoSerial extends Arduino {
      * @param data The data that has been received.
      */
     private onDataReceived = (data: any): void => {
-        if(this.scenario != null) {
+        if (this.scenario != null) {
             this.scenario.onMessage(data);
         } else {
             console.error('No scenario to pass data to!');

@@ -1,6 +1,5 @@
-import socketIO        = require('socket.io');
-
-import Timer            = NodeJS.Timer;
+import socketIO = require('socket.io');
+import Timer = NodeJS.Timer;
 import * as http from "http";
 import { clearInterval } from "timers";
 import { Config } from "../../../resources/config/config";
@@ -16,8 +15,6 @@ import { IPCMessage } from "../../ipc/messages/ipc-message";
 import { IPCRequest } from "../../ipc/messages/ipc-request";
 import { NodeWorker } from '../node-worker';
 
-
-
 /**
  * IntervalWorker class.
  *
@@ -26,15 +23,15 @@ import { NodeWorker } from '../node-worker';
  */
 export class IntervalWorker implements NodeWorker {
 
-    workerId: number                = null;
-    handler: MessageHandler         = null;
+    workerId: number = null;
+    handler: MessageHandler = null;
 
-    private interval: Timer         = null;
-    private config: Config          = null;
-    private arduino: Arduino        = null;
+    private interval: Timer = null;
+    private config: Config = null;
+    private arduino: Arduino = null;
 
     //Socket.io does not yet have an up to date type def for TypeScript! This bypasses the TS compiler!
-    private sio                     = null;
+    private sio = null;
     //private sio: SocketIO.Server  = null;
 
     /**
@@ -67,19 +64,19 @@ export class IntervalWorker implements NodeWorker {
 
         this.sio
             .origins((origin, callback) => {
-                console.log('WS request from: ' + origin +  ' : allowed!');
+                console.log('WS request from: ' + origin + ' : allowed!');
                 callback(null, true)
             })
             .of('/socket')
             .on('connection', (socket: SocketIO.Socket) => {
-            console.log(socket.id + ' connected');
-            socket.emit('welcome', 'You have successfully connected to the web socket!');
+                console.log(socket.id + ' connected');
+                socket.emit('welcome', 'You have successfully connected to the web socket!');
 
-            socket.on('app-event', (data: any) => {
-                //TODO: Test this! It seems not to work yet!!!
-               console.log('Message received from client:' + data);
+                socket.on('app-event', (data: any) => {
+                    //TODO: Test this! It seems not to work yet!!!
+                    console.log('Message received from client:' + data);
+                });
             });
-        });
 
         this.setupArduino();
         this.interval = setInterval(this.loop, this.config.settings.intervalTimeoutInSeconds * 1000);
@@ -89,9 +86,9 @@ export class IntervalWorker implements NodeWorker {
      * Sets up the connection to the Arduino and starts the desired Arduino Scenario.
      */
     private setupArduino(): void {
-        if(this.config.arduino.enableArduino) {
+        if (this.config.arduino.enableArduino) {
 
-            if(this.config.arduino.useSerialOverJohnnyFive) {
+            if (this.config.arduino.useSerialOverJohnnyFive) {
                 this.arduino = new ArduinoSerial(
                     this.config.arduino.serialPortName,
                     this.config.arduino.serialPortBaudRate,
@@ -114,7 +111,7 @@ export class IntervalWorker implements NodeWorker {
         console.log('[WORKER id:' + this.workerId + '] Restarting IntervalWorker...');
 
         clearInterval(this.interval);
-        if(this.config.arduino.enableArduino && this.arduino) {
+        if (this.config.arduino.enableArduino && this.arduino) {
             this.arduino.cleanup();
         }
 
@@ -151,7 +148,7 @@ export class IntervalWorker implements NodeWorker {
     public onMessage(message: IPCMessage): void {
         console.log('Interval worker message received');
 
-        if(message.type == IPCMessage.TYPE_REQUEST) {
+        if (message.type == IPCMessage.TYPE_REQUEST) {
             let m: IPCRequest = <IPCRequest>message;
 
             //While this requires more manual work than working with an eval() statement. It is much much safer.

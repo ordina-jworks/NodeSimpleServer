@@ -4,24 +4,24 @@ export class Config {
 
     //Config variables:
     public settings = {
-        httpPort:                       8080,
-        socketPort:                     8000,
+        httpPort: 8080,
+        socketPort: 8000,
 
-        webContentFolder:               "www",
-        endpointScanFolder:             "src/web/endpoints/impl/",
-        allowFolderListing:             true,
+        webContentFolder: "www",
+        endpointScanFolder: "src/web/endpoints/impl/",
+        allowFolderListing: true,
 
-        intervalTimeoutInSeconds:       480,
+        intervalTimeoutInSeconds: 480,
 
-        defaultCacheSize:               250
+        defaultCacheSize: 250
     };
 
     public arduino = {
-        enableArduino:                  false,
+        enableArduino: false,
 
-        useSerialOverJohnnyFive:        false,
-        serialPortName:                 "usbmodem",
-        serialPortBaudRate:             57600
+        useSerialOverJohnnyFive: false,
+        serialPortName: "usbmodem",
+        serialPortBaudRate: 57600
     };
 
     public keys = {
@@ -35,10 +35,10 @@ export class Config {
         user: 'user'
     };
     public auth = {
-      users: [
-          {user: 'admin', auth: 'YWRtaW46YWRtaW4=', roles: [this.roles.admin, this.roles.user]},
-          {user: 'user',  auth: 'dXNlcjp1c2Vy',     roles: [this.roles.user]}
-      ]
+        users: [
+            { user: 'admin', auth: 'YWRtaW46YWRtaW4=', roles: [this.roles.admin, this.roles.user] },
+            { user: 'user', auth: 'dXNlcjp1c2Vy', roles: [this.roles.user] }
+        ]
     };
 
     private constructor() {

@@ -1,5 +1,55 @@
 svg {
-	width: 100%;
-	height: 100%;
-	position: relative;
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+#stop4394 {
+    stop-color: #000000;
+    stop-opacity: 0;
+}
+
+#stop4396 {
+    stop-color: #f8f9f8;
+    stop-opacity: 0.95;
+}
+
+#stop4188 {
+    stop-color: #8d8f90;
+    stop-opacity: 1;
+}
+
+#stop4190 {
+    stop-color: #f0f0ff;
+    stop-opacity: 1;
+}
+
+#stop4406 {
+    stop-color: #000000;
+    stop-opacity: 0;
+}
+
+#stop4404 {
+    stop-color: #f8f9f8;
+    stop-opacity: 0.94915253;
+}
+
+#stop4324 {
+    stop-color: #000000;
+    stop-opacity: 1;
+}
+
+#stop4326 {
+    stop-color: #484849;
+    stop-opacity: 1;
+}
+
+#layerCilinderFoot,
+#layerCilinderTop,
+#layerCilinderBase,
+#layerBeerInCilinder,
+#layerBeerGlass,
+#layerCilinderLevels,
+#layerCilinderTap {
+    display: inline;
 }

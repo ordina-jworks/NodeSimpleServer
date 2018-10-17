@@ -1,18 +1,18 @@
-import os               = require('os');
-import cluster          = require('cluster');
+import os = require('os');
+import cluster = require('cluster');
 
-import {MessageHandler} from "./ipc/message-handler";
-import {WorkerFactory}  from "./workers/worker-factory";
+import { MessageHandler } from "./ipc/message-handler";
+import { WorkerFactory } from "./workers/worker-factory";
 
 class SimpleNodeServer {
 
-    private isDebug: boolean                    = false;
+    private isDebug: boolean = false;
 
-    private httpWorkers: Array<cluster.Worker>  = null;
-    private intervalWorker: cluster.Worker      = null;
-    private databroker: cluster.Worker          = null;
+    private httpWorkers: Array<cluster.Worker> = null;
+    private intervalWorker: cluster.Worker = null;
+    private databroker: cluster.Worker = null;
 
-    private messageHandler: MessageHandler      = null;
+    private messageHandler: MessageHandler = null;
 
     /**
      * Constructor for SimpleNodeServer.
@@ -52,23 +52,23 @@ class SimpleNodeServer {
      */
     private forkWorkers(): void {
         //Fork data broker.
-        this.databroker = cluster.fork({name: 'broker', debug: this.isDebug});
+        this.databroker = cluster.fork({ name: 'broker', debug: this.isDebug });
 
         //Fork interval worker.
-        this.intervalWorker = cluster.fork({name: 'interval', debug: this.isDebug});
+        this.intervalWorker = cluster.fork({ name: 'interval', debug: this.isDebug });
 
         //Fork normal server worker instances. These will handle all HTTP requests.
-        let cores:number                = os.cpus().length;
-        let numberOfHttpWorkers:number  = cores - 2 > 0 ? cores - 2 : 1;
+        let cores: number = os.cpus().length;
+        let numberOfHttpWorkers: number = cores - 2 > 0 ? cores - 2 : 1;
         console.log('[MASTER] There are ' + cores + ' cores available, starting ' + numberOfHttpWorkers + ' HTTP workers...');
 
-        for (let i:number = 0; i < numberOfHttpWorkers; i++) {
-            let worker = cluster.fork({name: 'http', debug: this.isDebug});
+        for (let i: number = 0; i < numberOfHttpWorkers; i++) {
+            let worker = cluster.fork({ name: 'http', debug: this.isDebug });
             this.httpWorkers.push(worker);
         }
 
         //Revive workers if they die!
-        if(!this.isDebug) {
+        if (!this.isDebug) {
             cluster.on('exit', this.reviveWorker);
         }
     };
@@ -83,7 +83,7 @@ class SimpleNodeServer {
         this.databroker.on('message', this.messageHandler.onDataBrokerMessageReceived);
         this.intervalWorker.on('message', this.messageHandler.onIntervalWorkerMessageReceived);
 
-        for(let i:number = 0; i < this.httpWorkers.length; i++){
+        for (let i: number = 0; i < this.httpWorkers.length; i++) {
             this.httpWorkers[i].on('message', this.messageHandler.onServerWorkerMessageReceived);
         }
     };
@@ -102,15 +102,15 @@ class SimpleNodeServer {
         //CLEAR!
         switch (worker.id) {
             case this.databroker.id:
-                this.databroker = cluster.fork({name: 'broker', debug: this.isDebug});
+                this.databroker = cluster.fork({ name: 'broker', debug: this.isDebug });
                 this.databroker.on('message', this.messageHandler.onDataBrokerMessageReceived);
                 break;
             case this.intervalWorker.id:
-                this.intervalWorker = cluster.fork({name: 'interval', debug: this.isDebug});
+                this.intervalWorker = cluster.fork({ name: 'interval', debug: this.isDebug });
                 this.intervalWorker.on('message', this.messageHandler.onIntervalWorkerMessageReceived);
                 break;
             default:
-                cluster.fork({name: 'http', debug: this.isDebug}).on('message', this.messageHandler.onServerWorkerMessageReceived);
+                cluster.fork({ name: 'http', debug: this.isDebug }).on('message', this.messageHandler.onServerWorkerMessageReceived);
         }
     };
 }

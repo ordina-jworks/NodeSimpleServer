@@ -11,8 +11,6 @@ import { beerAnimation } from '../animations/beer.animation';
 })
 export class BoozeMeterComponent implements OnInit {
 
-  constructor() { }
-
   beerAnimation = 'in';
 
   ngOnInit() {
@@ -22,5 +20,4 @@ export class BoozeMeterComponent implements OnInit {
   toggleBeerAnimation() {
     this.beerAnimation = this.beerAnimation === 'in' ? 'out' : 'in';
   }
-
 }

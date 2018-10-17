@@ -1,8 +1,6 @@
-import {Url} from "url";
-import {IncomingMessage, ServerResponse} from "http";
-
-import {EndpointDefinition} from "../endpoints/endpoint-definition";
-import {Parameter} from "../endpoints/parameters/parameter";
+import { IncomingMessage, ServerResponse } from "http";
+import { EndpointDefinition } from "../endpoints/endpoint-definition";
+import { Parameter } from "../endpoints/parameters/parameter";
 
 export abstract class HttpMethodEndpointHandler {
 
@@ -18,20 +16,20 @@ export abstract class HttpMethodEndpointHandler {
      * @returns {HttpReturn} The result is parsing failed or null if not.
      */
     public parseUrlParams(pathName: string, endPoint: EndpointDefinition): HttpReturn {
-        if(pathName.split('/').length == endPoint.path.split('/').length) {
+        if (pathName.split('/').length == endPoint.path.split('/').length) {
             let pathAndParams: string[] = pathName.split('/');
             let endpointPath: string[] = endPoint.path.split('/');
 
             let params: {} = {};
-            for(let i: number = 0; i < pathAndParams.length; i++) {
-                if(pathAndParams[i] != endpointPath[i]) {
-                    console.log('Param found in url: '+ endpointPath[i] + ' with value: ' + pathAndParams[i]);
+            for (let i: number = 0; i < pathAndParams.length; i++) {
+                if (pathAndParams[i] != endpointPath[i]) {
+                    console.log('Param found in url: ' + endpointPath[i] + ' with value: ' + pathAndParams[i]);
                     params[endpointPath[i].substring(1, endpointPath[i].length - 1)] = pathAndParams[i];
                 }
             }
 
-            if(endPoint.parameters.length == Object.keys(params).length) {
-                if(endPoint.parameters.length == 0) {
+            if (endPoint.parameters.length == Object.keys(params).length) {
+                if (endPoint.parameters.length == 0) {
                     return {
                         code: 0,
                         message: 'No URL params to process!'
@@ -79,13 +77,13 @@ export abstract class HttpMethodEndpointHandler {
     public parseQueryParams(requestData: URL, endPoint: EndpointDefinition): HttpReturn {
         let queryParams: Array<any> = Array.from(requestData.searchParams);
 
-        if(queryParams && queryParams.length > 0) {
-            if(endPoint.parameters.length === queryParams.length) {
+        if (queryParams && queryParams.length > 0) {
+            if (endPoint.parameters.length === queryParams.length) {
                 for (let i = 0; i < endPoint.parameters.length; i++) {
                     let param: Parameter<any> = endPoint.parameters[i];
 
                     for (let keyValuePair of queryParams) {
-                        if(keyValuePair[0] === endPoint.parameters[i].name) {
+                        if (keyValuePair[0] === endPoint.parameters[i].name) {
                             param.setValue(keyValuePair[1]);
                         }
                     }

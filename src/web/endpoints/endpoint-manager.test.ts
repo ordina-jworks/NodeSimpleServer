@@ -1,9 +1,8 @@
-import {suite, test}        from "mocha-typescript";
-import {expect}             from 'chai';
-
-import {EndpointManager}    from "./endpoint-manager";
-import {EndpointDefinition} from "./endpoint-definition";
-import {Parameter}          from "./parameters/parameter";
+import { suite, test } from "mocha-typescript";
+import { expect } from 'chai';
+import { EndpointManager } from "./endpoint-manager";
+import { EndpointDefinition } from "./endpoint-definition";
+import { Parameter } from "./parameters/parameter";
 
 @suite("Endpoint manager")
 class EndPointManagerTest {

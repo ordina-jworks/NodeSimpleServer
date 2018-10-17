@@ -1,17 +1,14 @@
-import http     = require('http');
-import url      = require('url');
-import fs       = require('fs');
-
-import {Router}                 from './routing/router';
-import {Config}                 from '../../resources/config/config';
-
-import {IncomingMessage}        from "http";
-import {ServerResponse}         from "http";
-import {Stats}                  from "fs";
-
-import {MessageManager}         from "../ipc/message-manager";
-import {MessageTarget}          from "../ipc/message-target";
-import {DataBrokerOperation}    from "../workers/impl/databroker/data-broker-operation";
+import http = require('http');
+import url = require('url');
+import fs = require('fs');
+import { Router } from './routing/router';
+import { Config } from '../../resources/config/config';
+import { IncomingMessage } from "http";
+import { ServerResponse } from "http";
+import { Stats } from "fs";
+import { MessageManager } from "../ipc/message-manager";
+import { MessageTarget } from "../ipc/message-target";
+import { DataBrokerOperation } from "../workers/impl/databroker/data-broker-operation";
 
 /**
  * Server class.
@@ -22,11 +19,11 @@ import {DataBrokerOperation}    from "../workers/impl/databroker/data-broker-ope
  */
 export class Server {
 
-    private config: Config                      = null;
-    private messageManager: MessageManager      = null;
+    private config: Config = null;
+    private messageManager: MessageManager = null;
 
-    private id: number                          = null;
-    private router: Router                      = null;
+    private id: number = null;
+    private router: Router = null;
 
     /**
      * Constructor for Server.
@@ -72,7 +69,7 @@ export class Server {
             //Strip all the path info and get the filename parts by splitting on the dash symbol.
             let filenameParts: string[] = fullFilePath.split('/').pop().split('-');
             //Convert each part of the filename to start with an uppercase letter.
-            for(let i: number = 0; i < filenameParts.length; i++) {
+            for (let i: number = 0; i < filenameParts.length; i++) {
                 filenameParts[i] = (filenameParts[i].charAt(0).toUpperCase() + filenameParts[i].slice(1));
             }
             //Join the filename back together and remove the .js extension.
@@ -100,11 +97,11 @@ export class Server {
         items.forEach((item: string) => {
             let stats: Stats = fs.statSync(path + '/' + item);
             //We don't want to list folders, but go in them recursively and scan for more files.
-            if(stats.isDirectory()) {
+            if (stats.isDirectory()) {
                 this.getFilesInFolder(path + item).forEach((file) => {
                     files.push(file);
                 });
-            } else if(item.split('.').length == 2 && item.indexOf('.js') == item.length - 3){
+            } else if (item.split('.').length == 2 && item.indexOf('.js') == item.length - 3) {
                 //We only add files that have one dot symbol in their name and end on the .js extension.
                 //This will ignore any other files (or unit tests)
                 files.push((path + '/' + item).replace('//', '/'));
@@ -121,15 +118,15 @@ export class Server {
      * @param request The HTTP Request.
      * @param response The HTTP Response.
      */
-    private onRequest = (request: IncomingMessage, response: ServerResponse): void => {
+    private onRequest(request: IncomingMessage, response: ServerResponse): void {
         let pathName: string = url.parse(request.url).pathname;
 
         let requestLine: string = '[WORKER id:' + this.id + '] IP: ' + request.connection.remoteAddress + ' \t-> requested: ' + pathName;
         console.log(requestLine);
         this.messageManager.sendMessage({
-            'cacheName' : 'requests',
-            'key' : process.hrtime()[1] + '-' + this.id + '-' + request.connection.remoteAddress,
-            'value' : requestLine
+            'cacheName': 'requests',
+            'key': process.hrtime()[1] + '-' + this.id + '-' + request.connection.remoteAddress,
+            'value': requestLine
         }, MessageTarget.DATA_BROKER, DataBrokerOperation.SAVE + "");
 
         this.router.route(pathName, request, response);

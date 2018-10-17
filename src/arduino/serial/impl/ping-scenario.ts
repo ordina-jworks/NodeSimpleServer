@@ -1,6 +1,6 @@
 import SerialPort = require("serialport");
 
-import {Scenario}   from "../../scenario";
+import { Scenario } from "../../scenario";
 
 /**
  * PingScenario class that implements the Scenario interface.
@@ -22,7 +22,7 @@ export class PingScenario implements Scenario {
     private ping = (): void => {
         console.log('ping...');
 
-        if(this.port != null) {
+        if (this.port != null) {
             this.port.write('ping');
             this.port.drain(() => {
                 console.log('ping written to comm port!');
@@ -35,7 +35,7 @@ export class PingScenario implements Scenario {
     private pong = (message: any): void => {
         console.log(message);
 
-        if(message.trim() == 'pong') {
+        if (message.trim() == 'pong') {
             console.log('Pong received, pinging again in 1sec...');
             setTimeout(() => {
                 this.ping();

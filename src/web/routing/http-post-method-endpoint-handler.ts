@@ -1,9 +1,8 @@
-import * as url                             from "url";
-import {IncomingMessage, ServerResponse}    from "http";
-
-import {Router}                             from "./router";
-import {EndpointDefinition}                 from "../endpoints/endpoint-definition";
-import {HttpMethodEndpointHandler}          from "./base-http-method-endpoint-handler";
+import * as url from "url";
+import { IncomingMessage, ServerResponse } from "http";
+import { Router } from "./router";
+import { EndpointDefinition } from "../endpoints/endpoint-definition";
+import { HttpMethodEndpointHandler } from "./base-http-method-endpoint-handler";
 
 export class HttpPostMethodEndpointHandler extends HttpMethodEndpointHandler {
 
@@ -21,24 +20,24 @@ export class HttpPostMethodEndpointHandler extends HttpMethodEndpointHandler {
     public handleEndpoint(endPoint: EndpointDefinition, pathName: string, request: IncomingMessage, response: ServerResponse): void {
         let requestData: any = url.parse(request.url, true);
 
-        if(requestData.query && Object.keys(requestData.query).length > 0) {
+        if (requestData.query && Object.keys(requestData.query).length > 0) {
             Router.respondSpecificServerError(response, 500, 'A post request should not contain any query params!', pathName);
             return;
         }
 
-        let result: {code: number, message: string} = this.parseUrlParams(pathName, endPoint);
-        if(!result) {
+        let result: { code: number, message: string } = this.parseUrlParams(pathName, endPoint);
+        if (!result) {
             endPoint.execute(request, response);
             return;
         } else {
-            if(result.code != 200) {
+            if (result.code != 200) {
                 Router.respondSpecificServerError(response, result.code, result.message, pathName);
                 return;
             }
         }
 
-        this.parseBodyPayload(request,(result: {code: number, message: string, data: any}) => {
-            if(result.code == 200) {
+        this.parseBodyPayload(request, (result: { code: number, message: string, data: any }) => {
+            if (result.code == 200) {
                 endPoint.executeWithBodyPayload(request, response, result.data);
                 return;
             } else {

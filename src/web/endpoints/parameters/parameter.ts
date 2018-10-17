@@ -1,4 +1,4 @@
-import {ParameterValidator} from "./parameter-validator";
+import { ParameterValidator } from "./parameter-validator";
 
 /**
  * Generic Parameter class.
@@ -7,11 +7,11 @@ import {ParameterValidator} from "./parameter-validator";
  */
 export class Parameter<T> {
 
-    public name: string                         = null;
-    public description: string                  = null;
-    public validator: ParameterValidator<T>     = null;
+    public name: string = null;
+    public description: string = null;
+    public validator: ParameterValidator<T> = null;
 
-    private value: T                            = null;
+    private value: T = null;
 
     /**
      * Constructor for Parameter.
@@ -31,7 +31,7 @@ export class Parameter<T> {
      *
      * @param value The value to set, should be of any of the T type.
      */
-    public setValue (value: T): void {
+    public setValue(value: T): void {
         this.value = value;
     };
 
@@ -40,8 +40,8 @@ export class Parameter<T> {
      *
      * @returns {T} The value of the parameter, will be of the T type.
      */
-    public getValue (): T {
-      return this.value;
+    public getValue(): T {
+        return this.value;
     };
 
     /**
@@ -52,11 +52,11 @@ export class Parameter<T> {
      *
      * @returns {boolean} True if valid, false if not.
      */
-    public validate (): boolean {
-        if(this.validator != null) {
+    public validate(): boolean {
+        if (this.validator != null) {
             let result: boolean = this.validator.validate(this.value);
 
-            if(result) {
+            if (result) {
                 console.log('Validation for ' + this.name + ' succeeded!');
                 return true;
             } else {
