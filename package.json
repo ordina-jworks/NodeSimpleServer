@@ -4,9 +4,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "postinstall": "npm install forever -g && npm install -g bower && npm install typescript -g",
+    "postinstall": "npm install forever -g && npm install typescript -g",
     "build": "tsc -p ./",
-    "prestart": "bower install && tsc -p ./",
     "start": "forever --minUptime 10000 -o output.log src/app.js",
     "stop": "forever stopall",
     "test": "tsc -p . && mocha --opts ./resources/test-config/mocha.opts",
