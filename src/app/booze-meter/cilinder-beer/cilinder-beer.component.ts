@@ -8,7 +8,7 @@ import { Subject } from 'rxjs';
   styleUrls: ['./cilinder-beer.component.scss']
 })
 export class CilinderBeerComponent implements OnInit {
-  private beerlevel = 100;
+  public beerlevel = 100;
   private fullHeight = 558;
   private subject = new Subject();
 
