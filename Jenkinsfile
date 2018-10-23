@@ -5,7 +5,7 @@ node {
 
     stage('Setup'){
         nodejs('node8') {
-            sh 'npm i -g @angular/cli@latest'
+            sh 'npm i -g @angular/cli@1.7.4 nodemon'
             sh 'npm i'
         }
     }
