@@ -1,10 +1,13 @@
 {
-  "name": "booze-angular",
-  "version": "0.0.0",
+  "name": "booze-0-meter-fe",
+  "version": "1.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
+    "start": "ls && pwd && nodemon server.js",
+    "run": "ng serve",
+    "startdocker": "ng serve --host 0.0.0.0",
+    "prebuild": "npm i -g @angular/cli@1.7.4 nodemon",
+    "build": "npm run prebuild && ng build",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"

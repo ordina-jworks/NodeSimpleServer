@@ -6,8 +6,8 @@ WORKDIR /usr/src/app
 
 # Install app dependencies
 COPY docker_package.json /usr/src/app/package.json
-RUN npm i @angular/cli@latest
-RUN npm i
+COPY server.js /usr/src/app
+RUN npm install
 
 # Bundle app source
 COPY dist/ /usr/src/app/www
